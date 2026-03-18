@@ -53,8 +53,12 @@ export default function LocationPicker({ initialData, onChange }: LocationPicker
 
     // Add Zoom and Rotation Controls
     map.addControl(new mapboxgl.NavigationControl(), "top-right");
-
     mapRef.current = map;
+
+    // Force resize to fix blank canvas issue when initializing inside Modals
+    map.on('load', () => {
+      map.resize();
+    });
 
     const marker = new mapboxgl.Marker({ draggable: true })
       .setLngLat([coords.longitude, coords.latitude])
