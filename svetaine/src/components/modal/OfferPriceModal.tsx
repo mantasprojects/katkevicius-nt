@@ -86,7 +86,7 @@ export function OfferPriceModal({ currentPrice, propertyTitle }: OfferPriceModal
         <BadgeEuro className="w-5 h-5 mr-2" /> Siūlyti kainą
       </DialogTrigger>
 
-      <DialogContent showCloseButton={false} className="sm:max-w-[425px] p-0 overflow-hidden bg-white border-none shadow-2xl rounded-3xl">
+      <DialogContent showCloseButton={false} className="sm:max-w-[425px] p-0 overflow-hidden bg-white border-none shadow-2xl rounded-3xl max-h-[90vh] flex flex-col">
         {/* Header */}
         <div className="bg-gradient-to-br from-[#F8FAFC] to-[#EFF6FF] border-b border-slate-100 p-6 text-center relative">
           <button
@@ -105,7 +105,7 @@ export function OfferPriceModal({ currentPrice, propertyTitle }: OfferPriceModal
           <p className="text-sm font-medium text-slate-500 line-clamp-1">{propertyTitle}</p>
         </div>
 
-        <div className="p-6">
+        <div className="p-6 overflow-y-auto flex-1">
           {isSuccess ? (
             <div className="py-10 text-center flex flex-col items-center justify-center animate-in fade-in zoom-in duration-300">
               <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mb-5 ring-8 ring-emerald-50">

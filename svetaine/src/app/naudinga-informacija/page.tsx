@@ -135,17 +135,21 @@ export default async function BlogPage({
     }
   });
 
-  // Filter merged lists
-  let filtered = mergedPosts;
-  if (selectedCategory) {
-    filtered = filtered.filter(p => p.category === selectedCategory);
-  }
+  // Filter merged lists by search
+  let filtered = [...mergedPosts];
   if (searchQuery) {
     const q = searchQuery.toLowerCase();
     filtered = filtered.filter(p => 
       p.title.toLowerCase().includes(q) || 
       (p.excerpt && p.excerpt.toLowerCase().includes(q))
     );
+  }
+
+  // Group by category to TOP instead of hiding others, so the grid is populated
+  if (selectedCategory) {
+    const matching = filtered.filter(p => p.category === selectedCategory);
+    const nonMatching = filtered.filter(p => p.category !== selectedCategory);
+    filtered = [...matching, ...nonMatching];
   }
 
   articles = filtered.slice(0, 19);
