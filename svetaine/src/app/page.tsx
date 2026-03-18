@@ -21,10 +21,9 @@ export default function HomePage() {
     fetch("/api/blog")
       .then(res => res.json())
       .then(data => {
-        if (Array.isArray(data)) {
-          const published = data.filter((p: any) => p.status === "published");
-          setArticles(published.slice(0, 3));
-        }
+        const postsArray = Array.isArray(data) ? data : (data.posts || []);
+        const published = postsArray.filter((p: any) => p.status === "published");
+        setArticles(published.slice(0, 3));
       })
       .catch(err => console.error("Klaida kraunant straipsnius:", err));
   }, []);

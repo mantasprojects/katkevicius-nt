@@ -67,8 +67,9 @@ function BlogEditorContent() {
     if (editId) {
       fetch("/api/blog")
         .then((res) => res.json())
-        .then((posts: BlogPost[]) => {
-          const found = posts.find((p) => p.id === editId);
+        .then((data) => {
+          const postsArray = Array.isArray(data) ? data : (data.posts || []);
+          const found = postsArray.find((p: any) => p.id === editId || p.slug === editId);
           if (found) setPost(found);
           setIsLoading(false);
         })
