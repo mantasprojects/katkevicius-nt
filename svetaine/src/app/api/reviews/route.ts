@@ -32,15 +32,18 @@ export async function POST(req: Request) {
 
     try {
       const isLocalhost = req.headers.get("host")?.includes("localhost");
-      const secret = isLocalhost ? "1x0000000000000000000000000000000AA" : process.env.TURNSTILE_SECRET_KEY;
+      const secret = isLocalhost 
+        ? "1x0000000000000000000000000000000AA" 
+        : (process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY || process.env.TURNSTILE_SECRET_KEY);
+
+      const formData = new URLSearchParams();
+      if (secret) formData.append("secret", secret);
+      formData.append("response", turnstileToken);
 
       const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          secret: secret,
-          response: turnstileToken,
-        }),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: formData,
       });
 
       const verifyData = await verifyRes.json();
