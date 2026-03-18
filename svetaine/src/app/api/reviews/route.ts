@@ -1,17 +1,29 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-
-const getFilePath = () => path.join(process.cwd(), "src/data/reviews.json");
+import { createClient } from "@/utils/supabase/server";
 
 export async function GET() {
   try {
-    const filePath = getFilePath();
-    if (!fs.existsSync(filePath)) {
-       return NextResponse.json([]);
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from('atsiliepimai')
+      .select('*')
+      .eq('patvirtinta', true)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+       return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    const data = fs.readFileSync(filePath, "utf-8");
-    return NextResponse.json(JSON.parse(data));
+
+    const mapped = data.map((r: any) => ({
+       id: r.id,
+       name: r.vardas,
+       comment: r.komentaras,
+       rating: r.reitingas,
+       date: r.created_at ? r.created_at.split('T')[0] : '',
+       status: 'approved' as const
+    }));
+
+    return NextResponse.json(mapped);
   } catch (error) {
     return NextResponse.json({ error: "Nepavyko nuskaityti atsiliepimų" }, { status: 500 });
   }
@@ -63,8 +75,29 @@ export async function POST(req: Request) {
       );
     }
 
-    const filePath = getFilePath();
-    fs.writeFileSync(filePath, JSON.stringify(updatedReviews, null, 2), "utf-8");
+    const supabase = await createClient();
+    
+    // updatedReviews incorporates the full list of reviews including the latest item.
+    // Index position length - 1 represents the newly appended review from the client.
+    const lastReview = updatedReviews[updatedReviews.length - 1];
+
+    if (!lastReview) {
+       return NextResponse.json({ error: "Nerastas naujas atsiliepimas" }, { status: 400 });
+    }
+
+    const { error: insertError } = await supabase
+      .from('atsiliepimai')
+      .insert({
+         vardas: lastReview.name,
+         komentaras: lastReview.comment,
+         reitingas: lastReview.rating,
+         patvirtinta: false // Requires Admin approval to show publicly
+      });
+
+    if (insertError) {
+       return NextResponse.json({ error: `Nepavyko išsaugoti: ${insertError.message}` }, { status: 500 });
+    }
+
     return NextResponse.json({ success: true, message: "Atsiliepimai atnaujinti" });
   } catch (error) {
     return NextResponse.json({ error: "Nepavyko išsaugoti atsiliepimų" }, { status: 500 });
