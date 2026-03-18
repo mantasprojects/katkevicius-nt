@@ -50,7 +50,7 @@ export default function CommissionCalculator({ dark = false }: { dark?: boolean 
             
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
               {[
-                { title: "Skaidrumas", desc: "Aiški kainodara bez jokių paslėptų mokesčių" },
+                { title: "Skaidrumas", desc: "Aiški kainodara be jokių paslėptų mokesčių" },
                 { title: "Rinkodara", desc: "Profesionalus objekto pristatymas ir tikslinė sklaida" },
                 { title: "Saugumas", desc: "Užtikrintas teisinis saugumas kiekviename etape" },
                 { title: "Strategija", desc: "Nuoseklus proceso valdymas iki sėkmingo rezultato" }
