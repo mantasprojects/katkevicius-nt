@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const supabase = await createClient();
@@ -20,6 +22,7 @@ export async function GET() {
        comment: r.komentaras,
        rating: r.reitingas,
        date: r.created_at ? r.created_at.split('T')[0] : '',
+       createdAt: r.created_at,
        status: 'approved' as const
     }));
 

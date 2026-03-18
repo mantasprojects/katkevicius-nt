@@ -37,7 +37,7 @@ export default function AtsiliepimaiPage() {
 
   useEffect(() => {
     setIsMounted(true);
-    fetch("/api/reviews")
+    fetch(`/api/reviews?t=${Date.now()}`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
@@ -60,9 +60,9 @@ export default function AtsiliepimaiPage() {
   const approvedReviews = reviews
     .filter(r => r.status === "approved")
     .filter(r => filterRating === null || r.rating === filterRating)
-    .sort((a, b) => {
-      const dateA = new Date(a.date.replace(/\./g, "-")).getTime();
-      const dateB = new Date(b.date.replace(/\./g, "-")).getTime();
+    .sort((a: any, b: any) => {
+      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : new Date(a.date.replace(/\./g, "-")).getTime();
+      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : new Date(b.date.replace(/\./g, "-")).getTime();
       return sortBy === "newest" ? dateB - dateA : dateA - dateB;
     });
 
