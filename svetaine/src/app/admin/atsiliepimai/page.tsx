@@ -159,7 +159,6 @@ export default function AdminReviewsPage() {
         <AnimatePresence mode="popLayout">
           {reviews
             .filter(r => r.name.toLowerCase().includes(searchQuery.toLowerCase()) || r.comment.toLowerCase().includes(searchQuery.toLowerCase()))
-            .sort((a, b) => (a.status === "pending" ? -1 : 1))
             .map((review) => (
 
             <motion.div
