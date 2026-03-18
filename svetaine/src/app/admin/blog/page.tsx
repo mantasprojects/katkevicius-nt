@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   FileText, Plus, Pencil, Trash2, Eye, Search,
-  Calendar, Tag, CheckCircle2, Clock, AlertCircle
+  Calendar, Tag, CheckCircle2, Clock, AlertCircle, ChevronRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/client";
@@ -35,14 +35,34 @@ export default function AdminBlogPage() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
+    const timer = setTimeout(() => {
+         setOffset(0);
+         fetchPosts(false, search);
+    }, 500);
+    return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search]);
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (isAppend: boolean = false, currentSearch: string = search) => {
     try {
-      const { data, error } = await supabase.from('tinklarastis_irasai').select('*').order('created_at', { ascending: false });
+      if (!isAppend) setLoading(true);
+      
+      let query = supabase
+        .from('tinklarastis_irasai')
+        .select('*');
+
+      if (currentSearch.trim()) {
+         query = query.or(`pavadinimas.ilike.%${currentSearch.trim()}%,kategorija.ilike.%${currentSearch.trim()}%`);
+      }
+
+      const { data, error } = await query
+        .order('created_at', { ascending: false })
+        .range(isAppend ? offset : 0, (isAppend ? offset : 0) + 29);
+
       if (data) {
         const mapped = data.map((p: any) => ({
           id: p.id,
@@ -56,13 +76,24 @@ export default function AdminBlogPage() {
           status: 'published',
           views: p.perziuros || 0
         }));
-        setPosts(mapped as any);
+
+        setPosts((prev) => isAppend ? [...prev, ...mapped] : mapped as any);
+        setHasMore(data.length === 30);
+      } else {
+        if (!isAppend) setPosts([]);
+        setHasMore(false);
       }
     } catch (err) {
       console.error("Klaida gaunant straipsnius:", err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadMore = () => {
+     const nextOffset = offset + 30;
+     setOffset(nextOffset);
+     fetchPosts(true, search);
   };
 
   const handleDelete = async (id: string) => {
@@ -218,6 +249,7 @@ return (
           )}
         </div>
       ) : (
+        <>
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
           <div className="divide-y divide-slate-100">
             {filteredPosts.map((post) => (
@@ -314,6 +346,15 @@ return (
             ))}
           </div>
         </div>
+
+        {hasMore && (
+          <div className="flex justify-center mt-8 pb-10">
+            <Button onClick={loadMore} className="h-12 px-8 bg-[#2563EB] hover:bg-[#1d4ed8] text-white font-bold rounded-xl shadow-lg shadow-[#2563EB]/20 cursor-pointer flex items-center gap-2">
+              Rodyti daugiau <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        )}
+        </>
       )}
     </div>
     </>

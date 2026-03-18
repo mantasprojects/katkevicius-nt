@@ -83,7 +83,11 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
       arai: Number(formData.get("arai") || 0),
       heating: formData.get("heating") as string || "",
       type: formData.get("type") as string || "Butas",
-      privalumai: (formData.get("privalumai") as string || "").split(",").map(t => t.trim()).filter(Boolean)
+      privalumai: (formData.get("privalumai") as string || "").split(",").map(t => t.trim()).filter(Boolean),
+      latitude: locationData.latitude,
+      longitude: locationData.longitude,
+      is_exact_location: locationData.is_exact_location,
+      address: locationData.address
     };
 
     try {
@@ -134,7 +138,7 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
           <span className="hidden md:inline">Pridėti naują objektą</span>
         </span>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden bg-white border-none shadow-2xl rounded-3xl max-h-[90vh] overflow-y-auto relative">
+      <DialogContent className="sm:max-w-5xl p-0 overflow-hidden bg-white border-none shadow-2xl rounded-3xl h-[85vh] max-h-[85vh] flex flex-col relative sm:mt-10">
         {isUploading && (
           <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center z-50">
             <div className="w-64 bg-slate-100 h-2.5 rounded-full overflow-hidden mb-4 shadow-inner">
@@ -155,7 +159,7 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
           <p className="text-sm font-medium text-slate-500 mt-1">Užpildykite pagrindinę objekto informaciją viešam katalogui.</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-8">
+        <form onSubmit={handleSubmit} className="p-6 space-y-8 flex-1 overflow-y-auto">
           
           {/* Main Info */}
           <div className="space-y-4">
@@ -285,7 +289,7 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
               </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-100 flex justify-end gap-3">
+          <div className="sticky bottom-0 bg-white z-10 pt-4 border-t border-slate-100 flex justify-end gap-3 -mx-6 -mb-6 p-6">
              <Button type="button" variant="outline" onClick={() => setOpen(false)} className="h-12 px-6 rounded-xl font-bold bg-white text-slate-600 border-slate-200 hover:bg-slate-50">
                 Atšaukti
              </Button>
