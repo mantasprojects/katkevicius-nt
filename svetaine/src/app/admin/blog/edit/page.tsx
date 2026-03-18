@@ -104,10 +104,14 @@ function BlogEditorContent() {
 
     setIsUploading(true);
 
+    let img: HTMLImageElement | null = null;
+    let url = "";
+
     try {
       // 1. Create Image object from File
-      const img = new Image();
-      img.src = URL.createObjectURL(file);
+      img = new Image();
+      url = URL.createObjectURL(file);
+      img.src = url;
       await new Promise((resolve) => {
         img.onload = resolve;
       });
@@ -164,7 +168,7 @@ function BlogEditorContent() {
     } finally {
       setIsUploading(false);
       // Clean up object URL
-      if (img.src) URL.revokeObjectURL(img.src);
+      if (url) URL.revokeObjectURL(url);
     }
   };
 
