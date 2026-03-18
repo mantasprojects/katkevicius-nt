@@ -200,7 +200,7 @@ export default function AtsiliepimaiPage() {
                       <Star className="w-3 h-3 text-amber-400 fill-current" />
                       <span className="text-sm font-bold">{stats.avg}</span>
                     </div>
-                    <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">{stats.total} "Atsiliepimų"</p>
+                    <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">{stats.total} Atsiliepimų</p>
                   </div>
                 </div>
               </div>
