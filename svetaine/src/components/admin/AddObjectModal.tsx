@@ -138,7 +138,7 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
           <span className="hidden md:inline">Pridėti naują objektą</span>
         </span>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-5xl p-0 overflow-hidden bg-white border-none shadow-2xl rounded-3xl h-[85vh] max-h-[85vh] flex flex-col relative sm:mt-10">
+      <DialogContent className="sm:max-w-5xl p-0 overflow-hidden bg-white border-none shadow-2xl rounded-3xl h-[85vh] max-h-[85vh] flex flex-col fixed left-1/2 !top-4 sm:!top-10 -translate-x-1/2 !translate-y-0 sm:!translate-y-0">
         {isUploading && (
           <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center z-50">
             <div className="w-64 bg-slate-100 h-2.5 rounded-full overflow-hidden mb-4 shadow-inner">

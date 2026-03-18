@@ -8,9 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Search } from "lucide-react";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-if (MAPBOX_TOKEN) {
-  mapboxgl.accessToken = MAPBOX_TOKEN;
-}
+// Token is set inside useEffect to ensure it loads on client with correct env variables
 
 interface LocationData {
   latitude: number;
@@ -40,6 +38,9 @@ export default function LocationPicker({ initialData, onChange }: LocationPicker
 
   // Initialize Map
   useEffect(() => {
+    if (MAPBOX_TOKEN) {
+      mapboxgl.accessToken = MAPBOX_TOKEN;
+    }
     if (!mapContainerRef.current) return;
 
     const map = new mapboxgl.Map({

@@ -208,10 +208,6 @@ export function OfferPriceModal({ currentPrice, propertyTitle }: OfferPriceModal
                 </div>
               </div>
 
-              <div className="w-full">
-                <Turnstile onVerify={setTurnstileToken} />
-              </div>
-
               <Button
                 type="submit"
                 disabled={isSubmitting || (!turnstileToken && typeof window !== "undefined" && window.location.hostname !== "localhost")}
@@ -229,6 +225,10 @@ export function OfferPriceModal({ currentPrice, propertyTitle }: OfferPriceModal
                   "Siųsti pasiūlymą"
                 )}
               </Button>
+
+              <div className="w-full mt-4 flex justify-center">
+                <Turnstile onVerify={setTurnstileToken} />
+              </div>
             </form>
           )}
         </div>
