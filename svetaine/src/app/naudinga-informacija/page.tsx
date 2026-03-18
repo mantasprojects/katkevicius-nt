@@ -112,41 +112,50 @@ export default async function BlogPage({
 
   const { data: dbPosts, error, count } = await query;
 
+  let dbPostsMapped: BlogPost[] = [];
   if (!error && dbPosts && dbPosts.length > 0) {
-    articles = dbPosts.map((p: any) => ({
+    dbPostsMapped = dbPosts.map((p: any) => ({
       id: p.id,
       title: p.pavadinimas,
       slug: p.slug,
       excerpt: p.turinys ? p.turinys.replace(/<[^>]*>?/gm, '').substring(0, 160) + "..." : "",
       category: p.kategorija,
-      image: p.nuotrauka_url,
+      image: p.nuotrauka_url || "https://images.unsplash.com/photo-1560518883-ce09059eeffa",
       author: "Mantas Katkevičius",
       date: p.created_at ? p.created_at.split("T")[0] : "",
       status: "published" as const
     }));
-    hasMoreInitial = (count || 0) > 19;
-  } else {
-    // 2. Fallback to JSON
-    let filtered = allArticlesJson;
-    if (selectedCategory) {
-      filtered = filtered.filter(p => p.category === selectedCategory);
-    }
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      filtered = filtered.filter(p => 
-        p.title.toLowerCase().includes(q) || 
-        (p.excerpt && p.excerpt.toLowerCase().includes(q))
-      );
-    }
-    articles = filtered.slice(0, 19);
-    hasMoreInitial = filtered.length > 19;
   }
 
+  // Merge lists, deduplicating by slug (Supabase overrides JSON)
+  const mergedPosts = [...dbPostsMapped];
+  allArticlesJson.forEach(p => {
+    if (!mergedPosts.some(m => m.slug === p.slug)) {
+      mergedPosts.push(p);
+    }
+  });
+
+  // Filter merged lists
+  let filtered = mergedPosts;
+  if (selectedCategory) {
+    filtered = filtered.filter(p => p.category === selectedCategory);
+  }
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter(p => 
+      p.title.toLowerCase().includes(q) || 
+      (p.excerpt && p.excerpt.toLowerCase().includes(q))
+    );
+  }
+
+  articles = filtered.slice(0, 19);
+  hasMoreInitial = filtered.length > 19;
+
   const activeCategories = categories.filter((cat) =>
-    allArticlesJson.some((a) => a.category === cat.name)
+    mergedPosts.some((a) => a.category === cat.name)
   );
 
-  const isEmptyMaster = allArticlesJson.length === 0;
+  const isEmptyMaster = mergedPosts.length === 0;
 
   if (isEmptyMaster) {
     return (
