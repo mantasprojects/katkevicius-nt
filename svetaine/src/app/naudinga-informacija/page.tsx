@@ -3,6 +3,28 @@ import { ArrowRight, Calendar, User, Search } from "lucide-react";
 import { Metadata } from "next";
 import fs from "fs";
 import path from "path";
+import Image from "next/image";
+import { createClient } from "@/utils/supabase/server";
+import ArticleList from "@/components/blog/ArticleList";
+
+const shimmer = (w: number, h: number) => `
+<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <linearGradient id="g">
+      <stop stop-color="#f6f7f8" offset="20%" />
+      <stop stop-color="#edeef1" offset="50%" />
+      <stop stop-color="#f6f7f8" offset="70%" />
+    </linearGradient>
+  </defs>
+  <rect width="${w}" height="${h}" fill="#f6f7f8" />
+  <rect width="${w}" height="${h}" fill="url(#g)" />
+  <animate attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite"/>
+</svg>`;
+
+const toBase64 = (str: string) =>
+  typeof window === 'undefined'
+    ? Buffer.from(str).toString('base64')
+    : window.btoa(str);
 
 export const metadata: Metadata = {
   title: "Naudinga Informacija | Mantas Katkevičius",
@@ -59,27 +81,72 @@ export default async function BlogPage({
   searchParams: Promise<{ category?: string; search?: string }>;
 }) {
   const params = await searchParams;
-  const allArticles = getPosts();
-  const categories = getCategories();
   const selectedCategory = params.category;
   const searchQuery = params.search;
 
-  // Filter articles by category and search
-  const articles = allArticles.filter((a) => {
-    const matchesCategory = !selectedCategory || a.category === selectedCategory;
-    const matchesSearch = !searchQuery || 
-      a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      a.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const supabase = await createClient();
+  const categories = getCategories();
+  let articles: any[] = [];
+  let hasMoreInitial = false;
+  let allArticlesJson: BlogPost[] = [];
 
-  // Get active categories (ones that have at least 1 published article in the master list)
+  try {
+    allArticlesJson = getPosts();
+  } catch {
+    allArticlesJson = [];
+  }
+
+  // 1. Try Supabase
+  let query = supabase
+    .from("tinklarastis_irasai")
+    .select("*", { count: "exact" })
+    .range(0, 18) // Get 19 items: 1 for featured, 18 for list
+    .order("created_at", { ascending: false });
+
+  if (selectedCategory) {
+    query = query.eq("kategorija", selectedCategory);
+  }
+  if (searchQuery) {
+    query = query.or(`pavadinimas.ilike.%${searchQuery}%,turinys.ilike.%${searchQuery}%`);
+  }
+
+  const { data: dbPosts, error, count } = await query;
+
+  if (!error && dbPosts && dbPosts.length > 0) {
+    articles = dbPosts.map((p: any) => ({
+      id: p.id,
+      title: p.pavadinimas,
+      slug: p.slug,
+      excerpt: p.turinys ? p.turinys.replace(/<[^>]*>?/gm, '').substring(0, 160) + "..." : "",
+      category: p.kategorija,
+      image: p.nuotrauka_url,
+      author: "Mantas Katkevičius",
+      date: p.created_at ? p.created_at.split("T")[0] : "",
+      status: "published" as const
+    }));
+    hasMoreInitial = (count || 0) > 19;
+  } else {
+    // 2. Fallback to JSON
+    let filtered = allArticlesJson;
+    if (selectedCategory) {
+      filtered = filtered.filter(p => p.category === selectedCategory);
+    }
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      filtered = filtered.filter(p => 
+        p.title.toLowerCase().includes(q) || 
+        (p.excerpt && p.excerpt.toLowerCase().includes(q))
+      );
+    }
+    articles = filtered.slice(0, 19);
+    hasMoreInitial = filtered.length > 19;
+  }
+
   const activeCategories = categories.filter((cat) =>
-    allArticles.some((a) => a.category === cat.name)
+    allArticlesJson.some((a) => a.category === cat.name)
   );
 
-
-  const isEmptyMaster = allArticles.length === 0;
+  const isEmptyMaster = allArticlesJson.length === 0;
 
   if (isEmptyMaster) {
     return (
@@ -190,13 +257,15 @@ export default async function BlogPage({
                 className="group flex flex-col lg:flex-row gap-0 bg-white rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-slate-200/80 transition-all duration-500 border border-slate-100"
               >
                 <div className="w-full lg:w-3/5 h-[280px] lg:h-[420px] relative overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={featured.image}
-                alt={featured.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                crossOrigin="anonymous"
-              />
+                <Image
+                  src={featured.image}
+                  alt={featured.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-1000 ease-out"
+                  sizes="(max-width: 1200px) 100vw, 50vw"
+                  placeholder="blur"
+                  blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1200, 800))}`}
+                />
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-black/5" />
               <div className="absolute top-6 left-6">
                 <span
@@ -244,54 +313,13 @@ export default async function BlogPage({
               <div className="h-px flex-1 bg-gradient-to-r from-slate-200 to-transparent ml-6" />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {rest.map((article) => {
-                const catColor = activeCategories.find((c) => c.name === article.category)?.color || "#2563EB";
-                return (
-                  <Link
-                    href={`/naudinga-informacija/${article.slug}`}
-                    key={article.id}
-                    className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-slate-200/60 transition-all duration-300 border border-slate-100 hover:-translate-y-1"
-                  >
-                    <div className="relative h-[220px] overflow-hidden">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={article.image}
-                        alt={article.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        crossOrigin="anonymous"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                      <div className="absolute top-4 left-4">
-                        <span
-                          className="px-3 py-1 rounded-full text-xs font-bold text-white uppercase tracking-wider shadow-md"
-                          style={{ backgroundColor: catColor }}
-                        >
-                          {article.category}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="p-6 flex flex-col flex-1">
-                      <h3 className="text-lg font-extrabold text-[#111827] group-hover:text-[#2563EB] transition-colors line-clamp-2 leading-snug mb-3">
-                        {article.title}
-                      </h3>
-                      <p className="text-slate-500 text-sm line-clamp-2 leading-relaxed flex-1 mb-5">
-                        {article.excerpt}
-                      </p>
-                      <div className="flex justify-between items-center pt-4 border-t border-slate-100">
-                        <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
-                          <Calendar className="w-3.5 h-3.5" /> {article.date}
-                        </span>
-                        <span className="text-xs font-bold text-[#2563EB] group-hover:gap-1.5 gap-1 transition-all flex items-center">
-                          Skaityti <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
+            <ArticleList 
+              initialArticles={rest} 
+              hasMoreInitial={hasMoreInitial} 
+              category={selectedCategory || undefined} 
+              search={searchQuery || undefined}
+              activeCategories={activeCategories}
+            />
           </div>
         </section>
       )}

@@ -98,27 +98,73 @@ function BlogEditorContent() {
     }));
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, isInline = false) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setIsUploading(true);
-    const formData = new FormData();
-    formData.append("files", file);
 
     try {
+      // 1. Create Image object from File
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      await new Promise((resolve) => {
+        img.onload = resolve;
+      });
+
+      // 2. Setup Canvas
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("Canvas context is not available");
+
+      // 3. Calculate dimension limits
+      let width = img.width;
+      let height = img.height;
+      const maxWidth = isInline ? 1200 : 1920; // 1200px inline, 1920px featured
+
+      if (width > maxWidth) {
+        height = Math.round((height * maxWidth) / width);
+        width = maxWidth;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      // 4. Draw Image
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // 5. Convert to WebP Blob with 80% quality
+      const blob = await new Promise<Blob | null>((resolve) => {
+        canvas.toBlob((b) => resolve(b), "image/webp", 0.8);
+      });
+
+      if (!blob) throw new Error("Failed to create blob from canvas");
+
+      // 6. Append to FormData
+      const formData = new FormData();
+      // Generate a clean webp filename
+      const cleanName = file.name.split(".")[0].replace(/[^a-z0-9]/gi, "-").toLowerCase();
+      formData.append("files", blob, `${cleanName}.webp`);
+
       const res = await fetch("/api/upload", {
         method: "POST",
         body: formData,
       });
       const data = await res.json();
       if (data.urls?.[0]) {
-        setPost((prev) => ({ ...prev, image: data.urls[0] }));
+        if (isInline) {
+          // Inline mode handles insertion elsewhere, like returning URL
+          return data.urls[0];
+        } else {
+          setPost((prev) => ({ ...prev, image: data.urls[0] }));
+        }
       }
     } catch (err) {
       console.error("Klaida įkeliant nuotrauką:", err);
     } finally {
       setIsUploading(false);
+      // Clean up object URL
+      if (img.src) URL.revokeObjectURL(img.src);
     }
   };
 
@@ -353,6 +399,37 @@ function BlogEditorContent() {
                     {btn.label}
                   </button>
                 ))}
+
+                {/* Inline Image Upload */}
+                <label className="px-3 py-1.5 rounded-md text-xs font-bold text-slate-600 hover:bg-white hover:shadow-sm transition-all cursor-pointer flex items-center gap-1">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={async (e) => {
+                      const url = await handleImageUpload(e, true);
+                      if (url) {
+                        if (viewMode === "html") {
+                          const textarea = document.getElementById("blog-content") as HTMLTextAreaElement;
+                          if (textarea) {
+                            const start = textarea.selectionStart;
+                            const end = textarea.selectionEnd;
+                            const replacement = `<img src="${url}" alt="" class="rounded-xl w-full my-4" />`;
+                            const newContent = textarea.value.substring(0, start) + replacement + textarea.value.substring(end);
+                            setPost((p) => ({ ...p, content: newContent }));
+                          }
+                        } else {
+                          document.execCommand("insertHTML", false, `<img src="${url}" class="rounded-xl w-full my-4" alt="" />`);
+                          const editDiv = document.getElementById("blog-content-visual");
+                          if (editDiv) {
+                            setPost(p => ({ ...p, content: editDiv.innerHTML }));
+                          }
+                        }
+                      }
+                    }}
+                  />
+                  <ImageIcon className="w-3.5 h-3.5" /> +Įkelti
+                </label>
               </div>
 
               {viewMode === "html" ? (

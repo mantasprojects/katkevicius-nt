@@ -22,10 +22,86 @@ function writePosts(posts: unknown[]) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(posts, null, 2), "utf-8");
 }
 
-// GET all posts
-export async function GET() {
-  const posts = readPosts();
-  return NextResponse.json(posts);
+import { createClient } from "@/utils/supabase/server";
+
+// GET posts with pagination
+export async function GET(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const offset = parseInt(searchParams.get("offset") || "0", 10);
+    const limit = parseInt(searchParams.get("limit") || "18", 10);
+    const category = searchParams.get("category");
+    const search = searchParams.get("search");
+
+    const supabase = await createClient();
+
+    // 1. Try fetching from Supabase
+    let query = supabase
+      .from("tinklarastis_irasai")
+      .select("*", { count: "exact" })
+      .range(offset, offset + limit - 1)
+      .order("created_at", { ascending: false });
+
+    if (category) {
+      query = query.eq("kategorija", category);
+    }
+    
+    if (search) {
+      query = query.or(`pavadinimas.ilike.%${search}%,turinys.ilike.%${search}%`);
+    }
+
+    const { data: dbPosts, error, count } = await query;
+
+    if (!error && dbPosts && dbPosts.length > 0) {
+      // Map to frontend structure
+      const mappedPosts = dbPosts.map((p: any) => ({
+        id: p.id,
+        title: p.pavadinimas,
+        slug: p.slug,
+        content: p.turinys,
+        category: p.kategorija,
+        image: p.nuotrauka_url,
+        author: "Mantas Katkevičius", // default
+        date: p.created_at ? p.created_at.split("T")[0] : "",
+        views: p.perziuros || 0,
+        status: "published" as const
+      }));
+
+      return NextResponse.json({
+        posts: mappedPosts,
+        hasMore: (count || 0) > offset + limit
+      });
+    }
+
+    // 2. Fallback to JSON if Supabase is empty or fails
+    console.log("Supabase tuščias arba klaida, naudojamas JSON.");
+    const allPosts = readPosts();
+    let filtered = allPosts;
+
+    if (category) {
+      filtered = filtered.filter((p: any) => p.category === category);
+    }
+    
+    if (search) {
+      const q = search.toLowerCase();
+      filtered = filtered.filter((p: any) => 
+        p.title.toLowerCase().includes(q) || 
+        (p.content && p.content.toLowerCase().includes(q)) ||
+        (p.excerpt && p.excerpt.toLowerCase().includes(q))
+      );
+    }
+
+    const paginated = filtered.slice(offset, offset + limit);
+
+    return NextResponse.json({
+      posts: paginated,
+      hasMore: filtered.length > offset + limit
+    });
+
+  } catch (err) {
+    console.error("Blog GET error:", err);
+    return NextResponse.json({ error: "Klaida užkraunant straipsnius." }, { status: 500 });
+  }
 }
 
 // POST — create or update a post
