@@ -102,6 +102,7 @@ export async function POST(req: NextRequest) {
     const recipientEmail = process.env.RECIPIENT_EMAIL || "info@katkevicius.lt";
 
     if (!smtpHost || !smtpUser || !smtpPass) {
+      console.warn("⚠️ [Inquiry API] Trūksta SMTP kintamųjų Vercel! El. pašto siuntimas praleidžiamas (log'inama į konsolę).");
       // If SMTP is not configured, log the inquiry and return success
       // This allows local development without email setup
       console.log("═══════════════════════════════════════════════════");

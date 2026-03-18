@@ -58,6 +58,7 @@ export async function POST(req: NextRequest) {
       const settings = JSON.parse(fs.readFileSync(settingsPath, "utf-8"));
       if (settings.customPassword) {
         storedPassword = settings.customPassword;
+        console.log("🔑 [Login] Slaptažodis pakeistas (customPassword) iš website-settings.json.");
       }
     } catch (e) {
       // Ignoruojame jei failo nėra ar kita klaida
@@ -116,6 +117,7 @@ export async function POST(req: NextRequest) {
       return response
     }
 
+    console.log(`❌ [Login] Neteisingas bandymas: '${username}'. customPassword active? ${storedPassword !== ADMIN_PASSWORD}`);
     return NextResponse.json(
       { error: "Neteisingas vartotojo vardas arba slaptažodis." },
       { status: 401 }

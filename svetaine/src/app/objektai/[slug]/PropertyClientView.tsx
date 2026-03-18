@@ -618,8 +618,12 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
                         defaultValue={`Laba diena, mane sudomino šis objektas: "${property.title}".`}
                       />
                     </div>
+                    <div className="w-full">
+                      <Turnstile onVerify={setTurnstileToken} />
+                    </div>
+
                   <div className="flex flex-col items-center gap-2">
-                    <Button disabled={isSubmitting || isSuccess || (!turnstileToken && typeof window !== "undefined" && window.location.hostname !== "localhost")} type="submit" className={`w-full h-14 text-white text-base font-bold shadow-xl shadow-[#1E3A8A]/20 transition-all mt-2 ${isSuccess ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-[#1E3A8A] hover:bg-[#111827] hover:-translate-y-1'}`}>
+                    <Button disabled={isSubmitting || isSuccess || (!turnstileToken && typeof window !== "undefined" && window.location.hostname !== "localhost")} type="submit" className={`w-full h-14 text-white text-base font-bold shadow-xl shadow-[#1E3A8A]/20 transition-all ${isSuccess ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-[#1E3A8A] hover:bg-[#111827] hover:-translate-y-1'}`}>
                     {isSubmitting ? (
                       <span className="flex items-center gap-2">
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
