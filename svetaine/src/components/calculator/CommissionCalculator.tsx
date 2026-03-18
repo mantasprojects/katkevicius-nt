@@ -121,19 +121,16 @@ export default function CommissionCalculator({ dark = false }: { dark?: boolean 
                 </div>
               </div>
 
-              <motion.div 
-                key={myFee}
-                initial={{ scale: 0.98, opacity: 0.8 }}
-                animate={{ scale: 1, opacity: 1 }}
+              <div 
                 className={cn("flex justify-between items-center p-8 rounded-[2rem] bg-slate-950 shadow-2xl shadow-slate-950/20", dark && "bg-primary shadow-primary/10")}
               >
                 <div>
                   <p className={cn("text-[10px] font-black text-blue-400 uppercase tracking-[0.15em] mb-3", dark && "text-slate-950")}>Mūsų Mokestis (nuo 1.89%)</p>
-                  <p className={cn("font-sans text-4xl font-black text-white flex items-baseline gap-3 tabular-nums tracking-wide", dark && "text-slate-950")}>
-                    € {formatNumber(myFee)} <span className={cn("text-sm font-bold text-slate-400 tracking-normal", dark && "text-slate-950/60")}>+PVM</span>
+                  <p className={cn("font-sans text-4xl font-black text-white flex items-baseline gap-2 tabular-nums tracking-wide whitespace-nowrap", dark && "text-slate-950")}>
+                    €{formatNumber(myFee)} <span className={cn("text-sm font-bold text-slate-400 tracking-normal", dark && "text-slate-950/60")}>+PVM</span>
                   </p>
                 </div>
-              </motion.div>
+              </div>
             </div>
 
             <div className={cn("mt-10 pt-10 border-t border-slate-100 flex items-center justify-between", dark && "border-white/10")}>
@@ -143,14 +140,11 @@ export default function CommissionCalculator({ dark = false }: { dark?: boolean 
                 </div>
                 <div>
                   <p className="text-xs font-black text-slate-400 uppercase tracking-[0.15em] mb-1">Sutaupoma suma</p>
-                  <motion.p 
-                    key={savings}
-                    initial={{ y: 10, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    className={cn("text-3xl font-black text-emerald-600 tracking-wide tabular-nums", dark && "text-emerald-400")}
+                  <p 
+                    className={cn("text-3xl font-black text-emerald-600 tracking-wide tabular-nums whitespace-nowrap", dark && "text-emerald-400")}
                   >
-                    € {formatNumber(savings)}
-                  </motion.p>
+                    €{formatNumber(savings)}
+                  </p>
                 </div>
               </div>
             </div>
