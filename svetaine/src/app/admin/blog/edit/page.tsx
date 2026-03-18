@@ -110,10 +110,11 @@ function BlogEditorContent() {
     try {
       // 1. Create Image object from File
       img = new Image();
+      if (!img) throw new Error("Failed to create Image object");
       url = URL.createObjectURL(file);
       img.src = url;
       await new Promise((resolve) => {
-        img.onload = resolve;
+        img!.onload = resolve;
       });
 
       // 2. Setup Canvas
@@ -122,8 +123,8 @@ function BlogEditorContent() {
       if (!ctx) throw new Error("Canvas context is not available");
 
       // 3. Calculate dimension limits
-      let width = img.width;
-      let height = img.height;
+      let width = img!.width;
+      let height = img!.height;
       const maxWidth = isInline ? 1200 : 1920; // 1200px inline, 1920px featured
 
       if (width > maxWidth) {
@@ -135,7 +136,7 @@ function BlogEditorContent() {
       canvas.height = height;
 
       // 4. Draw Image
-      ctx.drawImage(img, 0, 0, width, height);
+      ctx.drawImage(img!, 0, 0, width, height);
 
       // 5. Convert to WebP Blob with 80% quality
       const blob = await new Promise<Blob | null>((resolve) => {

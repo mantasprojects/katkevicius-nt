@@ -20,14 +20,17 @@ async function getCurrentSessionId(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
+  const currentSessionId = await getCurrentSessionId(req);
+  if (!currentSessionId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     if (!fs.existsSync(filePath)) {
       return NextResponse.json([]);
     }
     const data = fs.readFileSync(filePath, "utf-8");
     let sessions = JSON.parse(data);
-
-    const currentSessionId = await getCurrentSessionId(req);
 
     // Mark current session
     sessions = sessions.map((s: any) => ({
@@ -42,9 +45,13 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const currentSessionId = await getCurrentSessionId(req);
+  if (!currentSessionId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { action, id } = await req.json();
-    const currentSessionId = await getCurrentSessionId(req);
 
     if (!fs.existsSync(filePath)) {
       return NextResponse.json({ success: true });

@@ -2,7 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
+import { jwtVerify } from "jose";
+
 const INQUIRIES_FILE = path.join(process.cwd(), "src", "data", "inquiries.json");
+const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
+
+async function verifyAuth(req: NextRequest) {
+  const token = req.cookies.get("admin_token")?.value;
+  if (!token) return false;
+  try {
+    const secret = new TextEncoder().encode(JWT_SECRET);
+    await jwtVerify(token, secret);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 function readInquiries() {
   try {
@@ -17,7 +32,11 @@ function writeInquiries(data: unknown[]) {
   fs.writeFileSync(INQUIRIES_FILE, JSON.stringify(data, null, 2), "utf-8");
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  if (!(await verifyAuth(req))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const inquiries = readInquiries();
     // Sort by date and time descending (newest first)
@@ -33,6 +52,10 @@ export async function GET() {
 }
 
 export async function PUT(req: NextRequest) {
+  if (!(await verifyAuth(req))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await req.json();
     const { id, status, name, phone, message } = body;
@@ -57,6 +80,10 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  if (!(await verifyAuth(req))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await req.json();
     const { id } = body;
