@@ -66,7 +66,6 @@ export default function AdminCRMPage() {
       vardas: formData.get("name") as string,
       email: formData.get("email") as string,
       telefonas: formData.get("phone") as string,
-      statusas: formData.get("status") as string || "Naujas",
       zinute: formData.get("notes") as string
     };
 
@@ -216,7 +215,7 @@ export default function AdminCRMPage() {
                 <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs">Klientas</th>
                 <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs">Kontaktinė Info</th>
                 <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs">Statusas</th>
-                <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs w-1/3">Pastabos</th>
+                <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs w-1/3">Tekstas</th>
                 <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs text-right">Veiksmai</th>
               </tr>
             </thead>

@@ -68,28 +68,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Save to local file for Admin dashboard (CRM)
-    const newInquiry = {
-      id: Math.random().toString(36).substr(2, 9),
-      name,
-      phone,
-      message: message || "",
-      property: property || "Bendra užklausa",
-      pageUrl: pageUrl || "",
-      date: new Date().toISOString(),
-      status: "Nauja"
-    };
-
+    // Save to Supabase CRM
     try {
-      let inquiries = [];
-      if (fs.existsSync(INQUIRIES_FILE)) {
-        const fileData = fs.readFileSync(INQUIRIES_FILE, "utf-8");
-        inquiries = JSON.parse(fileData);
-      }
-      inquiries.push(newInquiry);
-      fs.writeFileSync(INQUIRIES_FILE, JSON.stringify(inquiries, null, 2), "utf-8");
+       const { createClient } = await import("@/utils/supabase/server"); 
+       const supabase = await createClient();
+       const { error: insertError } = await supabase.from('crm_kontaktai').insert({
+          vardas: name,
+          telefonas: phone,
+          zinute: message ? `${message} | URL: ${pageUrl || ''} | Obj: ${property || ''}` : `Užklausa iš: ${property || 'Puslapio'}`
+       });
+       if (insertError) console.error("CRM Insert failed:", insertError.message);
     } catch (err) {
-      console.error("Failed to save inquiry to file:", err);
+       console.error("Failed to save inquiry to Supabase:", err);
     }
 
 
