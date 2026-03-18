@@ -494,7 +494,7 @@ export default function AtsiliepimaiPage() {
                               <span className="truncate">{selectedFile ? selectedFile.name : "Pridėti nuotrauką"}</span>
                               <span className="text-[10px] text-slate-400 font-bold uppercase shrink-0 ml-2">PNG, JPG</span>
                             </label>
-                            <p className="text-[11px] text-slate-400 mt-1 font-medium leading-tight px-1">Rekomenduojama kvadratinė nuotrauka.</p>
+                            <p className="text-[11px] text-slate-400 mt-1 font-medium leading-tight px-1">Rekomenduojama kvadratinė nuotrauka. Tai bus jūsų profilio nuotrauka.</p>
                           </div>
                         </div>
 
