@@ -5,16 +5,16 @@ import path from "path"
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret"
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin"
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin"
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "Katkeviciusw2+"
 
 export async function POST(req: NextRequest) {
   try {
     const { username, password, turnstileToken } = await req.json()
 
-    // Turnstile Validacija
+    // 1. Cloudflare Turnstile Validacija
     if (!turnstileToken) {
       return NextResponse.json(
-        { error: "Atsiprašome, jūsų užklausa neperėjo saugumo patikros. Bandykite dar kartą." },
+        { error: "Saugaus prisijungimo patikra privaloma." },
         { status: 400 }
       );
     }
@@ -51,18 +51,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Patikriname ar yra pakeistas slaptažodis settings.json
     let storedPassword = ADMIN_PASSWORD;
-    try {
-      const settingsPath = path.join(process.cwd(), "src/data/website-settings.json");
-      const settings = JSON.parse(fs.readFileSync(settingsPath, "utf-8"));
-      if (settings.customPassword) {
-        storedPassword = settings.customPassword;
-        console.log("🔑 [Login] Slaptažodis pakeistas (customPassword) iš website-settings.json.");
-      }
-    } catch (e) {
-      // Ignoruojame jei failo nėra ar kita klaida
-    }
 
     if (username === ADMIN_USERNAME && password === storedPassword) {
 

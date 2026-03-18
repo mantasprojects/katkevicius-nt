@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BadgeEuro, CheckCircle2, X } from "lucide-react";
+import Turnstile from "@/components/ui/Turnstile";
 
 interface OfferPriceModalProps {
   currentPrice: number;
@@ -18,6 +19,7 @@ export function OfferPriceModal({ currentPrice, propertyTitle }: OfferPriceModal
   const [isSuccess, setIsSuccess] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showTermsError, setShowTermsError] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,6 +42,7 @@ export function OfferPriceModal({ currentPrice, propertyTitle }: OfferPriceModal
       message: `Siūloma kaina: ${offeredPrice.toLocaleString("lt-LT")} € (dabartinė: ${currentPrice.toLocaleString("lt-LT")} €)`,
       property: propertyTitle,
       pageUrl: typeof window !== "undefined" ? window.location.href : "",
+      turnstileToken: turnstileToken,
     };
 
     // LocalStorage Caches disabled per user request
@@ -205,9 +208,13 @@ export function OfferPriceModal({ currentPrice, propertyTitle }: OfferPriceModal
                 </div>
               </div>
 
+              <div className="w-full">
+                <Turnstile onVerify={setTurnstileToken} />
+              </div>
+
               <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || (!turnstileToken && typeof window !== "undefined" && window.location.hostname !== "localhost")}
                 className="w-full h-14 bg-[#1E3A8A] hover:bg-[#111827] text-white text-base font-bold shadow-xl shadow-[#1E3A8A]/20 transition-all mt-4 rounded-xl cursor-pointer"
               >
                 {isSubmitting ? (
