@@ -88,7 +88,7 @@ export default function ArticleList({
               key={article.id}
               className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-slate-200/60 transition-all duration-300 border border-slate-100 hover:-translate-y-1"
             >
-              <div className="relative h-[220px] overflow-hidden">
+              <div className="relative aspect-video overflow-hidden">
                 <Image
                   src={article.image}
                   alt={article.title}

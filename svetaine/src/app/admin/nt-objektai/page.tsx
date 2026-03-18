@@ -420,7 +420,7 @@ export default function AdminObjectsPage() {
 
       {/* Edit Modal */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="sm:max-w-5xl p-0 overflow-hidden bg-white border-none shadow-2xl rounded-3xl h-[85vh] max-h-[85vh] flex flex-col fixed left-1/2 !top-4 sm:!top-10 -translate-x-1/2 !translate-y-0 sm:!translate-y-0">
+        <DialogContent className="sm:max-w-5xl p-0 overflow-hidden bg-white border-none shadow-2xl rounded-2xl h-[90vh] max-h-[90vh] flex flex-col fixed left-1/2 !top-4 sm:!top-6 -translate-x-1/2 !translate-y-0 sm:!translate-y-0 backdrop-blur-md">
           {isUploading && (
             <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center z-50">
               <div className="w-64 bg-slate-100 h-2.5 rounded-full overflow-hidden mb-4 shadow-inner">
@@ -443,7 +443,7 @@ export default function AdminObjectsPage() {
 
           {editingProperty && (
             <form onSubmit={handleEditSave} className="p-6 space-y-5 flex-1 overflow-y-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                   <Label htmlFor="edit-title" className="text-xs font-bold uppercase tracking-wider text-slate-500">Pavadinimas *</Label>
                   <Input id="edit-title" name="title" required defaultValue={editingProperty.title} className="h-12 rounded-xl bg-slate-50 border-slate-200" />
@@ -454,7 +454,7 @@ export default function AdminObjectsPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                   <Label htmlFor="edit-city" className="text-xs font-bold uppercase tracking-wider text-slate-500">Miestas *</Label>
                   <Input id="edit-city" name="city" required defaultValue={editingProperty.city} className="h-12 rounded-xl bg-slate-50 border-slate-200" />
@@ -475,7 +475,7 @@ export default function AdminObjectsPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
                 <div className="space-y-2">
                   <Label htmlFor="edit-area" className="text-xs font-bold uppercase tracking-wider text-slate-500">Plotas (m²)</Label>
                   <Input id="edit-area" name="area" type="number" step="0.01" defaultValue={editingProperty.area || 0} className="h-12 rounded-xl bg-slate-50 border-slate-200" />
@@ -496,7 +496,7 @@ export default function AdminObjectsPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                   <Label htmlFor="edit-type" className="text-xs font-bold uppercase tracking-wider text-slate-500">Tipas</Label>
                   <select 

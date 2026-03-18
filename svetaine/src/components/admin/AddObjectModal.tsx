@@ -138,7 +138,7 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
           <span className="hidden md:inline">Pridėti naują objektą</span>
         </span>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-5xl p-0 overflow-hidden bg-white border-none shadow-2xl rounded-3xl h-[85vh] max-h-[85vh] flex flex-col fixed left-1/2 !top-4 sm:!top-10 -translate-x-1/2 !translate-y-0 sm:!translate-y-0">
+      <DialogContent className="sm:max-w-5xl p-0 overflow-hidden bg-white border-none shadow-2xl rounded-2xl h-[90vh] max-h-[90vh] flex flex-col fixed left-1/2 !top-4 sm:!top-6 -translate-x-1/2 !translate-y-0 sm:!translate-y-0 backdrop-blur-md">
         {isUploading && (
           <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center z-50">
             <div className="w-64 bg-slate-100 h-2.5 rounded-full overflow-hidden mb-4 shadow-inner">
@@ -166,7 +166,7 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
             <h3 className="text-lg font-bold text-[#1E3A8A] flex items-center border-b border-slate-100 pb-2">
               <Building className="w-5 h-5 mr-2" /> Pagrindinė Informacija
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <Label htmlFor="title" className="text-xs font-bold uppercase tracking-wider text-slate-500">Pavadinimas *</Label>
                 <Input id="title" name="title" required className="h-12 rounded-xl bg-slate-50 border-slate-200" placeholder="Pvz.: Modernus butas centre" />
@@ -214,7 +214,7 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
             <h3 className="text-lg font-bold text-[#1E3A8A] flex items-center border-b border-slate-100 pb-2">
               <MapPin className="w-5 h-5 mr-2" /> Lokacija
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <Label htmlFor="city" className="text-xs font-bold uppercase tracking-wider text-slate-500">Miestas *</Label>
                 <Input id="city" name="city" required className="h-12 rounded-xl bg-slate-50 border-slate-200" placeholder="Kaunas" />
@@ -229,7 +229,7 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
             <h3 className="text-lg font-bold text-[#1E3A8A] flex items-center border-b border-slate-100 pb-2">
               <FileText className="w-5 h-5 mr-2" /> Specifikacijos
             </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               <div className="space-y-2">
                 <Label htmlFor="area" className="text-xs font-bold uppercase tracking-wider text-slate-500">Plotas (m²)</Label>
                 <Input id="area" name="area" type="number" step="0.01" className="h-12 rounded-xl bg-slate-50 border-slate-200" placeholder="68" />
@@ -244,7 +244,7 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
                 <Input id="year" name="year" type="number" className="h-12 rounded-xl bg-slate-50 border-slate-200" placeholder="2022" />
               </div>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-2">
               <div className="space-y-2">
                 <Label htmlFor="arai" className="text-xs font-bold uppercase tracking-wider text-slate-500">Sklypas (arai)</Label>
                 <Input id="arai" name="arai" type="number" step="0.01" className="h-12 rounded-xl bg-slate-50 border-slate-200" placeholder="6" />

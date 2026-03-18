@@ -571,7 +571,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
             </div>
 
             {/* Sticky Sidebar Form */}
-            <div className="w-full lg:w-[420px]">
+            <div className="w-full lg:w-[420px] lg:sticky lg:top-24 h-fit">
               <div className="bg-white border border-slate-100 shadow-2xl shadow-slate-200/50 rounded-3xl p-8 md:p-10">
                 <div className="flex items-center gap-5 mb-8 pb-8 border-b border-slate-100">
                   <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#1E3A8A] flex-shrink-0 relative shadow-md">
@@ -623,7 +623,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
                     </div>
 
                   <div className="flex flex-col items-center gap-2">
-                    <Button disabled={isSubmitting || isSuccess || (!turnstileToken && typeof window !== "undefined" && window.location.hostname !== "localhost")} type="submit" className={`w-full h-14 text-white text-base font-bold shadow-xl shadow-[#1E3A8A]/20 transition-all ${isSuccess ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-[#1E3A8A] hover:bg-[#111827] hover:-translate-y-1'}`}>
+                    <Button disabled={isSubmitting || isSuccess || (!turnstileToken && typeof window !== "undefined" && window.location.hostname !== "localhost")} type="submit" className={`w-full h-14 text-white text-base font-bold shadow-xl shadow-[#1E3A8A]/20 transition-all hover:scale-105 active:scale-95 ${isSuccess ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-[#1E3A8A] hover:bg-[#111827] hover:-translate-y-1'}`}>
                     {isSubmitting ? (
                       <span className="flex items-center gap-2">
                         <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

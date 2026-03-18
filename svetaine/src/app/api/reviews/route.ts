@@ -34,7 +34,9 @@ export async function POST(req: Request) {
       const isLocalhost = req.headers.get("host")?.includes("localhost");
       const secret = isLocalhost 
         ? "1x0000000000000000000000000000000AA" 
-        : (process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY || process.env.TURNSTILE_SECRET_KEY);
+        : (process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY || 
+           process.env.TURNSTILE_SECRET_KEY || 
+           process.env.NEXT_CLOUDFLARE_TURNSTILE_SECRET_KEY);
 
       const formData = new URLSearchParams();
       if (secret) formData.append("secret", secret);
@@ -49,7 +51,7 @@ export async function POST(req: Request) {
       const verifyData = await verifyRes.json();
       if (!verifyData.success) {
         return NextResponse.json(
-          { error: "Atsiprašome, jūsų užklausa neperėjo saugumo patikros. Bandykite dar kartą." },
+          { error: `Atsiprašome, jūsų užklausa neperėjo saugumo patikros (Kodas: ${verifyData['error-codes']?.join(', ') || 'n/a'}).` },
           { status: 400 }
         );
       }

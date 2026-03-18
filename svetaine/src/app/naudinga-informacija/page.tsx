@@ -135,7 +135,7 @@ export default async function BlogPage({
     }
   });
 
-  // Filter merged lists by search
+  // Filter by search if exists
   let filtered = [...mergedPosts];
   if (searchQuery) {
     const q = searchQuery.toLowerCase();
@@ -145,11 +145,9 @@ export default async function BlogPage({
     );
   }
 
-  // Group by category to TOP instead of hiding others, so the grid is populated
+  // Strict Category Filtering (Exclusion)
   if (selectedCategory) {
-    const matching = filtered.filter(p => p.category === selectedCategory);
-    const nonMatching = filtered.filter(p => p.category !== selectedCategory);
-    filtered = [...matching, ...nonMatching];
+    filtered = filtered.filter(p => p.category === selectedCategory);
   }
 
   articles = filtered.slice(0, 19);
@@ -257,7 +255,7 @@ export default async function BlogPage({
       {articles.length === 0 ? (
         <section className="py-20 bg-[#F8FAFC] text-center">
           <div className="container px-4 mx-auto">
-            <p className="text-slate-500 text-lg">Nėra straipsnių pagal nurodytus paieškos kriterijus.</p>
+            <p className="text-slate-500 text-lg">Šioje kategorijoje straipsnių dar nėra arba nieko nerasta.</p>
           </div>
         </section>
       ) : (
@@ -327,6 +325,7 @@ export default async function BlogPage({
             </div>
 
             <ArticleList 
+              key={`${selectedCategory || "all"}-${searchQuery || "none"}`}
               initialArticles={rest} 
               hasMoreInitial={hasMoreInitial} 
               category={selectedCategory || undefined} 
