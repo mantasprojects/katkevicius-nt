@@ -1,0 +1,46 @@
+const fs = require('fs');
+
+const filePath = 'c:\\Users\\manta\\OneDrive\\Desktop\\SVETAINĖ\\svetaine\\src\\data\\blog-posts.json';
+let data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+// Define Expanded Content for Batch 3 (45-49)
+const updates = {
+  "pirkeju-baimes-nt-pirkimas": {
+    "excerpt": "Nuo paslėptų defektų iki banko palūkanų: Psichologinis gidas pirkėjui, kaip sumažinti stresą perkant nuosavą būstą.",
+    "content": "<h2>Būsto pirkimas: Didžiausias gyvenimo sandoris ir jo baimės</h2><p>Būsto pirkimas yra vienas finansiškai ir emociškai atsakingiausių sprendimų žmogaus gyvenime. Natūralu, kad didelės pinigų sumos ir įsipareigojimai dešimtmečiams sukelia baimę, nepasitikėjimą ir stresą. Tačiau dauguma šių baimių kyla iš informacijos trūkumo. Panagrinėkime 3 pagrindines pirkėjų baimes ir būdus jas neutralizuoti.</p><h3>1. Paslėpti Defektai (Nupirksiu „katę maiše“)</h3><p>Tai dažniausias nuogąstavimas. Pirkėjas bijo, kad po metų sutrūkinės sienos, pratekės stogas arba atsiras pelėsis po tapetais. **Sprendimas**: Į apžiūrą atsiveskite nepriklausomą statybų ekspertą. Jo paslauga kainuoja minimaliai, tačiau naudojant termovizorių ir matuoklius, jis aptinka drėgmę sienose ar prastai sumontuotus langus. Taip pat verta reikalauti iš pardavėjo raštiško garantinio patvirtinimo apie žinomus trūkumus sutartyje.</p><h3>2. Finansinė Našta (EURIBOR ir įmokų šuoliai)</h3><p>Baimė, kad praradus darbą ar pakilus palūkanoms, šeima nepajėgs dengti kredito. **Sprendimas**: Atsakingas planavimas. Jūsų mėnesio paskolos įmoka neturi viršyti fiksuoto banko termino (idealus variantas – iki 35% pajamų). Prieš pirkdami, būtinai sukaupkite „juodos dienos“ rezervą (3-6 mėn. šeimos išlaidų dydžio), kuris garantuos ramybę krizės atveju.</p><h3>3. Permokėjimas už Turtą</h3><p>„Ar kaina nėra dirbtinai užkelta?“ Pagalba čia – nepriklausomas turto vertinimas. Vertintojas naudoja tikslią Registrų centro statistiką apie pastarųjų mėnesių sandorius tame pačiame name ar gatvėje. Jei vertinimas sutampa su kaina – permokos nėra. <a href=\"/konsultacija\">Pasikonsultuokite prieš apžiūrą</a> – padėsiu jaustis drąsiai ir atremti derybinį spaudimą.</p>",
+    "image": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200&auto=format&fit=crop"
+  },
+  "paveldetas-turtas-pardavimas-mokesciai": {
+    "excerpt": "Mokestinė bazė: Kada galima parduoti paveldėtą turtą nemokant 15% GPM mokesčio? 10 metų taisyklė ir išimtys.",
+    "content": "<h2>Paveldėjimo ypatumai: Mokestinės prievolės parduodant</h2><p>Gavus nekilnojamojo turto palikimą, nuosavybė perleidžiama įpėdiniui. Nusprendus šį turtą parduoti, iškyla Gyventojų pajamų mokesčio (GPM) klausimas, jei turtas neišlaikomas įstatyme numatytą laikotarpį. Daugelis klysta skaičiuodami mokesčius, todėl svarbu žinoti teisinius rėmus.</p><h3>Nuo kada skaičiuojamas 10 metų terminas?</h3><p>Svarbiausia taisyklė, kurią žino ne visi: 10 metų turto išlaikymo terminas skaičiuojamas nuo **palikėjo mirties dienos** (mirties liudijimo datos), o ne nuo paveldėjimo teisės liudijimo pasirašymo datos pas notarą. Tai dažnai sutaupo kelis mėnesius ar net metus laiko terminui užfiksuoti.</p><h3>Kaip skaičiuojama apmokestinamoji vertė (Pelnas)?</h3><p>Jei turtą parduodate neprasėjus 10 metų, 15% GPM mokestis skaičiuojamas nuo skirtumo tarp pardavimo kainos ir **turto vertės paveldėjimo dieną**. Šią vertę notaras įrašo pagal Registrų centro masinį vertinimą. Jei ši vertė dokumentuose per maža – pelnas bus dirbtinai didelis. Rekomenduojama paveldėjimo momentu užsakyti individualų vertinimą realiai rinkos kainai užfiksuoti.</p><h3>Lengvatos nemokėti mokesčio:</h3><ul><li>**2 Metų Deklaracija**: Jei paveldėtame būste deklaruosite gyvenamąją vietą bent 2 metus – mokesčio nebus.</li><li>**Būsto Atnaujinimas**: Jei pardavus būstą per 1 metus nusiperkate kitą gyvenamąjį būstą ir jame deklaruojate vietą.</li></ul><p>Mokesčių planavimas sutaupys jūk tūkstančius. <a href=\"/konsultacija\">Aptarkime jūsų situaciją</a> prieš einant pas notarą sandoriui įforminti.</p>",
+    "image": "https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?q=80&w=1200&auto=format&fit=crop"
+  },
+  "saugus-rankpinigiai-perdavimas": {
+    "excerpt": "Venkite grynųjų pinigų: Detalūs patarimai, kaip suformuluoti preliminarios sutarties punktus, kad bankas neblokuotų sandorio.",
+    "content": "<h2>Rankpinigiai: Garantas, reikalaujantis atsargumo</h2><p>Rankpinigiai sandorio pradžioje – tai garantas, kad abi šalys (pirkėjas ir pardavėjas) įvykdys preliminarią sutartį. Tačiau neteisingai juos užfiksavus ar sumokėjus ne tam asmeniui, galima prarasti ne tik rankpinigius, bet ir galimybę įsigyti būstą.</p><h3>Pagrindinės saugumo taisyklės:</h3><ul><li>**Jokių grynųjų pinigų**: Mokėkite TIK bankiniu pavedimu. Mokėjimo paskirtyje įrašykite: „Avansas pagal preliminarią sutartį [data] dėl būsto [adresas]“. Tai yra nepaneigiamas įrodymas teisme.</li><li>**Nuosavybės teisės patikra**: Prieš mokėdami, REIKALAUkite šviežio Registrų centro išrašo. Mokėkite pinigus TIK tam asmeniui, kuris yra nurodytas kaip teisėtas savininkas arba turi notaro patvirtintą įgaliojimą veikti kito vardu.</li><li>**Sąlyginis grąžinimas**: Jei perkate su banko paskola, sutartyje BŪTINA įrašyti sąlygą: „Jei bankas nesuteikia kredito per 30 d. dėl nepriklausančių nuo pirkėjo priežasčių, avansas grąžinamas pilna apimtimi“. Tai apsaugos jūsų santaupas.</li></ul><h3>Užrakinkite sandorį saugiai</h3><p>Gera sutartis apsaugo abi puses nuo vienašališko kainos kėlimo ar pirkėjo „šokinėjimo“ tarp objektų. <a href=\"/konsultacija\">Paruošiu nepažeidžiamą sutarties šabloną</a> jūsų būsto rezervacijai.</p>",
+    "image": "https://images.unsplash.com/photo-1549210617-15ff68f7aa9a?q=80&w=1200&auto=format&fit=crop"
+  },
+  "geriausias-metas-parduoti-busta": {
+    "excerpt": "Pavasaris ar ruduo? Analizuojame aktyvumą vartotojų srautuose ir patariame, kada pakuoti turtą pardavimo pradžiai.",
+    "content": "<h2>NT Rinkos Sezoniškumas: Kada pirkėjai aktyviausi?</h2><p>Ar žinojote, kad nekilnojamojo turto rinka turi savo ciklą? Teisingai parinktas laikas skelbimo kėlimui internete gali lemti 10-15% greitesnį pardavimą ir mažesnį derybinį spaudimą. Panagrinėkime, kada geriausia pradėti procesą.</p><h3>Pavasaris (Kovo – Gegužės mėn.): Aktyvumo pikas</h3><p>Tai geriausias metas parduoti būstą. Po žiemos žmonės bunda, kyla poreikis atsinaujinti erdvę. Šeimos ieško naujų namų, kad spėtų persikraustyti iki mokslo metų pradžios (rugsėjo 1-osios). Nuotraukose kiemas, terasa ar langai su natūralia saulės šviesa atrodo gyvesni ir erdvesni.</p><h3>Ruduo (Rugsėjo – Lapkričio mėn.): Antroji banga</h3><p>Grįžę po atostogų, pirkėjai vėl susitelkia į nekilnojamojo turto paieškas prieš artėjančias žiemos šventes. Tai puikus laikas sandoriams užbaigti.</p><h3>Vasara ir Žiema: Pasyvesnio pardavimo metas</h3><ul><li>**Vasara**: Daugelis atostogauja pajūryje, skelbimų peržiūros krenta.</li><li>**Žiema**: Dėmesys skiriamas šventėms, o šildymo sąskaitos pirkėjui tampa papildomu argumentu Spausti kainą.</li></ul><p>Geriausia strategija – paruošti skelbimą žiemą, o paleisti ankstyvą pavasarį. <a href=\"/konsultacija\">Pasikonsultuokite dėl geriausios sezoniškumo taktikos</a> jūsų konkrečiam objektui.</p>",
+    "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1200&auto=format&fit=crop"
+  },
+  "partnerio-sutikimas-nt-pardavimas": {
+    "excerpt": "Santuokos teisiniai aspektai: Kada reikalingas sutuoktinio parašas ir kodėl asmeninė nuosavybė kartais būna bendra.",
+    "content": "<h2>Santuoka ir Nuosavybė: Teisiniai ginčai pas notarą</h2><p>Dauguma netikėtumų ir sandorio strigimų pas notarą kyla dėl nepilnai įvertintų sutuoktinių teisių į parduodamą turtą. Net jei turtas Registrų centre įrašytas tik vieno asmens vardu, LR įstatymai numato sąvoka „Bendra jungtinė nuosavybė“.</p><h3>Kada sutikimas parduoti yra privalomas?</h3><ul><li>**Turtas įgytas santuokos metu**: Pagal nutylėjimą, turtas priklauso abiem sutuoktiniams lygiomis dalimis. Pardavimui būtinas kito sutuoktinio parašas sutartyje arba notarinis sutikimas.</li><li>**Šeimos Turtas**: Jei būstas įgytas iki santuokos (asmeninė nuosavybė), bet jame deklaruoti nepilnamečiai vaikai arba tai yra pagrindinė šeimos gyvenamoji vieta. Norint jį parduoti, teisiškai reikalingas kito sutuoktinio sutikimas, apsaugantis šeimos interesus.</li></ul><h3>Išimtys: Paveldėjimas ir Vedybų sutartys</h3><p>Dovanojimo būdu ar paveldėjimu gautas turtas santuokoje išlieka asmenine nuosavybe. Tačiau detales pardavimo momentu notaras vertins itin atsargiai, kad nebūtų pažeistos kaimynystės ar vaikų teisės. Kad išvengtumėte avanso praradimo dėl netikėtų teisinių stabdžių, patikrinkite statusą iš anksto. <a href=\"/konsultacija\">Kreipkitės konsultacijos čia</a>.</p>",
+    "category": "Teisė",
+    "author": "Mantas Katkevičius",
+    "image": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=1200&auto=format&fit=crop"
+  }
+};
+
+// Update data
+data = data.map(item => {
+  if (updates[item.id]) {
+    return { ...item, ...updates[item.id] };
+  }
+  return item;
+});
+
+fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+console.log("Batch 3 Expanded Successfully!");

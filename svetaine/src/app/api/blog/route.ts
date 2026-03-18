@@ -1,0 +1,88 @@
+import { NextRequest, NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
+
+import { getViews } from "@/lib/blog-views";
+ 
+ const DATA_FILE = path.join(process.cwd(), "src", "data", "blog-posts.json");
+ 
+ function readPosts() {
+   try {
+     const data = fs.readFileSync(DATA_FILE, "utf-8");
+     const posts = JSON.parse(data);
+     const views = getViews();
+     return posts.map((p: any) => ({ ...p, views: views[p.slug] || 0 }));
+   } catch {
+     return [];
+   }
+ }
+
+
+function writePosts(posts: unknown[]) {
+  fs.writeFileSync(DATA_FILE, JSON.stringify(posts, null, 2), "utf-8");
+}
+
+// GET all posts
+export async function GET() {
+  const posts = readPosts();
+  return NextResponse.json(posts);
+}
+
+// POST — create or update a post
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const posts = readPosts();
+
+    // Generate slug from title if not provided
+    if (!body.slug && body.title) {
+      body.slug = body.title
+        .toLowerCase()
+        .replace(/[ąčęėįšųūž]/g, (c: string) => {
+          const map: Record<string, string> = { ą: "a", č: "c", ę: "e", ė: "e", į: "i", š: "s", ų: "u", ū: "u", ž: "z" };
+          return map[c] || c;
+        })
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+    }
+
+    // If id exists, update
+    const existingIndex = posts.findIndex((p: { id: string }) => p.id === body.id);
+    if (existingIndex >= 0) {
+      posts[existingIndex] = { ...posts[existingIndex], ...body };
+    } else {
+      // New post
+      body.id = body.slug || Math.random().toString(36).substr(2, 9);
+      body.date = body.date || new Date().toISOString().split("T")[0];
+      body.author = body.author || "Mantas Katkevičius";
+      body.status = body.status || "draft";
+      posts.unshift(body);
+    }
+
+    writePosts(posts);
+    return NextResponse.json({ success: true, post: body });
+  } catch (error) {
+    console.error("Blog API error:", error);
+    return NextResponse.json({ error: "Klaida tvarkant straipsnį." }, { status: 500 });
+  }
+}
+
+// DELETE — remove post by id
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "Trūksta ID." }, { status: 400 });
+    }
+
+    const posts = readPosts();
+    const filtered = posts.filter((p: { id: string }) => p.id !== id);
+    writePosts(filtered);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Blog DELETE error:", error);
+    return NextResponse.json({ error: "Klaida trinant straipsnį." }, { status: 500 });
+  }
+}

@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+:root {
+  /* Top Tier Premium Color Palette */
+  --background: #FFFFFF;
+  /* Deep Slate/Navy for text */
+  --foreground: #020617;
+  
+  --card: #FFFFFF;
+  --card-foreground: #020617;
+  
+  --popover: #FFFFFF;
+  --popover-foreground: #020617;
+  
+  /* Royal Blue - more vibrant and premium */
+  --primary: #2563EB;
+  --primary-foreground: #FFFFFF;
+  
+  /* Very light blue/gray for subtle backgrounds */
+  --secondary: #F8FAFC;
+  --secondary-foreground: #020617;
+  
+  --muted: #F8FAFC;
+  --muted-foreground: #64748B;
+  
+  --accent: #F1F5F9;
+  --accent-foreground: #020617;
+  
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  
+  --border: #E2E8F0;
+  --input: #E2E8F0;
+  
+  --ring: #2563EB;
+  
+  --radius: 0.75rem;
+}
+
+@layer utilities {
+  .premium-shadow {
+    box-shadow: 0 20px 50px -12px rgba(2, 6, 23, 0.12);
+  }
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20;
+  }
+}
+
+/* Custom Prose Typography For Blog Details */
+.prose h2 {
+  font-size: 1.875rem !important;
+  font-weight: 800 !important;
+  margin-top: 2.5rem !important;
+  margin-bottom: 1.25rem !important;
+  color: #020617 !important;
+  letter-spacing: -0.025em;
+}
+.prose h3 {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  margin-top: 2rem !important;
+  margin-bottom: 1rem !important;
+  color: #0F172A !important;
+}
+.prose p {
+  margin-bottom: 1.25rem !important;
+  line-height: 1.8 !important;
+  color: #334155 !important;
+}
+.prose ul {
+  list-style-type: disc !important;
+  padding-left: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+.prose li {
+  margin-bottom: 0.75rem !important;
+  color: #475569 !important;
+}
+.prose a {
+  color: #2563EB !important;
+  text-decoration: underline !important;
+  font-weight: 600 !important;
+}
+.prose a:hover {
+  color: #1E3A8A !important;
+}
+.prose strong {
+  font-weight: 700 !important;
+  color: #0F172A !important;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased scroll-smooth selection:bg-primary selection:text-white;
+  }
+}

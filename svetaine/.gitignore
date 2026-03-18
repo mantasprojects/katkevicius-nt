@@ -1,0 +1,63 @@
+# dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Agent temporary files
+tmp_*.js
+expand_batch*.js
+tmp/
+tmp_crop/
+scraped_*.json
+scraped_urls*.json
+failed_images*.json
+extracted_links*.json
+scraped_unsplash_urls*.json
+scraped_urls_pool.json
+scrape_unsplash_node.js
+final_mop_up.js
+find_duplicates.js
+fix_content_and_download.js
+fix_content_quality.js
+fix_non_nt_links.js
+fix_remaining_404s.js
+generate_sql_seeder.js
+inspect_schema.js
+migrate-i18n.js
+prune_locale_exact.js
+space_dates.js
+test_qa.js
+unpack_translations*.js
+update_imports.js
+validate_posts.js
+verify_ctas_real_estate.js
+extract_links.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts

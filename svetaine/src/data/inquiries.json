@@ -1,0 +1,24 @@
+[
+  {
+    "id": "tfab29a3l",
+    "name": "Mantas K",
+    "phone": "064541892",
+    "message": "Tema: AAA\n\nAAA",
+    "property": "",
+    "pageUrl": "http://localhost:3000/kontaktai",
+    "date": "2026-03-17",
+    "time": "01:13",
+    "status": "Nauja"
+  },
+  {
+    "id": "pr1w043ru",
+    "name": "Testinis Vartotojas",
+    "phone": "+37060000000",
+    "message": "Laba diena, mane sudomino šis objektas: \"Prabangus Penthouse Senamiestyje\".",
+    "property": "Prabangus Penthouse Senamiestyje",
+    "pageUrl": "http://localhost:3000/objektai/prabangus-penthouse-senamiestyje",
+    "date": "2026-03-17",
+    "time": "01:13",
+    "status": "Nauja"
+  }
+]

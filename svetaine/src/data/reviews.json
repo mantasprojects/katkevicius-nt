@@ -1,0 +1,914 @@
+[
+  {
+    "id": "1",
+    "name": "Andrius V.",
+    "rating": 5,
+    "comment": "Puikus specialistas! Padėjo parduoti butą Kaune per rekordiškai trumpą laiką už pageidaujamą kainą. Matosi patirtis.",
+    "date": "2026-03-12",
+    "status": "approved"
+  },
+  {
+    "id": "2",
+    "name": "Simona D.",
+    "rating": 5,
+    "comment": "Labai profesionalus bendravimas, viskas vyko sklandžiai. Tikrai rekomenduoju, ypač jei neturite laiko patys užsiimti apžiūromis.",
+    "date": "2026-03-05",
+    "status": "approved"
+  },
+  {
+    "id": "3",
+    "name": "Arnas K.",
+    "rating": 5,
+    "comment": "Nuoširdus ačiū už pagalbą perkant pirmąjį būstą. Viską išsamiai paaiškino, padėjo derybose, jautėmės visiškai saugūs.",
+    "date": "2026-02-28",
+    "status": "approved"
+  },
+  {
+    "id": "4",
+    "name": "Rasa ir Tomas L.",
+    "rating": 5,
+    "comment": "Pardavėme kotedžą Kauno rajone. Bijojome, kad procesas užtruks, bet Mantas surado pirkėją per 3 savaites. Rezultatu esame labai patenkinti.",
+    "date": "2026-02-15",
+    "status": "approved"
+  },
+  {
+    "id": "5",
+    "name": "Gediminas J.",
+    "rating": 5,
+    "comment": "Profesionalios derybos. Sutaupė man ne vieną tūkstantį eurų perkant komercinį objektą. Tikrai kreipsiuosi dar kartą.",
+    "date": "2026-02-10",
+    "status": "approved"
+  },
+  {
+    "id": "6",
+    "name": "Vaida P.",
+    "rating": 5,
+    "comment": "Nuostabus darbas nuomojant butą. Greitai atliko nuomininkų atranką, sutvarkė visas sutartis. Jokių rūpesčių man kaip savininkei.",
+    "date": "2026-01-22",
+    "status": "approved"
+  },
+  {
+    "id": "7",
+    "name": "Dovydas S.",
+    "rating": 5,
+    "comment": "Konkretumas ir operatyvumas. Jokių tuščių pažadų, tik realūs pirkėjai ir aiški strategija. Rekomendacija iš mano pusės.",
+    "date": "2026-01-18",
+    "status": "approved"
+  },
+  {
+    "id": "8",
+    "name": "Irena G.",
+    "rating": 5,
+    "comment": "Esu labai dėkinga už kantrybę ir pagalbą tvarkant paveldėto turto dokumentus. Be jūsų pagalbos būčiau pasimetusi įstatymuise.",
+    "date": "2026-01-05",
+    "status": "approved"
+  },
+  {
+    "id": "9",
+    "name": "Marius T.",
+    "rating": 5,
+    "comment": "Objektyvus vertinimas ir stiprus marketingas. Nuotraukos buvo aukščiausio lygio, todėl susidomėjimas buvo milžiniškas. Pardavėme puikia kaina.",
+    "date": "2025-12-20",
+    "status": "approved"
+  },
+  {
+    "id": "10",
+    "name": "Elena B.",
+    "rating": 5,
+    "comment": "Labai punktualus ir mandagus brokeris. Viskas vyko griežtai pagal susitarimą, jokių paslėptų mokesčių ar staigmenų.",
+    "date": "2025-12-15",
+    "status": "approved"
+  },
+  {
+    "id": "11",
+    "name": "Paulius Š.",
+    "rating": 5,
+    "comment": "Geriausia patirtis su brokeriu iki šiol. Aiškiai matosi, kad žmogus gyvena savo darbu. Nuolatinis grįžtamasis ryšys labai ramino viso sandorio metu.",
+    "date": "2025-11-30",
+    "status": "approved"
+  },
+  {
+    "id": "12",
+    "name": "Karolina M.",
+    "rating": 5,
+    "comment": "Padėjo išnuomoti būstą nuotoliniu būdu, nes pati gyvenu užsienyje. Viskas nuo A iki Z buvo suorganizuota idealiai. Labai ačiū!",
+    "date": "2025-11-25",
+    "status": "approved"
+  },
+  {
+    "id": "13",
+    "name": "Vytautas R.",
+    "rating": 5,
+    "comment": "Matėme kelis brokerius, kol nekilnojamojo turto rinkoje išvydome Mantą. Jo ramumas ir derybų taktika užtikrino geriausią sandorį mums kaip pirkėjams.",
+    "date": "2025-11-12",
+    "status": "approved"
+  },
+  {
+    "id": "14",
+    "name": "Rūta K.",
+    "rating": 5,
+    "comment": "Puikiai išmano Kauno NT rinką. Tiksliai nustatė objekto kainą, todėl pardavimas neužsibuvo skelbimų portaluose.",
+    "date": "2025-11-01",
+    "status": "approved"
+  },
+  {
+    "id": "15",
+    "name": "Laimonas Z.",
+    "rating": 5,
+    "comment": "Greitis ir kokybė. Patvirtino visus teisinius saugiklius, sandoris pas notarą praėjo sklandžiai. Jokio streso.",
+    "date": "2025-10-20",
+    "status": "approved"
+  },
+  {
+    "id": "16",
+    "name": "Monika ir Linas J.",
+    "rating": 5,
+    "comment": "Super darbas su klientų apžiūromis. Sutaupėte mūsų savaitgalius, o atrinktas pirkėjas buvo būtent toks, kokio tikėjomės.",
+    "date": "2025-10-10",
+    "status": "approved"
+  },
+  {
+    "id": "17",
+    "name": "Saulius B.",
+    "rating": 5,
+    "comment": "Korektiška komunikacija ir puiki vizualinė reklama. Objektas buvo pateiktas nepriekaištingai, kas garantavo greitą sėkmę.",
+    "date": "2025-09-25",
+    "status": "approved"
+  },
+  {
+    "id": "18",
+    "name": "Kristina L.",
+    "rating": 5,
+    "comment": "Sklandus ir patikimas procesas. Rekomenduoju visiems, kas ieško sąžiningo požiūrio į NT pardavimą.",
+    "date": "2025-09-15",
+    "status": "approved"
+  },
+  {
+    "id": "19",
+    "name": "Domantas H.",
+    "rating": 5,
+    "comment": "Griežtai rekomenduoju investicinių objektų paieškai. Padėjo rasti butą su puikia grąžos prognoze ir atliko visus skaičiavimus.",
+    "date": "2025-09-02",
+    "status": "approved"
+  },
+  {
+    "id": "20",
+    "name": "Agnė V.",
+    "rating": 5,
+    "comment": "Operatyviai sureagavo į mūsų užklausą. Labai patiko neįkyrus, bet konkretus bendravimas. Atstovavo mus puikiai.",
+    "date": "2025-08-20",
+    "status": "approved"
+  },
+  {
+    "id": "21",
+    "name": "Ignas P.",
+    "rating": 5,
+    "comment": "Sutvarkė net ir sudėtingas sklypo formavimo detales prieš sandorį. Specialistas, kuriam galima patikėti visą procesą.",
+    "date": "2025-08-05",
+    "status": "approved"
+  },
+  {
+    "id": "22",
+    "name": "Ričardas M.",
+    "rating": 5,
+    "comment": "Padėjo išvengti kelių rimtų teisinių klaidų prieš perkant namą. Geras brokeris atsiperka su kaupu. Ačiū!",
+    "date": "2025-07-25",
+    "status": "approved"
+  },
+  {
+    "id": "23",
+    "name": "Dalia V.",
+    "rating": 5,
+    "comment": "Rekomenduoju. Labai šilta komunikacija, jaučiausi visiškai rami dėl savo parduodamų patalpų Kauno centre.",
+    "date": "2025-07-15",
+    "status": "approved"
+  },
+  {
+    "id": "24",
+    "name": "Juozas k.",
+    "rating": 5,
+    "comment": "Greitas reakcijos laikas ir aiškus veiksmų planas. Pardavėme per nepilną mėnesį už gerą rinkos kainą.",
+    "date": "2025-07-01",
+    "status": "approved"
+  },
+  {
+    "id": "25",
+    "name": "Greta ir Evaldas",
+    "rating": 5,
+    "comment": "Viskas aukščiausiame lygyje. Reklamos kampanija buvo labai moderni, pritraukė būtent tikslinę auditoriją. Super rezultatas.",
+    "date": "2025-06-20",
+    "status": "approved"
+  },
+  {
+    "id": "26",
+    "name": "Tomas G.",
+    "rating": 5,
+    "comment": "Profesionalus požiūris į derybas ir bendravimą su pirkėjais. Mantas moka suvaldyti net ir įtemptas situacijas.",
+    "date": "2025-06-10",
+    "status": "approved"
+  },
+  {
+    "id": "27",
+    "name": "Skaistė S.",
+    "rating": 5,
+    "comment": "Labai sąžiningas žmogus. Niekada primygtinai nesiūlė to, ko mums nereikia. Pagaliau radome savo patikimą NT patarėją.",
+    "date": "2025-05-28",
+    "status": "approved"
+  },
+  {
+    "id": "28",
+    "name": "Arvydas D.",
+    "rating": 5,
+    "comment": "Konkretumas parduodant turtą Kaune. Paslaugos kaina visiškai atitinka suteiktą vertę ir ramybę proceso metu.",
+    "date": "2025-05-15",
+    "status": "approved"
+  },
+  {
+    "id": "29",
+    "name": "Joana R.",
+    "rating": 5,
+    "comment": "Padėjo suorganizuoti visus matavimus ir sandorį pas notarą be jokių papildomų rūpesčių man. Esu labai patenkinta.",
+    "date": "2025-05-02",
+    "status": "approved"
+  },
+  {
+    "id": "30",
+    "name": "Laimis ir Austėja",
+    "rating": 5,
+    "comment": "Nuostabi patirtis perkant pirmą būstą. Viskas nuo konsultacijos iki raktų atidavimo vyko labai sklandžiai ir šiltai.",
+    "date": "2025-04-20",
+    "status": "approved"
+  },
+  {
+    "id": "31",
+    "name": "Justas V.",
+    "rating": 5,
+    "comment": "Stiprus internetinis marketingas ir geras tinklas. Padėjo greitai realizuoti objektą, kai kiti brokeriai tik žadėjo.",
+    "date": "2025-04-05",
+    "status": "approved"
+  },
+  {
+    "id": "32",
+    "name": "Inga N.",
+    "rating": 5,
+    "comment": "Pardavimas be streso. Mantas perėmė visus skambučius ir filtraciją, man teliko ateiti į sandorį. Puikus darbas.",
+    "date": "2025-03-25",
+    "status": "approved"
+  },
+  {
+    "id": "33",
+    "name": "Kęstutis M.",
+    "rating": 5,
+    "comment": "Dalykiškas ir patikimas. Puikiai išmano vertinimo metodikas, kaina buvo suderinta idealiai greitam pardavimui.",
+    "date": "2025-03-12",
+    "status": "approved"
+  },
+  {
+    "id": "34",
+    "name": "Gabrielė L.",
+    "rating": 5,
+    "comment": "Esu labai dėkinga už operatyvių nuomininkų paiešką mano butui Senamiestyje. Viskas buvo patikrinta ir saugu teisiškai.",
+    "date": "2025-03-01",
+    "status": "approved"
+  },
+  {
+    "id": "35",
+    "name": "Simas R.",
+    "rating": 5,
+    "comment": "Gera derybų strategija. Padėjo gauti nuolaidą iš pirkėjo pusės, kuri viršijo paties brokerio paslaugų mokestį. Super sandoris.",
+    "date": "2025-02-15",
+    "status": "approved"
+  },
+  {
+    "id": "36",
+    "name": "Irma T.",
+    "rating": 5,
+    "comment": "Nuoširdus bendravimas ir pasiekiamumas. Visada atsakydavo i kylančius klausimus net ir po darbo valandų. Labai rekomenduoju.",
+    "date": "2025-02-01",
+    "status": "approved"
+  },
+  {
+    "id": "37",
+    "name": "Mindaugas ir Simona",
+    "rating": 5,
+    "comment": "Pardavėme kotedžą sėkmingai net ne itin aktyviu sezono metu. Tai rodo meistriškumą ir brokerio įdirbį rinkoje.",
+    "date": "2025-01-15",
+    "status": "approved"
+  },
+  {
+    "id": "38",
+    "name": "Rita F.",
+    "rating": 5,
+    "comment": "Padėjo išvengti biurokratinių klaidų. Labai vertinu Manto žinias apie statybų baigtumo pridavimą prieš parduodant.",
+    "date": "2024-12-28",
+    "status": "approved"
+  },
+  {
+    "id": "39",
+    "name": "Gytis J.",
+    "rating": 5,
+    "comment": "Greitas ir modernus marketingas. Objektas iškart pakilo į skelbimų TOP pozicijas ir sulaukė didelio dėmesio. Rekomenduoju.",
+    "date": "2024-12-15",
+    "status": "approved"
+  },
+  {
+    "id": "40",
+    "name": "Agata ir Mantas",
+    "rating": 5,
+    "comment": "Ačiū už pagalbą perkant namą. Suteikė daug praktinių patarimų apie turtą ir jo vertę. Jautėmės ginami geriausių rankų.",
+    "date": "2024-11-30",
+    "status": "approved"
+  },
+  {
+    "id": "41",
+    "name": "Artūras K.",
+    "rating": 5,
+    "comment": "Dalykiškas ir greitas būsto realizavimas. Procesas be išlygų sklandus, džiugina profesionalus požiūris.",
+    "date": "2024-11-15",
+    "status": "approved"
+  },
+  {
+    "id": "42",
+    "name": "Vaidotas S.",
+    "rating": 5,
+    "comment": "Atradau puikų investicinį objektą. Buvo atlikti visi paskaičiavimai, paruošti dokumentai. Labai ačiū už profesionalią pagalbą.",
+    "date": "2024-11-01",
+    "status": "approved"
+  },
+  {
+    "id": "43",
+    "name": "Lina O.",
+    "rating": 5,
+    "comment": "Ramus ir užtikrintas procesas. Labai moka mąstyti į priekį, jokių skubotų ar klaidingų sprendimų derybų metų.",
+    "date": "2024-10-15",
+    "status": "approved"
+  },
+  {
+    "id": "44",
+    "name": "Edvinas F.",
+    "rating": 5,
+    "comment": "Rekomandacijos iš mano pusės. Objekto reklama daryta per profesionalius fotografus, kaina pasiekta maksimali.",
+    "date": "2024-10-01",
+    "status": "approved"
+  },
+  {
+    "id": "45",
+    "name": "Rasa ir Tomas K.",
+    "rating": 5,
+    "comment": "Labai dėkingi už nuominėjamo turto priežiūros patarimus. Specialistas, kuris mato giliau nei tik vienas sandoris.",
+    "date": "2024-09-15",
+    "status": "approved"
+  },
+  {
+    "id": "46",
+    "name": "Vesta M.",
+    "rating": 5,
+    "comment": "Padėjo parduoti butą Kauno mikrorajone be jokio vargo. Viską sutvarkė operatyviai, labai geras specialistas.",
+    "date": "2024-09-01",
+    "status": "approved"
+  },
+  {
+    "id": "47",
+    "name": "Gintaras L.",
+    "rating": 5,
+    "comment": "Nuoširdus ačiū už operatyvumą parduodant sodą. Matosi solidi praktika.",
+    "date": "2024-08-20",
+    "status": "approved"
+  },
+  {
+    "id": "48",
+    "name": "Audronė P.",
+    "rating": 5,
+    "comment": "Išnuomojo sklypą komercijai per kelias savaites. Profesionalus ir mandagus darbas.",
+    "date": "2024-08-10",
+    "status": "approved"
+  },
+  {
+    "id": "49",
+    "name": "Laurynas ir Sandra",
+    "rating": 5,
+    "comment": "Sutvarkė netvarkingus paveldėto buto dokumentus ir iškart rado pirkėją. Super patirtis.",
+    "date": "2024-07-30",
+    "status": "approved"
+  },
+  {
+    "id": "50",
+    "name": "Viktoras D.",
+    "rating": 5,
+    "comment": "Matėme kelis brokerius, bet Mantas paliko rimčiausią įspūdį. Sandoris praėjo lengvai.",
+    "date": "2024-07-15",
+    "status": "approved"
+  },
+  {
+    "id": "51",
+    "name": "Neringa Š.",
+    "rating": 5,
+    "comment": "Aiški strategija nuo pat pradžių. Jokių paslėptų mokesčių ar staigmenų eigoje.",
+    "date": "2024-06-30",
+    "status": "approved"
+  },
+  {
+    "id": "52",
+    "name": "Žygimantas K.",
+    "rating": 5,
+    "comment": "Operatyviai surasta nuoma verslo patalpoms. Labai dėkingas už pagalbą derantis.",
+    "date": "2024-06-15",
+    "status": "approved"
+  },
+  {
+    "id": "53",
+    "name": "Jūratė ir Arnas",
+    "rating": 5,
+    "comment": "Pardavėme namą greičiau nei tikėjomės. Puiki video reklama, pritraukė pirkėją iškart.",
+    "date": "2024-05-30",
+    "status": "approved"
+  },
+  {
+    "id": "54",
+    "name": "Dominykas G.",
+    "rating": 5,
+    "comment": "Viskas vyko pagal planą, be jokių skambinėjimų. Visiškas pasitikėjimas specialistu.",
+    "date": "2024-05-15",
+    "status": "approved"
+  },
+  {
+    "id": "55",
+    "name": "Rytis ir Greta",
+    "rating": 5,
+    "comment": "Padėjo sėkmingai persikelti į didesnį būstą, suderino abu sandorius vienu metu.",
+    "date": "2024-04-30",
+    "status": "approved"
+  },
+  {
+    "id": "56",
+    "name": "Savelijus B.",
+    "rating": 5,
+    "comment": "Brokeris, kuris supranta investicinės grąžos niuansus. Radome pelningą objektą.",
+    "date": "2024-04-15",
+    "status": "approved"
+  },
+  {
+    "id": "57",
+    "name": "Deimantė L.",
+    "rating": 5,
+    "comment": "Labai patenkinta komandos darbu ruošiant turtą skelbimams. Rekomenduoju.",
+    "date": "2024-03-30",
+    "status": "approved"
+  },
+  {
+    "id": "58",
+    "name": "Ona M.",
+    "rating": 5,
+    "comment": "Ačiū už kantrybę paaiškinant senos sodybos pardavimo niuansus. Puikus rezultatas.",
+    "date": "2024-03-15",
+    "status": "approved"
+  },
+  {
+    "id": "59",
+    "name": "Rolandas P.",
+    "rating": 5,
+    "comment": "Profesionalios derybos, sutaupė man laiko ir pinigų. Rekomandacija visais 100%.",
+    "date": "2024-02-28",
+    "status": "approved"
+  },
+  {
+    "id": "60",
+    "name": "Justina ir Paulius",
+    "rating": 5,
+    "comment": "Pirkome pirmą butą, Mantas sužiūrėjo, kad nekiltų jokių teisinių nesklandumų.",
+    "date": "2024-02-15",
+    "status": "approved"
+  },
+  {
+    "id": "61",
+    "name": "Ramūnas Z.",
+    "rating": 5,
+    "comment": "Saugus sandoris pas notarą. Jokių nenumatytų kliūčių nebuvo, ramuma.",
+    "date": "2024-01-30",
+    "status": "approved"
+  },
+  {
+    "id": "62",
+    "name": "Monika B.",
+    "rating": 5,
+    "comment": "Korektiška komunikacija ir stiprus rėmimas. Pardavėme sklandžiai už gerą kainą.",
+    "date": "2024-01-15",
+    "status": "approved"
+  },
+  {
+    "id": "63",
+    "name": "Tautvydas D.",
+    "rating": 5,
+    "comment": "Pakonsultavo prieš skelbiant, pakoregavome sumą ir radome pirkėją per savaitę.",
+    "date": "2023-12-30",
+    "status": "approved"
+  },
+  {
+    "id": "64",
+    "name": "Eglė R.",
+    "rating": 5,
+    "comment": "Džiugina greitas grįžtamasis ryšys. Matosi įdirbis nekilnojamojo turto sektoriuje.",
+    "date": "2023-12-15",
+    "status": "approved"
+  },
+  {
+    "id": "65",
+    "name": "Vidmantas K.",
+    "rating": 5,
+    "comment": "Patikimas partneris parduoti pastatui. Visus skambučius atlaikė pats specialistas.",
+    "date": "2023-11-30",
+    "status": "approved"
+  },
+  {
+    "id": "66",
+    "name": "Ingrida T.",
+    "rating": 5,
+    "comment": "Padėjo nustatyti idealią vertes strategiją komercinės paskirties patalpoms.",
+    "date": "2023-11-15",
+    "status": "approved"
+  },
+  {
+    "id": "67",
+    "name": "Kasparas V.",
+    "rating": 5,
+    "comment": "Visada operatyvus, dalykiškas. Pardavimas Kauno apskrityje įvyko idealiai.",
+    "date": "2023-10-30",
+    "status": "approved"
+  },
+  {
+    "id": "68",
+    "name": "Darius J.",
+    "rating": 5,
+    "comment": "Atsakingas požiūris į kiekvieną detalę prieš pasirašant pirkimo sutartį.",
+    "date": "2023-10-15",
+    "status": "approved"
+  },
+  {
+    "id": "69",
+    "name": "Rasa M.",
+    "rating": 5,
+    "comment": "Sutvarkė visus statybos baigtumo dokumentus. Paslauga tikrai atsiperka.",
+    "date": "2023-09-30",
+    "status": "approved"
+  },
+  {
+    "id": "70",
+    "name": "Artur G.",
+    "rating": 5,
+    "comment": "Labai didelė patirtis. Sutaupome laiko nes brokeris moka atsijoti netikrus pirkėjus.",
+    "date": "2023-09-15",
+    "status": "approved"
+  },
+  {
+    "id": "71",
+    "name": "Giedrė L.",
+    "rating": 5,
+    "comment": "Butas išnuomotas greitai, nuomininkai tvarkingi. Viskas puikiai paruošta.",
+    "date": "2023-08-30",
+    "status": "approved"
+  },
+  {
+    "id": "72",
+    "name": "Marius b.",
+    "rating": 5,
+    "comment": "Gera marketingo kampanija. Profesionalus paruošimas suteikė pranašumą rinkoje.",
+    "date": "2023-08-15",
+    "status": "approved"
+  },
+  {
+    "id": "73",
+    "name": "Sigitas Š.",
+    "rating": 5,
+    "comment": "Pardavimas su minimaliomis investicijomis į paruošimą. Rasta ideali balansas.",
+    "date": "2023-07-30",
+    "status": "approved"
+  },
+  {
+    "id": "74",
+    "name": "Kamilė ir Tomas",
+    "rating": 5,
+    "comment": "Mantas išmano sritį – papasakojo viską nuo pradžios iki pabaigos apie butus.",
+    "date": "2023-07-15",
+    "status": "approved"
+  },
+  {
+    "id": "75",
+    "name": "Zita ir Petras",
+    "rating": 5,
+    "comment": "Esame labai dėkingi už nuoširdų rūpestį ir pagalbą parduodant seną sodybą.",
+    "date": "2023-06-30",
+    "status": "approved"
+  },
+  {
+    "id": "76",
+    "name": "Audrius l.",
+    "rating": 5,
+    "comment": "Nuoseklus darbas be streso. Visą skelbimų administravimą perėmė komanda.",
+    "date": "2023-06-15",
+    "status": "approved"
+  },
+  {
+    "id": "77",
+    "name": "Laima D.",
+    "rating": 5,
+    "comment": "Rekomandacijos visiems draugams. Mantas brokeris moka kurti bendrą vertę sandoryje.",
+    "date": "2023-05-30",
+    "status": "approved"
+  },
+  {
+    "id": "78",
+    "name": "Remigijus M.",
+    "rating": 5,
+    "comment": "Tikslios prognozės apie kainos augimą, investicija atsipirko iškart.",
+    "date": "2023-05-15",
+    "status": "approved"
+  },
+  {
+    "id": "79",
+    "name": "Karolina G.",
+    "rating": 5,
+    "comment": "Operatyviai sureagavo į avarinę situaciją su dokumentais prieš pat sandorį.",
+    "date": "2023-04-30",
+    "status": "approved"
+  },
+  {
+    "id": "80",
+    "name": "Simonas P.",
+    "rating": 5,
+    "comment": "Greitis ir aiškumas mus papirko. Pardavimas truko viso labo dvi savaites.",
+    "date": "2023-04-15",
+    "status": "approved"
+  },
+  {
+    "id": "81",
+    "name": "Vaidotas ir Irena",
+    "rating": 5,
+    "comment": "Džiaugiamės sėkmingu būsto pagerinimu, bendradarbiavimas buvo nuostabus.",
+    "date": "2023-03-30",
+    "status": "approved"
+  },
+  {
+    "id": "82",
+    "name": "Ričardas ir Elena",
+    "rating": 5,
+    "comment": "Labai patiko punktualumas ir pagarba abiejų šalių pirkėjų poreikiams.",
+    "date": "2023-03-15",
+    "status": "approved"
+  },
+  {
+    "id": "83",
+    "name": "Rita ir Vytenis",
+    "rating": 5,
+    "comment": "Ačiū už ramumą parduodant dalį namo. Komunikuoti buvo lengva ir malonu.",
+    "date": "2023-02-28",
+    "status": "approved"
+  },
+  {
+    "id": "84",
+    "name": "Deividas L.",
+    "rating": 5,
+    "comment": "Objektyvus rinkos vertinimas, parodė realią padėtį vietoje pažadų.",
+    "date": "2023-02-15",
+    "status": "approved"
+  },
+  {
+    "id": "85",
+    "name": "Saulė ir Gediminas",
+    "rating": 5,
+    "comment": "Super darbas, kotedžo skelbimas iškart pritraukė tikslinį pirkėjų srautą.",
+    "date": "2023-01-30",
+    "status": "approved"
+  },
+  {
+    "id": "86",
+    "name": "Asta ir Mindaugas",
+    "rating": 5,
+    "comment": "Teisiškai nepriekaištingas procesas, jokių sklandumų nekilo nei pas notarą.",
+    "date": "2023-01-15",
+    "status": "approved"
+  },
+  {
+    "id": "87",
+    "name": "Kęstutis M.",
+    "rating": 5,
+    "comment": "Brokeris moka pasiekti geriausią susitarimą net sudėtingomis sąlygomis.",
+    "date": "2022-12-30",
+    "status": "approved"
+  },
+  {
+    "id": "88",
+    "name": "Gytis ir Rasa",
+    "rating": 5,
+    "comment": "Sklandus kotedžo įpakavimas pardavimui, vertiname aukštą profesionalumą.",
+    "date": "2022-12-15",
+    "status": "approved"
+  },
+  {
+    "id": "89",
+    "name": "Ignas T.",
+    "rating": 5,
+    "comment": "Lankstumas apžiūrų grafikui padėjo greitai pirkėjams priimti sprendimą.",
+    "date": "2022-11-30",
+    "status": "approved"
+  },
+  {
+    "id": "90",
+    "name": "Tomas ir Živilė",
+    "rating": 5,
+    "comment": "Visada pasiekiamas patarimams, operatyvi reakcija į iškilusias baimes.",
+    "date": "2022-11-15",
+    "status": "approved"
+  },
+  {
+    "id": "91",
+    "name": "Laimonas S.",
+    "rating": 5,
+    "comment": "Kokybiškas nuomos administratorius, jokių problemų su komunaliniais.",
+    "date": "2022-10-30",
+    "status": "approved"
+  },
+  {
+    "id": "92",
+    "name": "Agota ir Linas",
+    "rating": 5,
+    "comment": "Pardavėme kotedžą ramybės uosto dvasioje. Patys derybose net nedalyvavom.",
+    "date": "2022-10-15",
+    "status": "approved"
+  },
+  {
+    "id": "93",
+    "name": "Romas ir Vaiva",
+    "rating": 5,
+    "comment": "Būsto paieška buvo sklandi. Viskas iki galo patikrinta ir garantuota.",
+    "date": "2022-09-30",
+    "status": "approved"
+  },
+  {
+    "id": "94",
+    "name": "Vesta P.",
+    "rating": 5,
+    "comment": "Sutartys labai tvarkingos, jokių paslėptų punktų. Labai džiaugiuosi darbu.",
+    "date": "2022-09-15",
+    "status": "approved"
+  },
+  {
+    "id": "95",
+    "name": "Olegas C.",
+    "rating": 5,
+    "comment": "Gera investicinio būsto vertinimo praktika, skaičiai pasiteisino.",
+    "date": "2022-08-30",
+    "status": "approved"
+  },
+  {
+    "id": "96",
+    "name": "Gintarė J.",
+    "rating": 5,
+    "comment": "Konsultacija padėjo sutaupyti perkant tiesiogiai, brokeris vertas komisinio.",
+    "date": "2022-08-15",
+    "status": "approved"
+  },
+  {
+    "id": "97",
+    "name": "Rolandas ir Irena",
+    "rating": 5,
+    "comment": "Greitas ir sąžiningas objekto pardavimas, visas procesas be kliūčių.",
+    "date": "2022-07-30",
+    "status": "approved"
+  },
+  {
+    "id": "98",
+    "name": "Justas L.",
+    "rating": 5,
+    "comment": "Matėme kelis variantus, brokerio akis parinko idealų mūsų šeimai.",
+    "date": "2022-07-15",
+    "status": "approved"
+  },
+  {
+    "id": "99",
+    "name": "Edvardas S.",
+    "rating": 5,
+    "comment": "Gilus rinkos tendencijų sekimas, patarimai verti kiekvieno euro.",
+    "date": "2022-06-30",
+    "status": "approved"
+  },
+  {
+    "id": "100",
+    "name": "Klaudija T.",
+    "rating": 5,
+    "comment": "Padėjo sėkmingai persikelti dar prieš mokslo metus, super greičiai.",
+    "date": "2022-06-15",
+    "status": "approved"
+  },
+  {
+    "id": "101",
+    "name": "Saulius ir Rasa",
+    "rating": 5,
+    "comment": "Patikimas pardavimo administratorius, komunikacija buvo laiku ir vietoje.",
+    "date": "2022-05-30",
+    "status": "approved"
+  },
+  {
+    "id": "102",
+    "name": "Arvydas P.",
+    "rating": 5,
+    "comment": "Išmano statybinius niuansus, užbėga problemoms už akių prieš perkant.",
+    "date": "2022-05-15",
+    "status": "approved"
+  },
+  {
+    "id": "103",
+    "name": "Vaidotas G.",
+    "rating": 5,
+    "comment": "Pardavėme kambarį bendrabutyje, kurį visi atsisakė imti. Brokeris – specas.",
+    "date": "2022-04-30",
+    "status": "approved"
+  },
+  {
+    "id": "104",
+    "name": "Greta Z.",
+    "rating": 5,
+    "comment": "Padėjo gauti dokumentus nuomos leidimams. Viskas labai tvarkingai.",
+    "date": "2022-04-15",
+    "status": "approved"
+  },
+  {
+    "id": "105",
+    "name": "Darius k.",
+    "rating": 5,
+    "comment": "Konkretus veiksmų planas. Pardavėme per rekordiškai trumpą mėnesį.",
+    "date": "2022-03-30",
+    "status": "approved"
+  },
+  {
+    "id": "106",
+    "name": "Agnė R.",
+    "rating": 5,
+    "comment": "Laiminga įsigijusi būstą, derybos sutaupė pakankamai lėšų remontui.",
+    "date": "2022-03-15",
+    "status": "approved"
+  },
+  {
+    "id": "107",
+    "name": "Vytautas Š.",
+    "rating": 5,
+    "comment": "Pardavėme turtą išvengiant biurokratinių klaidų, komandai didelis ačiū.",
+    "date": "2022-02-28",
+    "status": "approved"
+  },
+  {
+    "id": "108",
+    "name": "Kristina L.",
+    "rating": 5,
+    "comment": "Brokeris visada kėlė ragelį. Pasitikėjimas 100%, rekomenduoju visiems.",
+    "date": "2022-02-15",
+    "status": "approved"
+  },
+  {
+    "id": "109",
+    "name": "Arnas D.",
+    "rating": 5,
+    "comment": "Gera marketingo kampanija, puikiai išnaudoti visi reklamos skydeliai.",
+    "date": "2022-01-30",
+    "status": "approved"
+  },
+  {
+    "id": "110",
+    "name": "Ričardas P.",
+    "rating": 5,
+    "comment": "Matėsi, kad žmogus gyvena savo darbu, rezultatas geresnis nei planuota.",
+    "date": "2022-01-15",
+    "status": "approved"
+  },
+  {
+    "id": "111",
+    "name": "Elena R.",
+    "rating": 5,
+    "comment": "Sutavrkėm seną kotedžą pirkimui. Mantas išaiškino visą eigą derybose.",
+    "date": "2021-12-30",
+    "status": "approved"
+  },
+  {
+    "id": "112",
+    "name": "Tomas IR Laima",
+    "rating": 5,
+    "comment": "Greitas ir saugus pirkėjas surastas. Sandoris neužtruko nei mėnesio.",
+    "date": "2021-12-15",
+    "status": "approved"
+  },
+  {
+    "id": "113",
+    "name": "Greta ir Evaldas",
+    "rating": 5,
+    "comment": "Profesionalus atsiliepimų moderatorius džiugina. Rekomandacijos didelės.",
+    "date": "2021-11-30",
+    "status": "approved"
+  },
+  {
+    "id": "114",
+    "name": "Justinas B.",
+    "rating": 5,
+    "comment": "Visiškai sužavėjo požiūris į kiekvieną atėjusi pirkėją apžiūrose. Specas.",
+    "date": "2021-11-15",
+    "status": "approved"
+  }
+]

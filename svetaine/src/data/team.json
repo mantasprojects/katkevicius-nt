@@ -1,0 +1,16 @@
+[
+  {
+    "id": "1",
+    "name": "Mantas Katkevičius",
+    "email": "mantas@pavyzdys.lt",
+    "role": "Super Admin",
+    "status": "Aktyvus"
+  },
+  {
+    "id": "2",
+    "name": "Agnė Statkutė",
+    "email": "agne@pavyzdys.lt",
+    "role": "Redaktorė",
+    "status": "Aktyvus"
+  }
+]

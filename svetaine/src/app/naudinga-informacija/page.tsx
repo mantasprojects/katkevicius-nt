@@ -1,0 +1,319 @@
+import Link from "next/link";
+import { ArrowRight, Calendar, User, Search } from "lucide-react";
+import { Metadata } from "next";
+import fs from "fs";
+import path from "path";
+
+export const metadata: Metadata = {
+  title: "Naudinga Informacija | Mantas Katkevičius",
+  description: "Aktualijos, patarimai ir įžvalgos besidomintiems nekilnojamojo turto rinka. Profesionalūs patarimai iš nekilnojamojo turto pardavimų eksperto.",
+};
+
+interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  category: string;
+  author: string;
+  image: string;
+  date: string;
+  status: "published" | "draft";
+}
+
+interface Category {
+  id: string;
+  name: string;
+  color: string;
+}
+
+function getPosts(): BlogPost[] {
+  try {
+    const filePath = path.join(process.cwd(), "src", "data", "blog-posts.json");
+    const data = fs.readFileSync(filePath, "utf-8");
+    const posts: BlogPost[] = JSON.parse(data);
+    return posts.filter((p) => p.status === "published");
+  } catch {
+    return [];
+  }
+}
+
+function getCategories(): Category[] {
+  try {
+    const filePath = path.join(process.cwd(), "src", "data", "blog-categories.json");
+    const data = fs.readFileSync(filePath, "utf-8");
+    return JSON.parse(data);
+  } catch {
+    return [];
+  }
+}
+
+import { Suspense } from "react";
+import SearchInput from "@/components/blog/SearchInput";
+
+export const dynamic = "force-dynamic";
+
+export default async function BlogPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string; search?: string }>;
+}) {
+  const params = await searchParams;
+  const allArticles = getPosts();
+  const categories = getCategories();
+  const selectedCategory = params.category;
+  const searchQuery = params.search;
+
+  // Filter articles by category and search
+  const articles = allArticles.filter((a) => {
+    const matchesCategory = !selectedCategory || a.category === selectedCategory;
+    const matchesSearch = !searchQuery || 
+      a.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      a.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  // Get active categories (ones that have at least 1 published article in the master list)
+  const activeCategories = categories.filter((cat) =>
+    allArticles.some((a) => a.category === cat.name)
+  );
+
+
+  const isEmptyMaster = allArticles.length === 0;
+
+  if (isEmptyMaster) {
+    return (
+      <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
+        <section className="pt-24 pb-16">
+          <div className="container px-4 text-center max-w-3xl mx-auto">
+            <p className="text-[#2563EB] font-semibold tracking-wider uppercase text-sm mb-4">Tinklaraštis</p>
+            <h1 className="text-4xl md:text-5xl font-bold text-[#111827] tracking-tight mb-6">
+              Naudinga <span className="text-[#2563EB]">Informacija</span>
+            </h1>
+            <p className="text-slate-500 text-lg">Straipsniai ruošiami. Grįžkite netrukus!</p>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  const featured = articles[0];
+  const rest = articles.slice(1);
+
+
+  return (
+    <div className="flex flex-col min-h-screen bg-[#F8FAFC]">
+
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-[#0F172A] via-[#1E3A8A] to-[#1E40AF] text-white overflow-hidden">
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
+        </div>
+
+        <div className="container px-4 mx-auto max-w-7xl relative z-10 pt-24 pb-16">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-[1.1]">
+
+              Naudinga{" "}
+              <span className="bg-gradient-to-r from-blue-200 to-white bg-clip-text text-transparent">
+                Informacija
+              </span>
+            </h1>
+            <p className="text-blue-200/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-8">
+              Profesionalūs patarimai, teisinės įžvalgos bei nekilnojamojo turto rinkos aktualijos Jūsų sėkmingiems sprendimams.
+            </p>
+
+            {/* Search Input */}
+            <Suspense fallback={<div className="h-14 bg-white/10 rounded-2xl animate-pulse max-w-xl mx-auto mb-8" />}>
+              <SearchInput />
+            </Suspense>
+          </div>
+
+          {/* Category Pills */}
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            <Link
+              href="/naudinga-informacija"
+              scroll={false}
+              className={`px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm border transition-all ${
+                !selectedCategory
+                  ? "bg-white text-[#1E3A8A] border-white shadow-lg"
+                  : "bg-white/10 border-white/20 text-white hover:bg-white/20"
+              }`}
+            >
+              Visi
+            </Link>
+            {activeCategories.map((cat) => (
+              <Link
+                key={cat.id}
+                href={`/naudinga-informacija?category=${encodeURIComponent(cat.name)}`}
+                scroll={false}
+                className={`px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm border transition-all flex items-center gap-2 ${
+                  selectedCategory === cat.name
+                    ? "bg-white text-[#1E3A8A] border-white shadow-lg"
+                    : "bg-white/10 border-white/20 text-white hover:bg-white/20"
+                }`}
+                style={selectedCategory === cat.name ? {} : { borderColor: `${cat.color}40` }}
+              >
+                <span 
+                  className="w-2 h-2 rounded-full inline-block" 
+                  style={{ backgroundColor: cat.color }} 
+                />
+                {cat.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Wave divider */}
+        <div className="absolute bottom-0 left-0 right-0 translate-y-[1px]">
+          <svg viewBox="0 0 1440 80" fill="none" className="w-full scale-y-110 origin-bottom">
+            <path d="M0 80h1440V40c-240 30-480 50-720 40S240 30 0 50v30z" fill="#F8FAFC" />
+          </svg>
+        </div>
+      </section>
+
+      {articles.length === 0 ? (
+        <section className="py-20 bg-[#F8FAFC] text-center">
+          <div className="container px-4 mx-auto">
+            <p className="text-slate-500 text-lg">Nėra straipsnių pagal nurodytus paieškos kriterijus.</p>
+          </div>
+        </section>
+      ) : (
+        <>
+          {/* Featured Article */}
+          <section className="py-12 bg-[#F8FAFC]">
+            <div className="container px-4 mx-auto max-w-7xl">
+              <Link
+                href={`/naudinga-informacija/${featured.slug}`}
+                className="group flex flex-col lg:flex-row gap-0 bg-white rounded-3xl overflow-hidden shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-slate-200/80 transition-all duration-500 border border-slate-100"
+              >
+                <div className="w-full lg:w-3/5 h-[280px] lg:h-[420px] relative overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={featured.image}
+                alt={featured.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                crossOrigin="anonymous"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-black/5" />
+              <div className="absolute top-6 left-6">
+                <span
+                  className="px-4 py-1.5 rounded-full text-xs font-bold text-white uppercase tracking-wider shadow-lg"
+                  style={{
+                    backgroundColor: activeCategories.find((c) => c.name === featured.category)?.color || "#2563EB",
+                  }}
+                >
+                  {featured.category}
+                </span>
+              </div>
+            </div>
+            <div className="w-full lg:w-2/5 p-8 lg:p-12 flex flex-col justify-center">
+              <div className="flex items-center text-sm font-medium text-slate-400 mb-5 gap-5">
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="w-4 h-4" /> {featured.date}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <User className="w-4 h-4" /> {featured.author}
+                </span>
+              </div>
+              <h2 className="text-2xl lg:text-3xl font-extrabold text-[#111827] mb-4 group-hover:text-[#2563EB] transition-colors leading-tight">
+                {featured.title}
+              </h2>
+              <p className="text-slate-500 text-base lg:text-lg leading-relaxed mb-8 line-clamp-3">
+                {featured.excerpt}
+              </p>
+              <div className="inline-flex items-center font-bold text-[#2563EB] group-hover:gap-3 gap-2 transition-all mt-auto">
+                Skaityti straipsnį
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </div>
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      {/* Article Grid */}
+      {rest.length > 0 && (
+        <section className="py-16 bg-[#F8FAFC]">
+          <div className="container px-4 mx-auto max-w-7xl">
+            <div className="flex items-center justify-between mb-10">
+              <h2 className="text-2xl font-extrabold text-[#111827] tracking-tight">
+                Naujausi straipsniai
+              </h2>
+              <div className="h-px flex-1 bg-gradient-to-r from-slate-200 to-transparent ml-6" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {rest.map((article) => {
+                const catColor = activeCategories.find((c) => c.name === article.category)?.color || "#2563EB";
+                return (
+                  <Link
+                    href={`/naudinga-informacija/${article.slug}`}
+                    key={article.id}
+                    className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-slate-200/60 transition-all duration-300 border border-slate-100 hover:-translate-y-1"
+                  >
+                    <div className="relative h-[220px] overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={article.image}
+                        alt={article.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        crossOrigin="anonymous"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                      <div className="absolute top-4 left-4">
+                        <span
+                          className="px-3 py-1 rounded-full text-xs font-bold text-white uppercase tracking-wider shadow-md"
+                          style={{ backgroundColor: catColor }}
+                        >
+                          {article.category}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="p-6 flex flex-col flex-1">
+                      <h3 className="text-lg font-extrabold text-[#111827] group-hover:text-[#2563EB] transition-colors line-clamp-2 leading-snug mb-3">
+                        {article.title}
+                      </h3>
+                      <p className="text-slate-500 text-sm line-clamp-2 leading-relaxed flex-1 mb-5">
+                        {article.excerpt}
+                      </p>
+                      <div className="flex justify-between items-center pt-4 border-t border-slate-100">
+                        <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
+                          <Calendar className="w-3.5 h-3.5" /> {article.date}
+                        </span>
+                        <span className="text-xs font-bold text-[#2563EB] group-hover:gap-1.5 gap-1 transition-all flex items-center">
+                          Skaityti <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+      </>
+      )}
+
+      {/* CTA Section */}
+      <section className="py-20 bg-white border-t border-slate-100">
+        <div className="container px-4 mx-auto max-w-4xl text-center">
+          <h2 className="text-3xl font-extrabold text-[#111827] mb-4 tracking-tight">
+            Turite klausimų apie nekilnojamąjį turtą?
+          </h2>
+          <p className="text-slate-500 text-lg mb-8 max-w-2xl mx-auto">
+            Susisiekite ir gaukite profesionalią konsultaciją, pritaikytą jūsų situacijai.
+          </p>
+          <Link href="/konsultacija">
+            <button className="h-14 px-10 bg-[#1E3A8A] hover:bg-[#111827] text-white text-base font-bold rounded-xl shadow-xl shadow-[#1E3A8A]/20 transition-all hover:-translate-y-0.5 cursor-pointer">
+              Užsisakyti konsultaciją <ArrowRight className="w-5 h-5 inline ml-2" />
+            </button>
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+}
