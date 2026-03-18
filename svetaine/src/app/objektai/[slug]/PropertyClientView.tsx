@@ -371,10 +371,10 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
           <Link href="/objektai" className="inline-flex items-center text-sm font-bold uppercase tracking-wider text-slate-500 hover:text-[#2563EB] transition-colors">
             <ArrowLeft className="w-5 h-5 mr-3" />Grįžti į paiešką</Link>
           <div className="flex items-center gap-2">
-            <FacebookShareButton url={`https://katkevicius.lt/objektai/${property.slug}`} className="hover:-translate-y-1 transition-transform">
+            <FacebookShareButton url={`https://katkevicius.lt/objektai/${property.slug}?fb=1`} className="hover:-translate-y-1 transition-transform">
               <FacebookIcon size={32} round />
             </FacebookShareButton>
-            <WhatsappShareButton url={`https://katkevicius.lt/objektai/${property.slug}`} title={property.title} className="hover:-translate-y-1 transition-transform mr-4">
+            <WhatsappShareButton url={`https://katkevicius.lt/objektai/${property.slug}?wa=1`} title={property.title} className="hover:-translate-y-1 transition-transform mr-4">
               <WhatsappIcon size={32} round />
             </WhatsappShareButton>
           </div>
