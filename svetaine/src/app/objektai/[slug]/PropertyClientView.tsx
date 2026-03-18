@@ -618,10 +618,6 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
                         defaultValue={`Laba diena, mane sudomino šis objektas: "${property.title}".`}
                       />
                     </div>
-                    <div className="w-full">
-                      <Turnstile onVerify={setTurnstileToken} />
-                    </div>
-
                   <div className="flex flex-col items-center gap-2">
                     <Button disabled={isSubmitting || isSuccess || (!turnstileToken && typeof window !== "undefined" && window.location.hostname !== "localhost")} type="submit" className={`w-full h-14 text-white text-base font-bold shadow-xl shadow-[#1E3A8A]/20 transition-all hover:scale-105 active:scale-95 ${isSuccess ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-[#1E3A8A] hover:bg-[#111827] hover:-translate-y-1'}`}>
                     {isSubmitting ? (
@@ -638,6 +634,9 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
                       'Siųsti užklausą'
                     )}
                   </Button>
+                  </div>
+                  <div className="w-full mt-2">
+                    <Turnstile onVerify={setTurnstileToken} />
                   </div>
                 </form>
               </div>
