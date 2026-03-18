@@ -37,6 +37,7 @@ export default function AdminBlogPage() {
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [totalStats, setTotalStats] = useState({ total: 0, published: 0, draft: 0 });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -50,6 +51,11 @@ export default function AdminBlogPage() {
   const fetchPosts = async (isAppend: boolean = false, currentSearch: string = search) => {
     try {
       if (!isAppend) setLoading(true);
+      
+      if (!isAppend) {
+         const { count: absCount } = await supabase.from('tinklarastis_irasai').select('*', { count: 'exact', head: true });
+         setTotalStats({ total: absCount || 0, published: absCount || 0, draft: 0 });
+      }
       
       let query = supabase
         .from('tinklarastis_irasai')
@@ -173,7 +179,7 @@ return (
               <FileText className="w-5 h-5 text-[#2563EB]" />
             </div>
             <div>
-              <p className="text-2xl font-extrabold text-[#111827]">{posts.length}</p>
+              <p className="text-2xl font-extrabold text-[#111827]">{totalStats.total}</p>
               <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Viso straipsnių</p>
             </div>
           </div>
@@ -184,7 +190,7 @@ return (
               <CheckCircle2 className="w-5 h-5 text-emerald-500" />
             </div>
             <div>
-              <p className="text-2xl font-extrabold text-[#111827]">{publishedCount}</p>
+              <p className="text-2xl font-extrabold text-[#111827]">{totalStats.published}</p>
               <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Publikuoti</p>
             </div>
           </div>
@@ -195,7 +201,7 @@ return (
               <Clock className="w-5 h-5 text-amber-500" />
             </div>
             <div>
-              <p className="text-2xl font-extrabold text-[#111827]">{draftCount}</p>
+              <p className="text-2xl font-extrabold text-[#111827]">{totalStats.draft}</p>
               <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Juodraščiai</p>
             </div>
           </div>
