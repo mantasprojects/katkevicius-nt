@@ -322,8 +322,6 @@ export default function PardavimasClient() {
                      />
                   </div>
                   
-                  <Turnstile onVerify={setTurnstileToken} theme="dark" />
-
                   <Button 
                      type="submit"
                      disabled={isSubmitting}
@@ -331,6 +329,8 @@ export default function PardavimasClient() {
                   >
                      {isSubmitting ? "Siunčiama..." : "Pradėkime šiandien"}
                   </Button>
+
+                  <Turnstile onVerify={setTurnstileToken} theme="dark" />
                </motion.form>
             )}
          </div>
