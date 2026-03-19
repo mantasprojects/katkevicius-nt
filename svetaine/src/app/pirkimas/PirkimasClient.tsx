@@ -293,7 +293,7 @@ export default function PirkimasClient() {
                      type="email" 
                      placeholder="Jūsų el. paštas" 
                      required
-                     className="flex-1 bg-white border border-slate-200 rounded-xl px-4 h-14 text-base focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 text-slate-900 placeholder:text-slate-400" 
+                     className="w-full flex-1 bg-white border border-slate-200 rounded-xl px-4 h-14 text-base focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 text-slate-900 placeholder:text-slate-400" 
                      value={fomoEmail}
                      onChange={(e) => setFomoEmail(e.target.value)}
                    />

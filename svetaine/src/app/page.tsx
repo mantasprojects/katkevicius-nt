@@ -107,7 +107,7 @@ export default function HomePage() {
                   alt="Mantas Katkevičius" 
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-700"
                 />
-                <!-- Removed dark portrait overlay style -->
+                {/* Removed dark portrait overlay style */}
                 <div className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-white/10 border border-white/20 p-5 rounded-2xl flex flex-col items-center text-center">
                   <p className="text-white font-sans font-black text-2xl tracking-wide mb-1">Mantas Katkevičius</p>
                   <p className="text-primary text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-1.5">
