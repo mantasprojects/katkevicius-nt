@@ -78,7 +78,7 @@ export default function HomePage() {
             </h1>
 
             <p className="text-base md:text-lg text-slate-600 mb-10 max-w-md font-medium leading-relaxed drop-shadow-sm">
-              Aukščiausios klasės atstovavimas, derybų menas ir sklandus nekilnojamojo turto pardavimas.
+              Profesionalios nekilnojamojo turto paslaugos.
             </p>
 
             <Link href="/konsultacija" className="w-full sm:w-auto">
