@@ -15,6 +15,9 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useCallback, useRef } from "react";
+import dynamic from "next/dynamic";
+
+const PropertyMap = dynamic(() => import("@/components/objects/PropertyMap"), { ssr: false });
 
 const shimmer = (w: number, h: number) => `
 <svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -64,75 +67,7 @@ const createGeoJSONCircle = (center: [number, number], radiusInKm: number, point
   };
 };
 
-function PropertyMap({ latitude, longitude, isExact }: { latitude: number; longitude: number; isExact: boolean }) {
-  const mapContainerRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(false);
 
-  useEffect(() => {
-    if (!mapContainerRef.current) return;
-
-    const map = new mapboxgl.Map({
-      container: mapContainerRef.current,
-      style: "mapbox://styles/mapbox/light-v11",
-      center: [longitude, latitude],
-      zoom: 16,
-      scrollZoom: active,
-      attributionControl: false,
-    });
-
-    // Add Zoom Controls
-    map.addControl(new mapboxgl.NavigationControl(), "top-right");
-
-    map.on('load', () => {
-      if (isExact) {
-        const el = document.createElement('div');
-        el.className = 'custom-marker';
-        el.innerHTML = `
-          <div class="relative flex items-center justify-center">
-            <div class="w-6 h-6 rounded-full bg-[#2563EB] border-4 border-white shadow-xl flex items-center justify-center z-10"></div>
-            <div class="absolute w-10 h-10 rounded-full bg-[#2563EB]/30 animate-ping"></div>
-          </div>
-        `;
-        new mapboxgl.Marker(el)
-          .setLngLat([longitude, latitude])
-          .addTo(map);
-      } else {
-        const geojson = createGeoJSONCircle([longitude, latitude], 0.5);
-        map.addSource('circle-source', {
-          type: 'geojson',
-          data: geojson as any
-        });
-        map.addLayer({
-          id: 'circle-layer',
-          type: 'fill',
-          source: 'circle-source',
-          paint: {
-            'fill-color': '#2563EB',
-            'fill-opacity': 0.15,
-            'fill-outline-color': '#2563EB'
-          }
-        });
-      }
-    });
-
-    return () => {
-      map.remove();
-    };
-  }, [latitude, longitude, isExact, active]);
-
-  return (
-    <div className="absolute inset-0" onClick={() => setActive(true)}>
-      <div ref={mapContainerRef} className="w-full h-full" />
-      {!active && (
-        <div className="absolute inset-0 bg-black/5 flex items-center justify-center cursor-pointer group">
-          <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl text-xs font-bold text-slate-800 shadow-xl border border-white/50 group-hover:bg-white transition-all">
-             Paspauskite tam, kad valdytumėte žemėlapį
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
 
 /* ─── Custom High‑Performance Lightbox ────────────────────────────── */
 function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; startIndex: number; onClose: () => void }) {

@@ -7,11 +7,18 @@ import { cn } from "@/lib/utils";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import Script from "next/script";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
+  preload: true,
+});
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  display: 'swap',
+  preload: true,
 });
 
 export const metadata: Metadata = {

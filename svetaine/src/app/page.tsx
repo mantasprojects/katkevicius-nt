@@ -6,9 +6,13 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight, Star, Quote, CheckCircle2, Zap, TrendingUp, ShieldCheck } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/motion";
-import CommissionCalculator from "@/components/calculator/CommissionCalculator";
-import ProcessTimeline from "@/components/ui/timeline";
-import TestimonialCard from "@/components/ui/testimonial-card";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+
+const CommissionCalculator = dynamic(() => import("@/components/calculator/CommissionCalculator"), { ssr: false });
+const ProcessTimeline = dynamic(() => import("@/components/ui/timeline"), { ssr: false });
+const TestimonialsGrid = dynamic(() => import("@/components/home/TestimonialsGrid"), { ssr: false });
+const ArticlesGrid = dynamic(() => import("@/components/home/ArticlesGrid"), { ssr: false });
 import { cn } from "@/lib/utils";
 
 export default function HomePage() {
@@ -92,10 +96,14 @@ export default function HomePage() {
               <div className="absolute -inset-4 bg-gradient-to-br from-primary/30 to-slate-400/10 rounded-[3rem] blur-2xl opacity-70" />
               <div className="relative h-full w-full rounded-t-[5rem] rounded-b-3xl overflow-hidden shadow-2xl border border-white/10 group">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img 
+                <Image 
                   src="/uploads/1773775458388-profilio.png" 
                   alt="Mantas Katkevičius" 
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-700"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority={true}
+                  loading="eager"
+                  className="object-cover object-center group-hover:scale-105 transition-all duration-700"
                 />
                 {/* Removed dark portrait overlay style */}
                 <div className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-white/10 border border-white/20 p-5 rounded-2xl flex flex-col items-center text-center">
@@ -255,35 +263,7 @@ export default function HomePage() {
             </Link>
           </div>
           
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {articles.length === 0 ? (
-              [1, 2, 3].map((_, i) => (
-                <div key={i} className="bg-slate-50 rounded-3xl p-8 shadow-sm border border-slate-100 flex flex-col h-200 animate-pulse">
-                  <div className="h-4 bg-slate-200 rounded-full w-24 mb-4"></div>
-                  <div className="h-7 bg-slate-200 rounded-full w-5/6 mb-3"></div>
-                  <div className="h-4 bg-slate-200 rounded-full w-full mb-2"></div>
-                </div>
-              ))
-            ) : (
-              articles.map(article => (
-                <StaggerItem key={article.id}>
-                  <Link href={`/naudinga-informacija/${article.slug}`} className="group bg-white rounded-3xl p-8 hover:bg-slate-50 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 flex flex-col h-full hover:-translate-y-1">
-                    <div className="text-sm font-bold tracking-wider uppercase text-primary mb-4">
-                      {article.category || "Patarimai"}
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-950 mb-4 group-hover:text-primary transition-colors leading-tight">
-                      {article.title}
-                    </h3>
-                    <p className="text-slate-500 mb-8 flex-1 leading-relaxed text-sm line-clamp-3">
-                      {article.excerpt}
-                    </p>
-                    <div className="inline-flex items-center text-slate-950 font-bold text-sm group-hover:text-primary transition-colors mt-auto">Skaityti straipsnį<ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" />
-                    </div>
-                  </Link>
-                </StaggerItem>
-              ))
-            )}
-          </StaggerContainer>
+          <ArticlesGrid articles={articles} />
 
           {/* Mobile Only Button */}
           <div className="mt-10 flex justify-center md:hidden">
@@ -296,61 +276,6 @@ export default function HomePage() {
         </div>
       </section>
 
-    </div>
-  );
-}
-
-function TestimonialsGrid() {
-  const [reviews, setReviews] = useState<any[]>([]);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    fetch("/api/reviews")
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          setReviews(data.filter((r: any) => r.status === "approved").slice(0, 6));
-        } else {
-          const saved = localStorage.getItem("nt_reviews_master_v1");
-          if (saved) {
-            const allReviews = JSON.parse(saved);
-            setReviews(allReviews.filter((r: any) => r.status === "approved").slice(0, 6));
-          }
-        }
-      })
-      .catch(() => {
-        const saved = localStorage.getItem("nt_reviews_master_v1");
-        if (saved) {
-          const allReviews = JSON.parse(saved);
-          setReviews(allReviews.filter((r: any) => r.status === "approved").slice(0, 6));
-        }
-      });
-  }, []);
-
-  if (!mounted || reviews.length === 0) return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 opacity-20 pointer-events-none">
-       {[1,2,3].map(i => <div key={i} className="h-64 bg-slate-100 rounded-[32px] animate-pulse"></div>)}
-    </div>
-  );
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
-      <Quote className="absolute -top-24 -right-12 w-64 h-64 text-slate-100/30 -rotate-12 pointer-events-none z-0" />
-      
-      {reviews.map((review, idx) => (
-        <TestimonialCard 
-          key={review.id}
-          id={review.id}
-          name={review.name}
-          rating={review.rating}
-          comment={review.comment}
-          date={review.date}
-          image={review.image}
-          delay={idx * 0.1}
-          dark={false}
-        />
-      ))}
     </div>
   );
 }
