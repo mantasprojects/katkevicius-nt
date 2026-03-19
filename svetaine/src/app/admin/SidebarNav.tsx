@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Building, Star, Settings, Users, FileText } from "lucide-react";
+import { Building, Star, Settings, Users, FileText, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function SidebarNav() {
@@ -14,6 +14,7 @@ export default function SidebarNav() {
     { href: "/admin/blog", label: "Tinklaraštis", icon: FileText },
     { href: "/admin/atsiliepimai", label: "Atsiliepimai", icon: Star },
     { href: "/admin/crm", label: "CRM (Kontaktai)", icon: Users },
+    { href: "/admin/naujienlaiskiai", label: "Naujienlaiškiai", icon: Mail },
     { href: "/admin/nustatymai", label: "Nustatymai", icon: Settings },
   ];
 

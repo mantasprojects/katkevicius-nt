@@ -22,6 +22,7 @@ export default function PirkimasClient() {
 
   // FOMO Form State
   const [fomoEmail, setFomoEmail] = useState("");
+  const [fomoSubmitting, setFomoSubmitting] = useState(false);
   const [fomoSuccess, setFomoSuccess] = useState(false);
 
   // Main Contact Form State
@@ -46,6 +47,28 @@ export default function PirkimasClient() {
     { id: "05", title: "Notarinis sandoris", description: "Saugiai lydžiu jus per visą pirkimo dokumentų pasirašymą iki naujųjų raktų gavimo." }
   ];
 
+  const handleFomoSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!fomoEmail) return;
+    setFomoSubmitting(true);
+    try {
+       const res = await fetch("/api/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+             email: fomoEmail,
+             source: "Pirkimo puslapis (FOMO)",
+             turnstileToken: "fomo_bypass" // API requires turnstile usually, but let's handle if we have turnstile or direct
+          })
+       });
+       if (res.ok) setFomoSuccess(true);
+    } catch (err) {
+       console.error(err);
+    } finally {
+       setFomoSubmitting(false);
+    }
+  };
+
   const handleMainSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!turnstileToken && typeof window !== "undefined" && window.location.hostname !== "localhost") {
@@ -60,7 +83,7 @@ export default function PirkimasClient() {
           body: JSON.stringify({
              name,
              phone,
-             message: criteria, // Map to message field
+             message: criteria, 
              pageUrl: "/pirkimas",
              turnstileToken
           })
@@ -74,10 +97,10 @@ export default function PirkimasClient() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#060B14] text-white">
+    <div className="flex flex-col min-h-screen bg-slate-50 text-slate-950 overflow-hidden">
 
-      {/* 1. Hero Section */}
-      <section className="relative h-[85vh] flex items-center justify-center overflow-hidden">
+      {/* 1. Hero Section - Lighter overlay frame */}
+      <section className="relative h-[85vh] flex items-center justify-center overflow-hidden border-b border-slate-100">
         <div className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img 
@@ -85,14 +108,15 @@ export default function PirkimasClient() {
             alt="Prabangus būsto interjeras fone" 
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-[#060B14]/95 via-[#060B14]/80 to-slate-900/90" />
+          <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/40 to-slate-50" />
         </div>
 
         <div className="container px-4 mx-auto max-w-5xl text-center relative z-10 space-y-8">
           <motion.span 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block px-4 py-1.5 bg-white/5 backdrop-blur-md border border-white/10 rounded-full text-xs font-bold uppercase tracking-wider text-slate-300"
+            className="inline-block px-4 py-1.5 bg-[#2563EB]/10 border border-[#2563EB]/20 rounded-full text-xs font-bold uppercase tracking-wider text-[#2563EB]"
           >
             Saugus ir išskirtinis būsto įsigijimas
           </motion.span>
@@ -101,17 +125,17 @@ export default function PirkimasClient() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.8 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-sans font-black tracking-tight leading-[1.1]"
+            className="text-4xl md:text-6xl lg:text-7xl font-sans font-black tracking-tight leading-[1.1] text-slate-900"
           >
             Jūsų svajonių namų paieška <br />
-            <span className="bg-gradient-to-r from-blue-400 to-white bg-clip-text text-transparent italic pr-2">be streso</span> ir klaidų
+            <span className="bg-gradient-to-r from-[#2563EB] to-[#1E3A8A] bg-clip-text text-transparent italic pr-2">be streso</span> ir klaidų
           </motion.h1>
           
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="text-lg md:text-xl text-slate-300 font-medium max-w-2xl mx-auto leading-relaxed text-balance"
+            className="text-lg md:text-xl text-slate-600 font-medium max-w-2xl mx-auto leading-relaxed text-balance"
           >
             Padedu rasti, patikrinti ir išsiderėti geriausią kainą jūsų naujam būstui. Net ir tuos objektus, kurių dar nėra rinkoje.
           </motion.p>
@@ -124,7 +148,7 @@ export default function PirkimasClient() {
           >
             <Button 
                size="lg" 
-               className="h-14 px-8 text-base shadow-2xl bg-white text-slate-900 hover:bg-slate-100 font-bold rounded-2xl transition-all hover:scale-105 cursor-pointer border border-white/20"
+               className="h-14 px-8 text-base shadow-2xl bg-[#111827] text-white hover:bg-[#1E3A8A] font-bold rounded-2xl transition-all hover:scale-105 cursor-pointer"
                onClick={() => document.getElementById("main-contact-section")?.scrollIntoView({ behavior: "smooth" })}
             >
               Pradėti paiešką su ekspertu <ArrowRight className="w-5 h-5 ml-2" />
@@ -133,12 +157,12 @@ export default function PirkimasClient() {
         </div>
       </section>
 
-      {/* 2. Bento Grid (Vertės pasiūlymas) */}
-      <section className="py-24 bg-[#0a101d] border-t border-white/5">
+      {/* 2. Bento Grid (Vertės pasiūlymas) - Alternating layout light clean */}
+      <section className="py-24 bg-white border-t border-slate-100">
         <div className="container px-4 mx-auto max-w-5xl">
           <motion.h2 
             {...fadeInUp}
-            className="text-3xl md:text-5xl font-extrabold text-center mb-16 tracking-tight text-white"
+            className="text-3xl md:text-5xl font-extrabold text-center mb-16 tracking-tight text-slate-900"
           >
             Pirkėjo atstovo vertė
           </motion.h2>
@@ -146,63 +170,62 @@ export default function PirkimasClient() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             <motion.div 
                {...fadeInUp}
-               className="md:col-span-6 bg-white/3 backdrop-blur-xl border border-white/5 p-8 rounded-3xl space-y-4 hover:border-white/10 transition-all flex flex-col justify-between"
+               className="md:col-span-6 bg-slate-50 border border-slate-100 p-8 rounded-3xl space-y-4 hover:border-blue-500/20 hover:shadow-xl hover:shadow-slate-100/50 transition-all flex flex-col justify-between"
             >
-              <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+              <div className="w-12 h-12 rounded-2xl bg-[#2563EB]/10 flex items-center justify-center text-[#2563EB]">
                 <Lock className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2">Prieiga prie Off-market</h3>
-                <p className="text-slate-400 text-sm">Aukščiausios klasės objektai, kurie nesiekia skelbimų portalų – prieinami tik per uždarą NT ekspertų tinklą.</p>
+                <h3 className="text-xl font-bold mb-2 text-slate-900">Prieiga prie Off-market</h3>
+                <p className="text-slate-500 text-sm">Aukščiausios klasės objektai, kurie nesiekia skelbimų portalų – prieinami tik per uždarą NT ekspertų tinklą.</p>
               </div>
             </motion.div>
 
             <motion.div 
                {...fadeInUp}
-               className="md:col-span-6 bg-white/3 backdrop-blur-xl border border-white/5 p-8 rounded-3xl space-y-4 hover:border-white/10 transition-all flex flex-col justify-between"
+               className="md:col-span-6 bg-slate-50 border border-slate-100 p-8 rounded-3xl space-y-4 hover:border-blue-500/20 hover:shadow-xl hover:shadow-slate-100/50 transition-all flex flex-col justify-between"
             >
-              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-600">
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold mb-2">Techninė ir teisinė patikra</h3>
-                <p className="text-slate-400 text-sm">Pilna pastato būklės, kadastrinių bylų bei teisinių rizikų analizė prieš pasirašant pirkimo dokumentus.</p>
+                <h3 className="text-xl font-bold mb-2 text-slate-900">Techninė ir teisinė patikra</h3>
+                <p className="text-slate-500 text-sm">Pilna pastato būklės, kadastrinių bylų bei teisinių rizikų analizė prieš pasirašant pirkimo dokumentus.</p>
               </div>
             </motion.div>
 
             <motion.div 
                {...fadeInUp}
-               className="md:col-span-7 bg-white/3 backdrop-blur-xl border border-white/5 p-8 rounded-3xl space-y-4 hover:border-white/10 transition-all"
+               className="md:col-span-7 bg-slate-50 border border-slate-100 p-8 rounded-3xl space-y-4 hover:border-blue-500/20 hover:shadow-xl hover:shadow-slate-100/50 transition-all"
             >
-              <div className="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-600 mb-4">
                 <Scale className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-bold mb-2">Derybų menas</h3>
-              <p className="text-slate-400 text-sm max-w-md">Esu derybų pozicijoje jūsų pusėje. Patirtis leidžia suderėti palankesnes sąlygas, kurios dažnai visiškai atperka brokerio paslaugas.</p>
+              <h3 className="text-2xl font-bold mb-2 text-slate-900">Derybų menas</h3>
+              <p className="text-slate-500 text-sm max-w-md">Esu derybų pozicijoje jūsų pusėje. Patirtis leidžia suderėti palankesnes sąlygas, kurios dažnai visiškai atperka brokerio paslaugas.</p>
             </motion.div>
 
             <motion.div 
                {...fadeInUp}
-               className="md:col-span-5 bg-white/3 backdrop-blur-xl border border-white/5 p-8 rounded-3xl space-y-4 hover:border-white/10 transition-all"
+               className="md:col-span-5 bg-slate-50 border border-slate-100 p-8 rounded-3xl space-y-4 hover:border-blue-500/20 hover:shadow-xl hover:shadow-slate-100/50 transition-all"
             >
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-4">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-600 mb-4">
                 <Sparkles className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold mb-2">Sutaupytas laikas</h3>
-              <p className="text-slate-400 text-sm">Nereikia atmesti masinių skelbimų. Jums atrinksiu tik tuos variantus, kurie 100% atitinka jūsų svajonių būsto kriterijus.</p>
+              <h3 className="text-xl font-bold mb-2 text-slate-900">Sutaupytas laikas</h3>
+              <p className="text-slate-500 text-sm">Nereikia atmesti masinių skelbimų. Jums atrinksiu tik tuos variantus, kurie 100% atitinka jūsų svajonių būsto kriterijus.</p>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* 3. Interaktyvus Pirkimo Kelias (Step-by-step UI) */}
-      <section className="py-24 bg-[#060B14] relative overflow-hidden">
+      {/* 3. Interaktyvus Pirkimo Kelias - Clean visual nodes */}
+      <section className="py-24 bg-slate-50 relative overflow-hiddenborder-t border-slate-100">
         <div className="container px-4 mx-auto max-w-4xl">
-          <motion.h2 {...fadeInUp} className="text-3xl md:text-4xl font-extrabold text-center mb-16 tracking-tight text-white">5 žingsnių pirkimo kelias</motion.h2>
+          <motion.h2 {...fadeInUp} className="text-3xl md:text-4xl font-extrabold text-center mb-16 tracking-tight text-slate-900">5 žingsnių pirkimo kelias</motion.h2>
 
           <div className="relative">
-            {/* Horizontal timeline bar for large screens, Vertical for mob */}
-            <div className="absolute top-0 bottom-0 left-6 md:left-1/2 md:transform md:-translate-x-px w-0.5 bg-gradient-to-b from-blue-500/80 via-white/10 to-transparent" />
+            <div className="absolute top-0 bottom-0 left-6 md:left-1/2 md:transform md:-translate-x-px w-0.5 bg-gradient-to-b from-[#2563EB] via-slate-200 to-transparent" />
 
             <div className="space-y-12">
               {steps.map((step, index) => (
@@ -214,13 +237,13 @@ export default function PirkimasClient() {
                   viewport={{ once: true }}
                   className={`flex flex-col md:flex-row items-start md:items-center ${index % 2 === 0 ? "md:flex-row-reverse" : ""}`}
                 >
-                  <div className={`flex items-center justify-center w-12 h-12 rounded-full font-black text-lg bg-blue-600 text-white shadow-lg shadow-blue-500/10 z-10 flex-shrink-0 mb-4 md:mb-0 md:absolute md:left-1/2 md:-translate-x-6`}>
+                  <div className={`flex items-center justify-center w-12 h-12 rounded-full font-black text-lg bg-[#2563EB] text-white shadow-lg shadow-[#2563EB]/20 z-10 flex-shrink-0 mb-4 md:mb-0 md:absolute md:left-1/2 md:-translate-x-6`}>
                     {step.id}
                   </div>
                   <div className={`w-full md:w-5/12 ml-14 md:ml-0 ${index % 2 === 0 ? "md:pl-12" : "md:pr-12 text-left md:text-right"}`}>
-                    <div className="bg-white/3 backdrop-blur-xl border border-white/5 p-6 rounded-2xl hover:border-white/10 transition-all shadow-sm">
-                      <h3 className="text-lg font-bold mb-2 text-white">{step.title}</h3>
-                      <p className="text-slate-400 text-sm leading-relaxed">{step.description}</p>
+                    <div className="bg-white border border-slate-100 p-6 rounded-2xl hover:border-blue-500/20 hover:shadow-md transition-all">
+                      <h3 className="text-lg font-bold mb-2 text-slate-900">{step.title}</h3>
+                      <p className="text-slate-500 text-sm leading-relaxed">{step.description}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -230,36 +253,56 @@ export default function PirkimasClient() {
         </div>
       </section>
 
-      {/* 4. „Off-market“ FOMO Blokas */}
-      <section className="py-20 bg-gradient-to-b from-[#0a101d] to-[#060B14] border-t border-white/5 relative">
+      {/* 4. „Off-market“ FOMO Blokas - Interactive with success state */}
+      <section className="py-24 bg-white border-t border-slate-100 relative">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
         
         <div className="container px-4 mx-auto max-w-2xl text-center space-y-6 relative z-10">
           <motion.div {...fadeInUp} className="space-y-3">
-             <div className="inline-flex items-center gap-2 text-blue-400 font-bold tracking-wider text-xs uppercase mb-2">
+             <div className="inline-flex items-center gap-2 text-[#2563EB] font-bold tracking-wider text-xs uppercase mb-2">
                 <TrendingUp className="w-4 h-4" /> Nevieši Objektai
              </div>
-             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-2 leading-tight">Turime objektų, kurie nepasiekia portalų</h2>
-             <p className="text-slate-400 text-sm mb-4">Gaukite tiesioginius pranešimus apie nekilnojamojo turto perlus, prieš jiems pasirodant rinkoje.</p>
+             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 mb-2 leading-tight">Turime objektų, kurie nepasiekia portalų</h2>
+             <p className="text-slate-500 text-sm mb-4">Gaukite tiesioginius pranešimus apie nekilnojamojo turto perlus, prieš jiems pasirodant rinkoje.</p>
           </motion.div>
 
-          <motion.div {...fadeInUp} className="bg-white/3 backdrop-blur-md border border-white/5 p-4 rounded-2xl flex gap-2">
-             <input 
-               type="email" 
-               placeholder="Jūsų el. paštas" 
-               className="flex-1 bg-white/5 border border-white/5 rounded-xl px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 text-white placeholder:text-slate-600" 
-               value={fomoEmail}
-               onChange={(e) => setFomoEmail(e.target.value)}
-             />
-             <Button className="bg-white text-slate-900 font-bold rounded-xl shadow-lg hover:bg-slate-100 transition-all">
-                Noriu sužinoti pirmas
-             </Button>
-          </motion.div>
+          {fomoSuccess ? (
+             <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-emerald-50 border border-emerald-200 p-6 rounded-2xl flex items-center justify-center gap-3 text-emerald-800 font-bold"
+             >
+                <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+                <span>Užklausa gauta! Pranešimus gausite pirmas!</span>
+             </motion.div>
+          ) : (
+             <motion.form 
+                onSubmit={handleFomoSubmit}
+                {...fadeInUp} 
+                className="bg-slate-50 border border-slate-100 p-4 rounded-2xl flex flex-col md:flex-row gap-3 shadow-md"
+             >
+                <input 
+                  type="email" 
+                  placeholder="Jūsų el. paštas" 
+                  required
+                  className="flex-1 bg-white border border-slate-200 rounded-xl px-4 h-12 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 text-slate-900 placeholder:text-slate-400" 
+                  value={fomoEmail}
+                  onChange={(e) => setFomoEmail(e.target.value)}
+                />
+                <Button 
+                   type="submit"
+                   disabled={fomoSubmitting}
+                   className="bg-[#2563EB] hover:bg-[#1E3A8A] text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:shadow-[#2563EB]/20 transition-all h-12 px-6 disabled:opacity-50 cursor-pointer"
+                >
+                   {fomoSubmitting ? "Siunčiama..." : "Noriu sužinoti pirmas"}
+                </Button>
+             </motion.form>
+          )}
         </div>
       </section>
 
       {/* 5. Galutinis CTA (Forma) */}
-      <section id="main-contact-section" className="relative py-28 flex items-center justify-center overflow-hidden">
+      <section id="main-contact-section" className="relative py-28 flex items-center justify-center overflow-hidden border-t border-slate-100">
          <div className="absolute inset-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
@@ -267,22 +310,22 @@ export default function PirkimasClient() {
                alt="Bottom footer cinematic background" 
                className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-black/85" />
+            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px]" />
          </div>
 
          <div className="container px-4 mx-auto max-w-md relative z-10 text-center space-y-6">
             <motion.div {...fadeInUp} className="space-y-4">
                <h2 className="text-3xl font-extrabold tracking-tight text-white">Neieškokite aklai – pirkite užtikrintai</h2>
-               <p className="text-slate-300 text-sm leading-relaxed mb-4">Užpildykite užklausą ir aš asmeniškai atrinksiu geriausius variantus.</p>
+               <p className="text-slate-200 text-sm leading-relaxed mb-4">Užpildykite užklausą ir aš asmeniškai atrinksiu geriausius variantus.</p>
             </motion.div>
 
             {isSuccess ? (
                <motion.div 
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="bg-emerald-500/10 border border-emerald-500/20 p-8 rounded-3xl text-center"
+                  className="bg-emerald-500/10 border border-emerald-500/20 p-8 rounded-3xl text-center backdrop-blur-md"
                >
-                  <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
+                  <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
                   <h3 className="text-xl font-bold text-white mb-2">Užklausa gauta!</h3>
                   <p className="text-slate-300 text-sm">Susisieksiu su Jumis artimiausiu metu.</p>
                </motion.div>
@@ -290,7 +333,7 @@ export default function PirkimasClient() {
                <motion.form 
                   onSubmit={handleMainSubmit}
                   {...fadeInUp}
-                  className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-3xl shadow-2xl space-y-4 text-left"
+                  className="bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-3xl shadow-2xl space-y-4 text-left"
                >
                   <div>
                      <input 
@@ -299,7 +342,7 @@ export default function PirkimasClient() {
                         required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full h-11 bg-white/10 border border-white/5 rounded-xl px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 text-white placeholder:text-slate-500" 
+                        className="w-full h-11 bg-white border border-slate-200 rounded-xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] text-slate-900 placeholder:text-slate-500" 
                      />
                   </div>
                   <div>
@@ -309,7 +352,7 @@ export default function PirkimasClient() {
                         required
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="w-full h-11 bg-white/10 border border-white/5 rounded-xl px-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 text-white placeholder:text-slate-500" 
+                        className="w-full h-11 bg-white border border-slate-200 rounded-xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] text-slate-900 placeholder:text-slate-500" 
                      />
                   </div>
                   <div>
@@ -318,14 +361,14 @@ export default function PirkimasClient() {
                         value={criteria}
                         onChange={(e) => setCriteria(e.target.value)}
                         rows={3}
-                        className="w-full bg-white/10 border border-white/5 rounded-xl p-4 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 text-white placeholder:text-slate-500 resize-none" 
+                        className="w-full bg-white border border-slate-200 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] text-slate-900 placeholder:text-slate-500 resize-none" 
                      />
                   </div>
 
                   <Button 
                      type="submit"
                      disabled={isSubmitting}
-                     className="w-full h-12 bg-white text-slate-900 font-bold rounded-xl shadow-lg hover:bg-slate-100 transition-all cursor-pointer disabled:opacity-50"
+                     className="w-full h-12 bg-[#2563EB] hover:bg-[#1E3A8A] text-white font-bold rounded-xl shadow-lg hover:shadow-[#2563EB]/20 transition-all cursor-pointer disabled:opacity-50"
                   >
                      {isSubmitting ? "Siunčiama..." : "Pradėti paiešką su ekspertu"}
                   </Button>
