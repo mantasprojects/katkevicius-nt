@@ -5,9 +5,45 @@ import { TrendingUp, FileText, Camera, ArrowRight, ShieldCheck, CheckCircle2, Aw
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import Turnstile from "@/components/ui/Turnstile";
 
 export default function PardavimasClient() {
   const [activeStep, setActiveStep] = useState(0);
+  const [name, setName] = useState("");
+  const [contact, setContact] = useState("");
+  const [message, setMessage] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!turnstileToken && typeof window !== "undefined" && window.location.hostname !== "localhost") {
+       alert("Prašome patvirtinti saugumo patikrą.");
+       return;
+    }
+    setIsSubmitting(true);
+    try {
+       const res = await fetch("/api/send-inquiry", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+             name,
+             phone: contact,
+             message,
+             pageUrl: "/pardavimas",
+             turnstileToken
+          })
+       });
+       if (res.ok) {
+          setIsSuccess(true);
+       }
+    } catch (error) {
+       console.error(error);
+    } finally {
+       setIsSubmitting(false);
+    }
+  };
 
   const steps = [
     { id: "01", title: "Objekto analizė ir kaina", description: "Atlieku tikslią rinkos kainų ir konkurentų analizę, nustatome maksimalią objekto starto vertę." },
@@ -72,7 +108,7 @@ export default function PardavimasClient() {
             animate={{ opacity: 1, y: 0 }}
             className="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/10 rounded-full text-xs font-bold uppercase tracking-wider text-slate-200"
           >
-            Aukščiausias NT brokerio standartas
+            NT pardavimų standartas
           </motion.span>
           
           <motion.h1 
@@ -82,7 +118,7 @@ export default function PardavimasClient() {
             className="text-4xl md:text-6xl lg:text-7xl font-sans font-black tracking-tight leading-[1.1]"
           >
             Parduokite turtą <br />
-            <span className="bg-gradient-to-r from-blue-400 to-white bg-clip-text text-transparent italic">brangiau</span> su strategija
+            <span className="bg-gradient-to-r from-blue-400 to-white bg-clip-text text-transparent italic pr-2">brangiau</span> su strategija
           </motion.h1>
           
           <motion.p 
@@ -240,16 +276,63 @@ export default function PardavimasClient() {
                <p className="text-slate-300 text-sm leading-relaxed mb-4">Užpildykite užklausą ir gausite nemokamą turto vertinimą jau rytoj.</p>
             </motion.div>
 
-            <motion.div 
-               {...fadeInUp}
-               className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-3xl shadow-2xl space-y-4"
-            >
-               <input type="text" placeholder="Jūsų Vardas" className="w-full h-11 bg-white/10 border border-white/5 rounded-xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-white/30 text-white placeholder:text-slate-500" />
-               <input type="email" placeholder="El. paštas arba Telefonas" className="w-full h-11 bg-white/10 border border-white/5 rounded-xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-white/30 text-white placeholder:text-slate-500" />
-               <Button className="w-full h-12 bg-white text-slate-900 font-bold rounded-xl shadow-lg hover:bg-slate-100 transition-all cursor-pointer">
-                  Pradėkime šiandien
-               </Button>
-            </motion.div>
+            {isSuccess ? (
+               <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="bg-emerald-500/10 border border-emerald-500/20 p-8 rounded-3xl text-center"
+               >
+                  <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-4" />
+                  <h3 className="text-xl font-bold text-white mb-2">Užklausa gauta!</h3>
+                  <p className="text-slate-300 text-sm">Susisieksiu su Jumis artimiausiu metu.</p>
+               </motion.div>
+            ) : (
+               <motion.form 
+                  onSubmit={handleSubmit}
+                  {...fadeInUp}
+                  className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-3xl shadow-2xl space-y-4 text-left"
+               >
+                  <div>
+                     <input 
+                        type="text" 
+                        placeholder="Jūsų vardas" 
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full h-11 bg-white/10 border border-white/5 rounded-xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-white/30 text-white placeholder:text-slate-500" 
+                     />
+                  </div>
+                  <div>
+                     <input 
+                        type="text" 
+                        placeholder="El. paštas arba telefonas" 
+                        required
+                        value={contact}
+                        onChange={(e) => setContact(e.target.value)}
+                        className="w-full h-11 bg-white/10 border border-white/5 rounded-xl px-4 text-sm focus:outline-none focus:ring-2 focus:ring-white/30 text-white placeholder:text-slate-500" 
+                     />
+                  </div>
+                  <div>
+                     <textarea 
+                        placeholder="Žinutė / Komentaras (neprivaloma)" 
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        rows={3}
+                        className="w-full bg-white/10 border border-white/5 rounded-xl p-4 text-sm focus:outline-none focus:ring-2 focus:ring-white/30 text-white placeholder:text-slate-500 resize-none" 
+                     />
+                  </div>
+                  
+                  <Turnstile onVerify={setTurnstileToken} theme="dark" />
+
+                  <Button 
+                     type="submit"
+                     disabled={isSubmitting}
+                     className="w-full h-12 bg-white text-slate-900 font-bold rounded-xl shadow-lg hover:bg-slate-100 transition-all cursor-pointer disabled:opacity-50"
+                  >
+                     {isSubmitting ? "Siunčiama..." : "Pradėkime šiandien"}
+                  </Button>
+               </motion.form>
+            )}
          </div>
       </section>
 
