@@ -14,7 +14,7 @@ export default function PardavimasClient() {
     { id: "02", title: "Home staging ir paruošimas", description: "Subtiliais dizaino sprendimais padidiname patrauklumą ir sukuriame prabangos įspūdį nuo pirmo žvilgsnio." },
     { id: "03", title: "Maksimali sklaida (Ads)", description: "Targetuota Facebook, Instagram ir Google reklama nukreipiama tik į realiai būsto ieškančius pirkėjus." },
     { id: "04", title: "Derybos ir atranka", description: "Filtruoju skambučius, organizuoju apžiūras ir ginu Jūsų finansinius interesus derybų metu." },
-    { id: "05", title: "Sėkmingas sandoris", description: "Sutvarkau visą dokumentaciją, pažymas bei lydžiu Jus iki patiekojo sandorio užbaigimo pas notarą." }
+    { id: "05", title: "Sėkmingas sandoris", description: "Sutvarkau visą dokumentaciją, pažymas bei lydžiu Jus iki sandorio užbaigimo pas notarą." }
   ];
 
   const features = [
@@ -72,7 +72,7 @@ export default function PardavimasClient() {
             animate={{ opacity: 1, y: 0 }}
             className="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/10 rounded-full text-xs font-bold uppercase tracking-wider text-slate-200"
           >
-            Elite Real Estate Broker Standard
+            Aukščiausias NT brokerio standartas
           </motion.span>
           
           <motion.h1 
@@ -147,7 +147,7 @@ export default function PardavimasClient() {
         
         <div className="container px-4 mx-auto max-w-6xl">
           <motion.div {...fadeInUp} className="text-center mb-20">
-            <h2 className="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight leading-tight">5 Žingsnių Pardavimo Strategija</h2>
+            <h2 className="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight leading-tight">5 žingsnių pardavimo strategija</h2>
             <p className="text-slate-400 max-w-xl mx-auto text-base">Rinkodaros efektyvumą didina tikslingi įrankiai ir derybinis meistriškumas.</p>
           </motion.div>
 
