@@ -293,14 +293,14 @@ export default function PirkimasClient() {
                      type="email" 
                      placeholder="Jūsų el. paštas" 
                      required
-                     className="flex-1 bg-white border border-slate-200 rounded-xl px-4 h-12 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 text-slate-900 placeholder:text-slate-400" 
+                     className="flex-1 bg-white border border-slate-200 rounded-xl px-4 h-14 text-base focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 text-slate-900 placeholder:text-slate-400" 
                      value={fomoEmail}
                      onChange={(e) => setFomoEmail(e.target.value)}
                    />
                    <Button 
                       type="submit"
                       disabled={fomoSubmitting}
-                      className="bg-[#2563EB] hover:bg-[#1E3A8A] text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:shadow-[#2563EB]/20 transition-all h-12 px-6 disabled:opacity-50 cursor-pointer flex-shrink-0"
+                      className="bg-[#2563EB] hover:bg-[#1E3A8A] text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:shadow-[#2563EB]/20 transition-all h-14 px-6 disabled:opacity-50 cursor-pointer flex-shrink-0"
                    >
                       {fomoSubmitting ? "Siunčiama..." : "Noriu sužinoti pirmas"}
                    </Button>
