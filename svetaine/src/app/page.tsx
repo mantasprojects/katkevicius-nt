@@ -55,8 +55,12 @@ export default function HomePage() {
         {/* Integrated Spread Layout */}
         <div className="container px-4 mx-auto max-w-7xl relative z-10 flex flex-col md:flex-row items-center justify-between h-full pt-2 md:pt-16">
           {/* Left Content Side */}
-          <!-- Removed Badge -->
-
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="w-full md:w-6/12 flex flex-col items-start text-left relative z-10 mb-12 md:mb-0"
+          >
             <h1 className="text-[2.75rem] md:text-6xl lg:text-7xl font-sans font-black mb-6 leading-[1.05] tracking-tight text-slate-950 drop-shadow-sm">
               Nuo paieškos <br />
               iki sandorio <br />
