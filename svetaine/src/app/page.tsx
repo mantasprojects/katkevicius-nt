@@ -47,7 +47,7 @@ export default function HomePage() {
         <div className="absolute inset-0 z-0 bg-gradient-to-br from-slate-50 via-white to-indigo-50/20">
           <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-60" />
           <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-sky-100/30 rounded-full blur-3xl opacity-60" />
-          <!-- No dark overlay -->
+          
           {/* Subtle Bottom Gradient */}
           <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent" />
         </div>
