@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
   ArrowLeft, Save, Eye, Upload, Image as ImageIcon, 
@@ -295,22 +296,6 @@ function BlogEditorContent() {
             />
           </div>
 
-          {/* Excerpt */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
-            <Label className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 block">
-              Trumpas aprašymas (SEO)
-            </Label>
-            <textarea
-              value={post.excerpt}
-              onChange={(e) => setPost((p) => ({ ...p, excerpt: e.target.value }))}
-              placeholder="Trumpas aprašymas, kuris bus rodomas paieškos rezultatuose..."
-              className="w-full min-h-[80px] border-0 border-b border-slate-100 bg-transparent p-0 text-base focus:outline-none focus:ring-0 resize-none placeholder:text-slate-300 font-sans"
-              maxLength={300}
-            />
-            <p className="text-right text-xs text-slate-400 mt-2">
-              {post.excerpt?.length || 0}/300
-            </p>
-          </div>
 
           {/* Content Editor */}
           <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
@@ -461,6 +446,84 @@ function BlogEditorContent() {
               )}
             </div>
           </div>
+
+          {/* New SEO Optimization Module with Google Preview */}
+          <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm space-y-6">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <Label className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1">
+                <Globe className="w-4 h-4" /> SEO Optimizavimas & Google Peržiūra
+              </Label>
+            </div>
+
+            {/* Google SERP Snippet Preview */}
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-slate-400">Paieškos rezultato peržiūra</Label>
+              <div className="border border-slate-100 p-5 rounded-2xl bg-[#F8FAFC] space-y-1 max-w-xl">
+                <p className="text-xs text-[#202124] flex items-center gap-1 font-sans">
+                  https://mkatkevicius.lt <span className="text-slate-400">› naudinga › {post.slug || "naujas-irasas"}</span>
+                </p>
+                <h4 className="text-xl text-[#1a0dab] hover:underline cursor-pointer font-sans font-medium leading-snug">
+                  {post.seo_title || post.title || "Be pavadinimo"}
+                </h4>
+                <p className="text-sm text-[#4d5156] font-sans line-clamp-2 leading-relaxed">
+                  {post.seo_description || "Įveskite SEO aprašymą žemiau, kad pamatytumėte, kaip jūsų straipsnis atrodys Google paieškos rezultatuose."}
+                </p>
+              </div>
+            </div>
+
+            {/* Form Fields Section */}
+            <div className="space-y-4 pt-2">
+              <div className="space-y-1.5">
+                <div className="flex justify-between items-center">
+                  <Label className="text-xs font-semibold text-slate-700">Meta Pavadinimas (SEO Title)</Label>
+                  <span className={`text-[11px] font-bold ${
+                    (post.seo_title?.length || 0) > 60 ? "text-red-500" : "text-slate-400"
+                  }`}>
+                    {post.seo_title?.length || 0}/60
+                  </span>
+                </div>
+                <Input
+                  value={post.seo_title || ""}
+                  onChange={(e) => setPost((p) => ({ ...p, seo_title: e.target.value }))}
+                  placeholder="Meta title Google paieškai..."
+                  className={`h-11 text-sm rounded-xl border-slate-200 focus:ring-2 focus:ring-[#2563EB]/20 ${
+                    (post.seo_title?.length || 0) > 60 ? "border-red-300 focus:border-red-400" : ""
+                  }`}
+                  maxLength={100} // slight buffer over counter
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <div className="flex justify-between items-center">
+                  <Label className="text-xs font-semibold text-slate-700">Meta Aprašymas (SEO Description)</Label>
+                  <span className={`text-[11px] font-bold ${
+                    (post.seo_description?.length || 0) > 160 ? "text-red-500" : "text-slate-400"
+                  }`}>
+                    {post.seo_description?.length || 0}/160
+                  </span>
+                </div>
+                <textarea
+                  value={post.seo_description || ""}
+                  onChange={(e) => setPost((p) => ({ ...p, seo_description: e.target.value }))}
+                  placeholder="Trumpas SEO aprašas paieškos rezultatams... (Meta description)"
+                  className={`w-full min-h-[80px] border border-slate-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 resize-none font-sans ${
+                    (post.seo_description?.length || 0) > 160 ? "border-red-300 focus:border-red-400" : ""
+                  }`}
+                  maxLength={250}
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold text-slate-700">Raktiniai žodžiai (atskirti kableliais)</Label>
+                <Input
+                  value={post.focus_keywords || ""}
+                  onChange={(e) => setPost((p) => ({ ...p, focus_keywords: e.target.value }))}
+                  placeholder="pvz: nekilnojamasis turtas, pardavimas, Kaunas"
+                  className="h-11 text-sm rounded-xl border-slate-200 focus:ring-2 focus:ring-[#2563EB]/20"
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Sidebar */}
@@ -558,52 +621,27 @@ function BlogEditorContent() {
             </div>
           </div>
 
-          {/* SEO Optimization */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm space-y-4">
-            <Label className="text-xs font-bold uppercase tracking-wider text-slate-500 block">
-              <Globe className="w-4 h-4 inline mr-1" /> SEO Optimizavimas
-            </Label>
-
-            <div className="space-y-2">
-              <Label className="text-xs font-medium text-slate-500">SEO Pavadinimas (iki 60 simb.)</Label>
-              <Input
-                value={post.seo_title || ""}
-                onChange={(e) => setPost((p) => ({ ...p, seo_title: e.target.value }))}
-                placeholder="SEO Pavadinimas..."
-                className="h-9 text-sm rounded-lg border-slate-200"
-                maxLength={60}
-              />
-              <p className="text-right text-[10px] text-slate-400">
-                {post.seo_title?.length || 0}/60
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-xs font-medium text-slate-500">SEO Aprašymas (iki 160 simb.)</Label>
-              <textarea
-                value={post.seo_description || ""}
-                onChange={(e) => setPost((p) => ({ ...p, seo_description: e.target.value }))}
-                placeholder="Trumpas SEO aprašas paieškos rezultatams..."
-                className="w-full min-h-[60px] border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] resize-none font-sans"
-                maxLength={160}
-              />
-              <p className="text-right text-[10px] text-slate-400">
-                {post.seo_description?.length || 0}/160
-              </p>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-xs font-medium text-slate-500">Raktiniai žodžiai (atskirti kableliais)</Label>
-              <Input
-                value={post.focus_keywords || ""}
-                onChange={(e) => setPost((p) => ({ ...p, focus_keywords: e.target.value }))}
-                placeholder="pvz: nekilnojamasis turtas, pardavimas, Kaunas"
-                className="h-9 text-sm rounded-lg border-slate-200"
-              />
-            </div>
-          </div>
         </div>
       </div>
+      <AnimatePresence>
+        {isSaved && (
+          <motion.div
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="fixed bottom-8 right-8 bg-[#0F172A] text-white px-5 py-4 rounded-2xl shadow-2xl flex items-center gap-3.5 z-50 border border-white/10 backdrop-blur-xl"
+          >
+            <div className="w-8 h-8 bg-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-400">
+              <CheckCircle2 className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-sm font-bold tracking-tight">Išsaugota sėkmingai!</p>
+              <p className="text-xs text-slate-400 mt-0.5">Visi pakeitimai atnaujinti sistemoje.</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
