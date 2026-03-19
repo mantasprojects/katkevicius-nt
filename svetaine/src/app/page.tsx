@@ -33,11 +33,7 @@ export default function HomePage() {
       })
       .catch(err => console.error("Klaida kraunant straipsnius:", err));
 
-    const setIntervalId = setInterval(() => {
-      setIndex((prev) => (prev + 1) % images.length);
-    }, 6000);
-
-    return () => clearInterval(setIntervalId);
+    // Slider disabled
   }, []);
 
   if (!isMounted) return null;
@@ -94,7 +90,7 @@ export default function HomePage() {
             </h1>
 
             <p className="text-base md:text-lg text-white/90 mb-10 max-w-md font-medium leading-relaxed drop-shadow-sm">
-              Aiški strategija, prabangus pareikimas ir profesionalus derybų valdymas. Pardavimo vidurkis – vos 6 savaitės.
+              Aiški strategija, skaitmeninis marketingas ir profesionalus derybų valdymas. Pardavimo vidurkis – vos 6 savaitės.
             </p>
 
             <Link href="/konsultacija" className="w-full sm:w-auto">
