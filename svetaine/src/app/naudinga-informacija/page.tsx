@@ -88,19 +88,11 @@ export default async function BlogPage({
   const categories = getCategories();
   let articles: any[] = [];
   let hasMoreInitial = false;
-  let allArticlesJson: BlogPost[] = [];
 
-  try {
-    allArticlesJson = getPosts();
-  } catch {
-    allArticlesJson = [];
-  }
-
-  // 1. Try Supabase
+  // 1. Fetch ALL posts from Supabase to correctly build Categories
   let query = supabase
     .from("tinklarastis_irasai")
     .select("*", { count: "exact" })
-    .range(0, 18) // Get 19 items: 1 for featured, 18 for list
     .order("created_at", { ascending: false });
 
   if (selectedCategory) {
@@ -110,7 +102,7 @@ export default async function BlogPage({
     query = query.or(`pavadinimas.ilike.%${searchQuery}%,turinys.ilike.%${searchQuery}%`);
   }
 
-  const { data: dbPosts, error, count } = await query;
+  const { data: dbPosts, error } = await query;
 
   let dbPostsMapped: BlogPost[] = [];
   if (!error && dbPosts && dbPosts.length > 0) {
@@ -118,7 +110,7 @@ export default async function BlogPage({
       id: p.id,
       title: p.pavadinimas,
       slug: p.slug,
-      excerpt: p.turinys ? p.turinys.replace(/<[^>]*>?/gm, '').substring(0, 160) + "..." : "",
+      excerpt: p.seo_description || (p.turinys ? p.turinys.replace(/<[^>]*>?/gm, '').substring(0, 160) + "..." : ""),
       category: p.kategorija,
       image: p.nuotrauka_url || "https://images.unsplash.com/photo-1560518883-ce09059eeffa",
       author: "Mantas Katkevičius",
@@ -127,15 +119,9 @@ export default async function BlogPage({
     }));
   }
 
-  // Merge lists, deduplicating by slug (Supabase overrides JSON)
   const mergedPosts = [...dbPostsMapped];
-  allArticlesJson.forEach(p => {
-    if (!mergedPosts.some(m => m.slug === p.slug)) {
-      mergedPosts.push(p);
-    }
-  });
 
-  // Filter by search if exists
+  // Filter by search if exists (already filtered in Supabase for title/content, but client fallback gives match accuracy)
   let filtered = [...mergedPosts];
   if (searchQuery) {
     const q = searchQuery.toLowerCase();

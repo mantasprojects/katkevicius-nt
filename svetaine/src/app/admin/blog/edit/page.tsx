@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { savePost } from "@/app/actions/blog";
 
 interface BlogPost {
   id: string;
@@ -22,6 +23,9 @@ interface BlogPost {
   image: string;
   date: string;
   status: "published" | "draft";
+  seo_title?: string;
+  seo_description?: string;
+  focus_keywords?: string;
 }
 
 interface Category {
@@ -182,19 +186,16 @@ function BlogEditorContent() {
     if (status) payload.status = status;
 
     try {
-      const res = await fetch("/api/blog", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-      if (data.success) {
+      const res = await savePost(payload);
+      if (res.success) {
         setIsSaved(true);
-        if (!editId && data.post?.id) {
+        if (!editId && res.post?.id) {
           // Redirect to edit mode for the new post
-          router.replace(`/admin/blog/edit?id=${data.post.id}`);
+          router.replace(`/admin/blog/edit?id=${res.post.id}`);
         }
         setTimeout(() => setIsSaved(false), 3000);
+      } else {
+        alert(res.error || "Klaida saugant");
       }
     } catch (err) {
       console.error("Klaida saugant:", err);
@@ -552,6 +553,51 @@ function BlogEditorContent() {
               <Input
                 value={post.author}
                 onChange={(e) => setPost((p) => ({ ...p, author: e.target.value }))}
+                className="h-9 text-sm rounded-lg border-slate-200"
+              />
+            </div>
+          </div>
+
+          {/* SEO Optimization */}
+          <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm space-y-4">
+            <Label className="text-xs font-bold uppercase tracking-wider text-slate-500 block">
+              <Globe className="w-4 h-4 inline mr-1" /> SEO Optimizavimas
+            </Label>
+
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-slate-500">SEO Pavadinimas (iki 60 simb.)</Label>
+              <Input
+                value={post.seo_title || ""}
+                onChange={(e) => setPost((p) => ({ ...p, seo_title: e.target.value }))}
+                placeholder="SEO Pavadinimas..."
+                className="h-9 text-sm rounded-lg border-slate-200"
+                maxLength={60}
+              />
+              <p className="text-right text-[10px] text-slate-400">
+                {post.seo_title?.length || 0}/60
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-slate-500">SEO Aprašymas (iki 160 simb.)</Label>
+              <textarea
+                value={post.seo_description || ""}
+                onChange={(e) => setPost((p) => ({ ...p, seo_description: e.target.value }))}
+                placeholder="Trumpas SEO aprašas paieškos rezultatams..."
+                className="w-full min-h-[60px] border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] resize-none font-sans"
+                maxLength={160}
+              />
+              <p className="text-right text-[10px] text-slate-400">
+                {post.seo_description?.length || 0}/160
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs font-medium text-slate-500">Raktiniai žodžiai (atskirti kableliais)</Label>
+              <Input
+                value={post.focus_keywords || ""}
+                onChange={(e) => setPost((p) => ({ ...p, focus_keywords: e.target.value }))}
+                placeholder="pvz: nekilnojamasis turtas, pardavimas, Kaunas"
                 className="h-9 text-sm rounded-lg border-slate-200"
               />
             </div>

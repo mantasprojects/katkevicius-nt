@@ -10,14 +10,9 @@
     "color": "#059669"
   },
   {
-    "id": "investicijos",
-    "name": "Investicijos",
+    "id": "investavimas",
+    "name": "Investavimas",
     "color": "#D97706"
-  },
-  {
-    "id": "projektai",
-    "name": "Projektai",
-    "color": "#7C3AED"
   },
   {
     "id": "teise",
@@ -30,26 +25,6 @@
     "color": "#EC4899"
   },
   {
-    "id": "kita",
-    "name": "Kita",
-    "color": "#6B7280"
-  },
-  {
-    "id": "mokes-iai",
-    "name": "Mokesčiai",
-    "color": "#EF4444"
-  },
-  {
-    "id": "marketingas",
-    "name": "Marketingas",
-    "color": "#3B82F6"
-  },
-  {
-    "id": "vertinimas",
-    "name": "Vertinimas",
-    "color": "#10B981"
-  },
-  {
     "id": "inovacijos",
     "name": "Inovacijos",
     "color": "#8B5CF6"
@@ -58,15 +33,5 @@
     "id": "remontas",
     "name": "Remontas",
     "color": "#F59E0B"
-  },
-  {
-    "id": "saugumas",
-    "name": "Saugumas",
-    "color": "#14B8A6"
-  },
-  {
-    "id": "investavimas",
-    "name": "Investavimas",
-    "color": "#D97706"
   }
 ]
