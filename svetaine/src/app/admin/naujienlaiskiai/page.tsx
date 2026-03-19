@@ -116,25 +116,34 @@ export default function AdminSubscribersPage() {
     const notes = formData.get("notes") as string;
 
     try {
-      if (editingSub.source.includes("Backup") || editingSub.source === "Manualinis") {
-         const newZinute = `[Naujienlaiškis] | Notes: ${notes}`;
-         await supabase.from('crm_kontaktai').update({ zinute: newZinute }).eq('id', editingSub.id);
+      const res = await fetch('/api/admin/subscribers', {
+         method: 'PUT',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ id: editingSub.id, source: editingSub.source, notes })
+      });
+      
+      if (res.ok) {
+         setSubscribers(prev => prev.map(s => s.id === editingSub.id ? { ...s, notes } : s));
       } else {
-         await supabase.from('naujienlaiskiai').update({ pastabos: notes }).eq('id', editingSub.id);
+         alert("Nepavyko išsaugoti pakeitimų.");
       }
-      setSubscribers(prev => prev.map(s => s.id === editingSub.id ? { ...s, notes } : s));
     } catch (err) { console.error(err); }
     setIsEditOpen(false);
   };
 
   const handleDelete = async (id: string, source: string) => {
     try {
-      if (source.includes("Backup") || source === "Manualinis") {
-         await supabase.from('crm_kontaktai').delete().eq('id', id);
+      const res = await fetch('/api/admin/subscribers', {
+         method: 'DELETE',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ id, source })
+      });
+
+      if (res.ok) {
+         setSubscribers(prev => prev.filter(s => s.id !== id));
       } else {
-         await supabase.from('naujienlaiskiai').delete().eq('id', id);
+         alert("Nepavyko ištrinti.");
       }
-      setSubscribers(prev => prev.filter(s => s.id !== id));
     } catch (err) { console.error(err); }
     setDeleteConfirmId(null);
   };
