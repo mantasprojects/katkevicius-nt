@@ -70,12 +70,12 @@ function BlogEditorContent() {
   // Load existing post for editing
   useEffect(() => {
     if (editId) {
-      fetch("/api/blog")
+      fetch(`/api/blog?id=${editId}`)
         .then((res) => res.json())
         .then((data) => {
-          const postsArray = Array.isArray(data) ? data : (data.posts || []);
-          const found = postsArray.find((p: any) => p.id === editId || p.slug === editId);
-          if (found) setPost(found);
+          if (data && !data.error) {
+            setPost(data);
+          }
           setIsLoading(false);
         })
         .catch(() => setIsLoading(false));

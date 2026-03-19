@@ -28,6 +28,7 @@ import { createClient } from "@/utils/supabase/server";
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
     const offset = parseInt(searchParams.get("offset") || "0", 10);
     const limit = parseInt(searchParams.get("limit") || "18", 10);
     const category = searchParams.get("category");
@@ -35,7 +36,36 @@ export async function GET(req: NextRequest) {
 
     const supabase = await createClient();
 
-    // 1. Try fetching from Supabase
+    // 1. Single Post Check
+    if (id) {
+      const { data: dbPost, error } = await supabase
+        .from("tinklarastis_irasai")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (!error && dbPost) {
+        return NextResponse.json({
+          id: dbPost.id,
+          title: dbPost.pavadinimas,
+          slug: dbPost.slug,
+          content: dbPost.turinys,
+          category: dbPost.kategorija,
+          image: dbPost.nuotrauka_url,
+          author: "Mantas Katkevičius",
+          date: dbPost.created_at ? dbPost.created_at.split("T")[0] : "",
+          views: dbPost.perziuros || 0,
+          status: "published" as const,
+          seo_title: dbPost.seo_title || "",
+          seo_description: dbPost.seo_description || "",
+          focus_keywords: dbPost.focus_keywords || ""
+        });
+      } else {
+        return NextResponse.json({ error: "Straipsnis nerastas." }, { status: 404 });
+      }
+    }
+
+    // 2. Fetching multiple from Supabase
     let query = supabase
       .from("tinklarastis_irasai")
       .select("*", { count: "exact" })
@@ -64,7 +94,10 @@ export async function GET(req: NextRequest) {
         author: "Mantas Katkevičius", // default
         date: p.created_at ? p.created_at.split("T")[0] : "",
         views: p.perziuros || 0,
-        status: "published" as const
+        status: "published" as const,
+        seo_title: p.seo_title || "",
+        seo_description: p.seo_description || "",
+        focus_keywords: p.focus_keywords || ""
       }));
 
       return NextResponse.json({
