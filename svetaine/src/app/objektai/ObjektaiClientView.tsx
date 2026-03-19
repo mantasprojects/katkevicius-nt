@@ -100,7 +100,7 @@ export default function ObjektaiClientView() {
       <div className="bg-white border border-slate-100 shadow-xl shadow-slate-200/40 rounded-3xl p-6 md:p-8 relative z-10 transition-all">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-[#111827] flex items-center">
-            <SlidersHorizontal className="w-6 h-6 mr-3 text-[#2563EB]" />Objektų Filtras</h2>
+            <SlidersHorizontal className="w-6 h-6 mr-3 text-[#2563EB]" />OBJEKTŲ FILTRAS</h2>
           <Button 
             variant="ghost" 
             className="md:hidden text-slate-500 hover:bg-slate-50 rounded-xl"

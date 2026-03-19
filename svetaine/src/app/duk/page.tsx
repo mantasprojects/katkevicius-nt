@@ -255,10 +255,10 @@ export default function FAQPage() {
                 <div>
                   <p className="text-[#2563EB] font-bold tracking-wider uppercase text-xs mb-2">Pagalba ir Informacija</p>
                   <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#111827] leading-tight mb-2">
-                    Dažnai Užduodami
+                    DAŽNAI UŽDUODAMI
                   </h1>
                   <h2 className="text-2xl font-bold bg-gradient-to-r from-[#2563EB] to-blue-400 bg-clip-text text-transparent mb-5">
-                    Klausimai
+                    KLAUSIMAI
                   </h2>
                   <p className="text-slate-500 text-sm leading-relaxed max-w-sm">
                     Atsakymai į svarbiausius klausimus ketinantiems pirkti, parduoti ar investuoti į nekilnojamąjį turtą.
