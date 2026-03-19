@@ -126,15 +126,15 @@ export default function PardavimasClient() {
           >
             <div className="space-y-1">
               <div className="text-4xl md:text-5xl font-sans font-black bg-gradient-to-r from-blue-400 to-white bg-clip-text text-transparent">300+</div>
-              <div className="text-xs text-slate-500 font-bold uppercase tracking-wider">Parduota Objektų</div>
+              <div className="text-xs text-slate-500 font-bold tracking-wider">Parduota objektų</div>
             </div>
             <div className="space-y-1 border-l border-white/10">
               <div className="text-4xl md:text-5xl font-sans font-black bg-gradient-to-r from-blue-400 to-white bg-clip-text text-transparent">21 d.</div>
-              <div className="text-xs text-slate-500 font-bold uppercase tracking-wider">Vidutinis Pardavimo Laikas</div>
+              <div className="text-xs text-slate-500 font-bold tracking-wider">Vidutinis pardavimo laikas</div>
             </div>
             <div className="space-y-1 border-l border-white/10 col-span-2 md:col-span-1 pt-4 md:pt-0">
               <div className="text-4xl md:text-5xl font-sans font-black bg-gradient-to-r from-blue-400 to-white bg-clip-text text-transparent">+5%</div>
-              <div className="text-xs text-slate-500 font-bold uppercase tracking-wider">Viršyta Pradinė Kaina</div>
+              <div className="text-xs text-slate-500 font-bold tracking-wider">Viršyta pradinė kaina</div>
             </div>
           </motion.div>
         </div>
@@ -189,7 +189,7 @@ export default function PardavimasClient() {
         <div className="container px-4 mx-auto max-w-6xl">
           <motion.div {...fadeInUp} className="text-center mb-16 px-4">
              <p className="text-blue-600 font-bold tracking-wider uppercase text-xs mb-2">Vizualinis Svoris</p>
-             <h2 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tight">Kaip Pasiekiame Maksimalią Kainą?</h2>
+             <h2 className="text-3xl md:text-5xl font-black text-slate-950 tracking-tight">Kaip pasiekiame maksimalią kainą?</h2>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

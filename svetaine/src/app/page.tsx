@@ -121,7 +121,7 @@ export default function HomePage() {
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-400/5 rounded-full blur-2xl" />
                 <div className="w-12 h-12 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center mb-6 shadow-sm"><Zap className="w-6 h-6 text-primary" /></div>
-                <h3 className="text-2xl font-bold mb-3 text-slate-950">NT Pirkimas</h3>
+                <h3 className="text-2xl font-bold mb-3 text-slate-950">NT pirkimas</h3>
                 <p className="text-slate-500 text-sm leading-relaxed mb-8 flex-1">Apžiūrime tik lūkesčius atitinkančius objektus. Identifikuoju teisinę riziką ir sutaupau jūsų laiką bei biudžetą.</p>
                 <div className="flex items-center text-primary font-bold text-sm mt-auto">Sužinoti daugiau<ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -136,7 +136,7 @@ export default function HomePage() {
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl" />
                 <div className="w-12 h-12 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center mb-6 shadow-sm"><TrendingUp className="w-6 h-6 text-primary" /></div>
-                <h3 className="text-2xl font-bold mb-3 text-slate-950">NT Pardavimas</h3>
+                <h3 className="text-2xl font-bold mb-3 text-slate-950">NT pardavimas</h3>
                 <p className="text-slate-500 text-sm leading-relaxed mb-8 flex-1">Maksimali rinkos kaina per trumpą laiką. Stipri prezentacija, tikslinė sklaida ir profesionalus derybų valdymas.</p>
                 <div className="flex items-center text-primary font-bold text-sm mt-auto">Sužinoti daugiau<ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -151,7 +151,7 @@ export default function HomePage() {
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-400/5 rounded-full blur-2xl" />
                 <div className="w-12 h-12 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center justify-center mb-6 shadow-sm"><ShieldCheck className="w-6 h-6 text-emerald-600" /></div>
-                <h3 className="text-2xl font-bold mb-3 text-slate-950">NT Nuoma</h3>
+                <h3 className="text-2xl font-bold mb-3 text-slate-950">NT nuoma</h3>
                 <p className="text-slate-500 text-sm leading-relaxed mb-8 flex-1">Patikima nuomininkų atranka ir sklandus sutarčių administravimas. Apsaugokite savo investiciją nuo rizikų.</p>
                 <div className="flex items-center text-emerald-600 font-bold text-sm mt-auto">Sužinoti daugiau<ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </div>

@@ -49,7 +49,7 @@ export default function PirkimasClient() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="inline-block px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full text-xs font-bold uppercase tracking-wider text-primary mb-6"
-          >Saugus Būsto Įsigijimas</motion.span>
+          >Saugus būsto įsigijimas</motion.span>
           
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
@@ -125,7 +125,7 @@ export default function PirkimasClient() {
                 </div>
                 <div className="flex items-start gap-3 group">
                   <CheckCircle2 className="w-6 h-6 text-primary flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                  <p className="text-slate-700 font-medium">Užtikrintos palankiausios pirkimo salygos derybose.</p>
+                  <p className="text-slate-700 font-medium">Užtikrintos palankiausios pirkimo sąlygos derybose.</p>
                 </div>
               </div>
 
