@@ -53,23 +53,9 @@ export default function HomePage() {
         </div>
 
         {/* Integrated Spread Layout */}
-        <div className="container px-4 mx-auto max-w-7xl relative z-10 flex flex-col md:flex-row items-center justify-between h-full pt-6 md:pt-16">
+        <div className="container px-4 mx-auto max-w-7xl relative z-10 flex flex-col md:flex-row items-center justify-between h-full pt-2 md:pt-16">
           {/* Left Content Side */}
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full md:w-6/12 flex flex-col items-start text-left relative z-10 mb-12 md:mb-0"
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-md px-4 py-1.5 rounded-full border border-primary/20 mb-6"
-            >
-              <Star className="w-4 h-4 text-emerald-400 fill-emerald-400" />
-              <span className="text-xs font-bold text-white uppercase tracking-widest leading-none">NT Ekspertas</span>
-            </motion.div>
+          <!-- Removed Badge -->
 
             <h1 className="text-[2.75rem] md:text-6xl lg:text-7xl font-sans font-black mb-6 leading-[1.05] tracking-tight text-slate-950 drop-shadow-sm">
               Nuo paieškos <br />
@@ -93,7 +79,7 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: "easeOut" }}
-            className="w-full md:w-5/12 flex flex-col items-center justify-end h-full relative md:-translate-y-12"
+            className="w-full md:w-5/12 flex flex-col items-center justify-end h-full relative md:-translate-y-16"
           >
             {/* Ambient Background Glow behind profile */}
             <div className="absolute inset-0 bg-primary/10 rounded-full blur-[120px] -z-10" />
