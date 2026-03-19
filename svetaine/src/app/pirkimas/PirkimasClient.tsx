@@ -24,12 +24,13 @@ export default function PirkimasClient() {
   const [fomoEmail, setFomoEmail] = useState("");
   const [fomoSubmitting, setFomoSubmitting] = useState(false);
   const [fomoSuccess, setFomoSuccess] = useState(false);
+  const [fomoTurnstileToken, setFomoTurnstileToken] = useState("");
 
   // Main Contact Form State
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [criteria, setCriteria] = useState("");
-  const [turnstileToken, setTurnstileToken] = useState("");
+  const [mainTurnstileToken, setMainTurnstileToken] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -50,6 +51,10 @@ export default function PirkimasClient() {
   const handleFomoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fomoEmail) return;
+    if (!fomoTurnstileToken && typeof window !== "undefined" && window.location.hostname !== "localhost") {
+       alert("Prašome patvirtinti saugumo patikrą.");
+       return;
+    }
     setFomoSubmitting(true);
     try {
        const res = await fetch("/api/subscribe", {
@@ -58,12 +63,18 @@ export default function PirkimasClient() {
           body: JSON.stringify({
              email: fomoEmail,
              source: "Pirkimo puslapis (FOMO)",
-             turnstileToken: "fomo_bypass" // API requires turnstile usually, but let's handle if we have turnstile or direct
+             turnstileToken: fomoTurnstileToken
           })
        });
-       if (res.ok) setFomoSuccess(true);
+       if (res.ok) {
+          setFomoSuccess(true);
+       } else {
+          const errData = await res.json();
+          alert(errData.error || "Užklausa nepavyko. Bandykite dar kartą.");
+       }
     } catch (err) {
        console.error(err);
+       alert("Sistemos klaida. Bandykite dar kartą.");
     } finally {
        setFomoSubmitting(false);
     }
@@ -71,7 +82,7 @@ export default function PirkimasClient() {
 
   const handleMainSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!turnstileToken && typeof window !== "undefined" && window.location.hostname !== "localhost") {
+    if (!mainTurnstileToken && typeof window !== "undefined" && window.location.hostname !== "localhost") {
        alert("Prašome patvirtinti saugumo patikrą.");
        return;
     }
@@ -85,7 +96,7 @@ export default function PirkimasClient() {
              phone,
              message: criteria, 
              pageUrl: "/pirkimas",
-             turnstileToken
+             turnstileToken: mainTurnstileToken
           })
        });
        if (res.ok) setIsSuccess(true);
@@ -99,7 +110,7 @@ export default function PirkimasClient() {
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 text-slate-950 overflow-hidden">
 
-      {/* 1. Hero Section - Lighter overlay frame */}
+      {/* 1. Hero Section */}
       <section className="relative h-[85vh] flex items-center justify-center overflow-hidden border-b border-slate-100">
         <div className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -157,7 +168,7 @@ export default function PirkimasClient() {
         </div>
       </section>
 
-      {/* 2. Bento Grid (Vertės pasiūlymas) - Alternating layout light clean */}
+      {/* 2. Bento Grid */}
       <section className="py-24 bg-white border-t border-slate-100">
         <div className="container px-4 mx-auto max-w-5xl">
           <motion.h2 
@@ -219,8 +230,8 @@ export default function PirkimasClient() {
         </div>
       </section>
 
-      {/* 3. Interaktyvus Pirkimo Kelias - Clean visual nodes */}
-      <section className="py-24 bg-slate-50 relative overflow-hiddenborder-t border-slate-100">
+      {/* 3. Interactive Timeline */}
+      <section className="py-24 bg-slate-50 relative overflow-hidden border-t border-slate-100">
         <div className="container px-4 mx-auto max-w-4xl">
           <motion.h2 {...fadeInUp} className="text-3xl md:text-4xl font-extrabold text-center mb-16 tracking-tight text-slate-900">5 žingsnių pirkimo kelias</motion.h2>
 
@@ -253,7 +264,7 @@ export default function PirkimasClient() {
         </div>
       </section>
 
-      {/* 4. „Off-market“ FOMO Blokas - Interactive with success state */}
+      {/* 4. „Off-market“ FOMO Blokas */}
       <section className="py-24 bg-white border-t border-slate-100 relative">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
         
@@ -279,23 +290,28 @@ export default function PirkimasClient() {
              <motion.form 
                 onSubmit={handleFomoSubmit}
                 {...fadeInUp} 
-                className="bg-slate-50 border border-slate-100 p-4 rounded-2xl flex flex-col md:flex-row gap-3 shadow-md"
+                className="bg-slate-50 border border-slate-100 p-4 rounded-2xl flex flex-col gap-3 shadow-md"
              >
-                <input 
-                  type="email" 
-                  placeholder="Jūsų el. paštas" 
-                  required
-                  className="flex-1 bg-white border border-slate-200 rounded-xl px-4 h-12 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 text-slate-900 placeholder:text-slate-400" 
-                  value={fomoEmail}
-                  onChange={(e) => setFomoEmail(e.target.value)}
-                />
-                <Button 
-                   type="submit"
-                   disabled={fomoSubmitting}
-                   className="bg-[#2563EB] hover:bg-[#1E3A8A] text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:shadow-[#2563EB]/20 transition-all h-12 px-6 disabled:opacity-50 cursor-pointer"
-                >
-                   {fomoSubmitting ? "Siunčiama..." : "Noriu sužinoti pirmas"}
-                </Button>
+                <div className="flex flex-col md:flex-row gap-3 w-full">
+                   <input 
+                     type="email" 
+                     placeholder="Jūsų el. paštas" 
+                     required
+                     className="flex-1 bg-white border border-slate-200 rounded-xl px-4 h-12 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 text-slate-900 placeholder:text-slate-400" 
+                     value={fomoEmail}
+                     onChange={(e) => setFomoEmail(e.target.value)}
+                   />
+                   <Button 
+                      type="submit"
+                      disabled={fomoSubmitting}
+                      className="bg-[#2563EB] hover:bg-[#1E3A8A] text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:shadow-[#2563EB]/20 transition-all h-12 px-6 disabled:opacity-50 cursor-pointer flex-shrink-0"
+                   >
+                      {fomoSubmitting ? "Siunčiama..." : "Noriu sužinoti pirmas"}
+                   </Button>
+                </div>
+                <div className="scale-75 origin-top-left md:origin-center flex justify-center mt-1">
+                   <Turnstile onVerify={setFomoTurnstileToken} theme="light" />
+                </div>
              </motion.form>
           )}
         </div>
@@ -373,7 +389,7 @@ export default function PirkimasClient() {
                      {isSubmitting ? "Siunčiama..." : "Pradėti paiešką su ekspertu"}
                   </Button>
                   
-                  <Turnstile onVerify={setTurnstileToken} theme="dark" />
+                  <Turnstile onVerify={setMainTurnstileToken} theme="dark" />
 
                </motion.form>
             )}

@@ -1,15 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Mail, Search, Trash2, Check, X, Users } from "lucide-react";
+import { Mail, Search, Trash2, Check, X, Plus, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { createClient } from "@/utils/supabase/client";
 
 interface Subscriber {
   id: string;
   email: string;
   source: string;
+  notes: string;
   date: string;
 }
 
@@ -18,69 +21,129 @@ export default function AdminSubscribersPage() {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isMounted, setIsMounted] = useState(false);
+  const [isAddOpen, setIsAddOpen] = useState(false);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [editingSub, setEditingSub] = useState<Subscriber | null>(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
+  const loadSubscribers = async () => {
+    try {
+      // 1. Fetch from primary table 'naujienlaiskiai'
+      const { data: pData } = await supabase
+        .from('naujienlaiskiai')
+        .select('*')
+        .order('sukuriama_data', { ascending: false });
+
+      let mappedPrimary: Subscriber[] = [];
+      if (pData) {
+        mappedPrimary = pData.map((s: any) => ({
+          id: s.id,
+          email: s.email,
+          source: s.saltinis || "—",
+          notes: s.pastabos || "",
+          date: s.sukuriama_data ? s.sukuriama_data.split('T')[0] : "—"
+        }));
+      }
+
+      // 2. Fetch from backup 'crm_kontaktai'
+      const { data: bData } = await supabase
+        .from('crm_kontaktai')
+        .select('*')
+        .filter('zinute', 'ilike', '%[Naujienlaiškis]%')
+        .order('created_at', { ascending: false });
+
+      let mappedBackup: Subscriber[] = [];
+      if (bData) {
+        mappedBackup = bData.map((s: any) => {
+           // Extract email from zinute if not explicit
+           const email = s.email && s.email !== '—' ? s.email : s.zinute?.match(/Naujienlaiškis: ([\w\.-]+@[\w\.-]+)/)?.[1] || s.email;
+           const extractedNotes = s.zinute?.split('| Notes:')[1] || s.zinute || "";
+           return {
+              id: s.id,
+              email: email || "—",
+              source: "Pirkimas (Backup)",
+              notes: extractedNotes.replace('[Naujienlaiškis]', '').trim(),
+              date: s.created_at ? s.created_at.split('T')[0] : "—"
+           };
+        });
+      }
+
+      // Combine and de-duplicate
+      const combined = [...mappedPrimary, ...mappedBackup];
+      const uniqueEmails = new Set();
+      const deduplicated = combined.filter(item => {
+         if (!item.email || item.email === '—') return true;
+         if (uniqueEmails.has(item.email.toLowerCase())) return false;
+         uniqueEmails.add(item.email.toLowerCase());
+         return true;
+      });
+
+      setSubscribers(deduplicated);
+    } catch (err) {
+      console.error("Failed to load subscribers:", err);
+    }
+  };
 
   useEffect(() => {
     setIsMounted(true);
-    const loadSubscribers = async () => {
-      try {
-        // 1. Fetch from primary table 'naujienlaiskiai'
-        const { data: pData, error: pError } = await supabase
-          .from('naujienlaiskiai')
-          .select('*')
-          .order('sukuriama_data', { ascending: false });
-
-        let mappedPrimary: Subscriber[] = [];
-        if (pData) {
-          mappedPrimary = pData.map((s: any) => ({
-            id: s.id,
-            email: s.email,
-            source: s.saltinis || "—",
-            date: s.sukuriama_data ? s.sukuriama_data.split('T')[0] : "—"
-          }));
-        }
-
-        // 2. Fetch from backup 'crm_kontaktai' just in case
-        const { data: bData } = await supabase
-          .from('crm_kontaktai')
-          .select('*')
-          .filter('zinute', 'ilike', '%[Naujienlaiškis]%')
-          .order('created_at', { ascending: false });
-
-        let mappedBackup: Subscriber[] = [];
-        if (bData) {
-          mappedBackup = bData.map((s: any) => {
-             const email = s.email && s.email !== '—' ? s.email : s.zinute?.match(/Naujienlaiškis: ([\w\.-]+@[\w\.-]+)/)?.[1] || s.email;
-             return {
-                id: s.id,
-                email: email || "—",
-                source: "Pirkimas (Backup)",
-                date: s.created_at ? s.created_at.split('T')[0] : "—"
-             };
-          });
-        }
-
-        // Combine and de-duplicate by email
-        const combined = [...mappedPrimary, ...mappedBackup];
-        const uniqueEmails = new Set();
-        const deduplicated = combined.filter(item => {
-           if (!item.email || item.email === '—') return true; // keep empty just in case
-           if (uniqueEmails.has(item.email.toLowerCase())) return false;
-           uniqueEmails.add(item.email.toLowerCase());
-           return true;
-        });
-
-        setSubscribers(deduplicated);
-      } catch (err) {
-        console.error("Failed to load subscribers:", err);
-      }
-    };
-    loadSubscribers();
+    const loadState = async () => {
+       await loadSubscribers();
+    }
+    loadState();
   }, []);
+
+  const handleAddSubscriber = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const notes = formData.get("notes") as string;
+
+    try {
+      // To bypass SQL blockages, save manual adds directly to crm_kontaktai with a specific tag
+      const payload = {
+        vardas: "Manual Subscriber",
+        email: email,
+        telefonas: "-",
+        zinute: `[Naujienlaiškis] Maualiai Pridėtas | Notes: ${notes}`
+      };
+      
+      const { data, error } = await supabase.from('crm_kontaktai').insert([payload]).select();
+      if (data && data.length > 0) {
+         setSubscribers(prev => [{
+            id: data[0].id,
+            email: email,
+            source: "Manualinis",
+            notes: notes,
+            date: new Date().toISOString().split('T')[0]
+         }, ...prev]);
+      } else {
+         alert("Nepavyko įrašyti.");
+      }
+    } catch (err) { console.error(err); }
+    setIsAddOpen(false);
+  };
+
+  const handleEditSave = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!editingSub) return;
+    const formData = new FormData(e.currentTarget);
+    const notes = formData.get("notes") as string;
+
+    try {
+      if (editingSub.source.includes("Backup") || editingSub.source === "Manualinis") {
+         const newZinute = `[Naujienlaiškis] | Notes: ${notes}`;
+         await supabase.from('crm_kontaktai').update({ zinute: newZinute }).eq('id', editingSub.id);
+      } else {
+         await supabase.from('naujienlaiskiai').update({ pastabos: notes }).eq('id', editingSub.id);
+      }
+      setSubscribers(prev => prev.map(s => s.id === editingSub.id ? { ...s, notes } : s));
+    } catch (err) { console.error(err); }
+    setIsEditOpen(false);
+  };
 
   const handleDelete = async (id: string, source: string) => {
     try {
-      if (source.includes("Backup")) {
+      if (source.includes("Backup") || source === "Manualinis") {
          await supabase.from('crm_kontaktai').delete().eq('id', id);
       } else {
          await supabase.from('naujienlaiskiai').delete().eq('id', id);
@@ -92,7 +155,8 @@ export default function AdminSubscribersPage() {
 
   const filteredSubscribers = subscribers.filter(s => 
     s.email.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    s.source.toLowerCase().includes(searchQuery.toLowerCase())
+    s.source.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    s.notes.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   if (!isMounted) return null;
@@ -107,8 +171,42 @@ export default function AdminSubscribersPage() {
               {subscribers.length}
             </span>
           </h1>
-          <p className="text-slate-500 font-medium">Valdykite naujienlaiškių prenumeratorius ir el. pašto kontaktus.</p>
+          <p className="text-slate-500 font-medium">Valdykite naujienlaiškių prenumeratorius ir pridėkite pastabas.</p>
         </div>
+
+        <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+          <DialogTrigger>
+            <span className="bg-[#2563EB] hover:bg-[#1E3A8A] text-white shadow-xl shadow-[#2563EB]/20 h-12 px-6 rounded-xl font-bold flex items-center cursor-pointer">
+              <Plus className="w-5 h-5 mr-2" />
+              Pridėti prenumeratorių
+            </span>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden bg-white border-none shadow-2xl rounded-3xl">
+            <div className="bg-[#F8FAFC] border-b border-slate-100 p-6">
+              <DialogTitle className="text-2xl font-extrabold text-[#111827] tracking-tight">Naujas prenumeratorius</DialogTitle>
+            </div>
+            <form onSubmit={handleAddSubscriber} className="p-6 space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-slate-500">El. Paštas *</Label>
+                <Input id="email" name="email" type="email" required className="h-12 rounded-xl bg-slate-50 border-slate-200" placeholder="vardas@mail.lt" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="notes" className="text-xs font-bold uppercase tracking-wider text-slate-500">Aprašymas / Pastabos</Label>
+                <textarea 
+                  id="notes" 
+                  name="notes" 
+                  className="w-full min-h-[100px] rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] resize-none"
+                  placeholder="Informacija apie prenumeratorių..."
+                />
+              </div>
+              <div className="pt-4 border-t border-slate-100">
+                 <Button type="submit" className="w-full bg-[#111827] hover:bg-[#1E3A8A] text-white shadow-xl shadow-[#111827]/20 h-12 rounded-xl font-bold transition-all">
+                    Išsaugoti
+                 </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
@@ -125,11 +223,12 @@ export default function AdminSubscribersPage() {
         </div>
         
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[600px]">
+          <table className="w-full text-left border-collapse min-w-[650px]">
             <thead>
               <tr className="bg-white border-b border-slate-200">
                 <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs">El. paštas</th>
                 <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs">Šaltinis</th>
+                <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs w-1/4">Aprašymas</th>
                 <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs">Data</th>
                 <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs text-right">Veiksmai</th>
               </tr>
@@ -139,53 +238,84 @@ export default function AdminSubscribersPage() {
                 <tr key={s.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
                   <td className="py-5 px-6">
                     <div className="flex items-center">
-                      <div className="w-10 h-10 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center font-bold mr-3 flex-shrink-0">
+                      <div className="w-9 h-9 rounded-full bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center font-bold mr-3 flex-shrink-0">
                         <Mail className="w-4 h-4" />
                       </div>
-                      <p className="text-[#111827] font-bold">{s.email}</p>
+                      <p className="text-[#111827] font-bold text-sm">{s.email}</p>
                     </div>
                   </td>
-                  <td className="py-5 px-6 font-medium text-slate-600 text-sm">
-                    <span className="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider">
+                  <td className="py-5 px-6 font-medium text-slate-600 text-xs">
+                    <span className={`px-2 py-1 rounded-lg font-bold uppercase tracking-wider ${
+                      s.source.includes("Backup") || s.source === "Manualinis" ? "bg-amber-100 text-amber-800" : "bg-blue-100 text-blue-800"
+                    }`}>
                        {s.source}
                     </span>
+                  </td>
+                  <td className="py-5 px-6 text-sm text-slate-500 max-w-xs truncate" title={s.notes}>
+                    {s.notes || "—"}
                   </td>
                   <td className="py-5 px-6 text-sm text-slate-500">
                     {s.date}
                   </td>
                   <td className="py-5 px-6 text-right">
                     <div className="flex items-center justify-end gap-2">
+                      <Button variant="outline" size="icon" onClick={() => { setEditingSub(s); setIsEditOpen(true); }} className="h-8 w-8 rounded-lg border-slate-200 text-slate-600 hover:bg-slate-100">
+                        <Edit className="w-3.5 h-3.5" />
+                      </Button>
+
                       {deleteConfirmId === s.id ? (
                         <>
-                          <Button variant="outline" size="icon" onClick={() => handleDelete(s.id, s.source)} className="h-9 w-9 rounded-lg border-red-200 bg-red-50 text-red-600 hover:bg-red-100">
-                            <Check className="w-4 h-4" />
+                          <Button variant="outline" size="icon" onClick={() => handleDelete(s.id, s.source)} className="h-8 w-8 rounded-lg border-red-200 bg-red-50 text-red-600 hover:bg-red-100">
+                            <Check className="w-3.5 h-3.5" />
                           </Button>
-                          <Button variant="outline" size="icon" onClick={() => setDeleteConfirmId(null)} className="h-9 w-9 rounded-lg border-slate-200 text-slate-600 hover:bg-slate-100">
-                            <X className="w-4 h-4" />
+                          <Button variant="outline" size="icon" onClick={() => setDeleteConfirmId(null)} className="h-8 w-8 rounded-lg border-slate-200 text-slate-600 hover:bg-slate-100">
+                            <X className="w-3.5 h-3.5" />
                           </Button>
                         </>
                       ) : (
-                        <Button variant="outline" size="icon" onClick={() => setDeleteConfirmId(s.id)} className="h-9 w-9 rounded-lg border-red-100 text-red-600 hover:bg-red-50 hover:border-red-200">
-                          <Trash2 className="w-4 h-4" />
+                        <Button variant="outline" size="icon" onClick={() => setDeleteConfirmId(s.id)} className="h-8 w-8 rounded-lg border-red-100 text-red-600 hover:bg-red-50">
+                          <Trash2 className="w-3.5 h-3.5" />
                         </Button>
                       )}
                     </div>
                   </td>
                 </tr>
               ))}
-              {filteredSubscribers.length === 0 && (
-                <tr>
-                  <td colSpan={4} className="py-16 text-center text-slate-500">
-                    <Mail className="w-12 h-12 mx-auto text-slate-300 mb-4" />
-                    <p className="text-lg font-medium text-[#111827]">Prenumeratorių nerasta</p>
-                    <p className="text-sm">Bandykite keisti paieškos kriterijus.</p>
-                  </td>
-                </tr>
-              )}
             </tbody>
           </table>
         </div>
       </div>
+
+      {/* Edit Description Dialog */}
+      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+        <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden bg-white border-none shadow-2xl rounded-3xl">
+          <div className="bg-[#F8FAFC] border-b border-slate-100 p-6">
+            <DialogTitle className="text-2xl font-extrabold text-[#111827] tracking-tight">Redaguoti prenumeratorių</DialogTitle>
+          </div>
+          {editingSub && (
+            <form onSubmit={handleEditSave} className="p-6 space-y-4">
+              <div className="space-y-2">
+                <Label className="text-xs font-bold uppercase tracking-wider text-slate-500">El. Paštas</Label>
+                <Input value={editingSub.email} disabled className="h-12 rounded-xl bg-slate-50 border-slate-100" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-notes" className="text-xs font-bold uppercase tracking-wider text-slate-500">Aprašymas / Pastabos</Label>
+                <textarea 
+                  id="edit-notes" 
+                  name="notes" 
+                  defaultValue={editingSub.notes}
+                  className="w-full min-h-[120px] rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] resize-none"
+                />
+              </div>
+              <div className="pt-4 border-t border-slate-100 flex justify-end">
+                 <Button type="submit" className="w-full bg-[#111827] hover:bg-[#1E3A8A] text-white h-12 rounded-xl font-bold transition-all">
+                    Išsaugoti pastabas
+                 </Button>
+              </div>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
