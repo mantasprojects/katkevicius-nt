@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { LazyMotion, domMax, m, AnimatePresence } from "framer-motion";
+import { LazyMotion, domMax, m } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -88,6 +88,7 @@ export default function HomePage() {
                   priority={true}
                   fetchPriority="high"
                   loading="eager"
+                  decoding="sync"
                   className="object-cover object-center group-hover:scale-105 transition-all duration-700"
                 />
                 {/* Removed dark portrait overlay style */}

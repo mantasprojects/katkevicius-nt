@@ -14,12 +14,12 @@ export default function TestimonialsGrid() {
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
-          setReviews(data.filter((r: any) => r.status === "approved").slice(0, 6));
+          setReviews(data.filter((r: any) => r.status === "approved").slice(0, 3));
         } else {
           const saved = localStorage.getItem("nt_reviews_master_v1");
           if (saved) {
             const allReviews = JSON.parse(saved);
-            setReviews(allReviews.filter((r: any) => r.status === "approved").slice(0, 6));
+            setReviews(allReviews.filter((r: any) => r.status === "approved").slice(0, 3));
           }
         }
       })
@@ -27,7 +27,7 @@ export default function TestimonialsGrid() {
         const saved = localStorage.getItem("nt_reviews_master_v1");
         if (saved) {
           const allReviews = JSON.parse(saved);
-          setReviews(allReviews.filter((r: any) => r.status === "approved").slice(0, 6));
+          setReviews(allReviews.filter((r: any) => r.status === "approved").slice(0, 3));
         }
       });
   }, []);
