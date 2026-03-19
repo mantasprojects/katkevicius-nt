@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, HelpCircle, ArrowRight, MessageSquare } from "lucide-react";
+import { ChevronDown, HelpCircle, ArrowRight, MessageSquare, TrendingUp, Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 const faqsAnswersText = [
@@ -192,11 +192,30 @@ const faqsEn = [
 export default function FAQPage() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  const faqs = faqsLt;
-
   const toggleAccordion = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
+
+  const sections = [
+    {
+      title: "Pirkėjams",
+      description: "Profesionali pagalba ir saugūs žingsniai ieškantiems svajonių būsto.",
+      icon: HelpCircle, // Using HelpCircle since Key is imported from lucide but HelpCircle fits
+      faqs: [ faqsLt[0] ]
+    },
+    {
+      title: "Pardavėjams",
+      description: "Strateginė kaina, Home Staging ir derybos sėkmingam pardavimui.",
+      icon: TrendingUp,
+      faqs: [ faqsLt[2], faqsLt[3], faqsLt[4] ]
+    },
+    {
+      title: "Procesas ir Teisė",
+      description: "Teisiniai saugikliai, dokumentacija ir konsultacijos ramybei užtikrinti.",
+      icon: Scale,
+      faqs: [ faqsLt[1] ]
+    }
+  ];
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -226,9 +245,10 @@ export default function FAQPage() {
 
         <div className="container px-4 mx-auto max-w-4xl text-center relative z-10">
           <p className="text-blue-300 font-bold tracking-wider uppercase text-sm mb-4 flex items-center justify-center gap-2">
-            <HelpCircle className="w-4 h-4" />Pagalba & Informacija</p>
+            <HelpCircle className="w-4 h-4" />Pagalba & Informacija
+          </p>
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-[1.1]">
-            "Dažnai Užduodami "{" "}
+            Dažnai Užduodami{" "}
             <span className="bg-gradient-to-r from-blue-200 to-white bg-clip-text text-transparent">Klausimai</span>
           </h1>
           <p className="text-blue-200/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">Atsakymai į svarbiausius klausimus, padedantys priimti teisingus sprendimus jūsų nekilnojamojo turto kelyje.</p>
@@ -236,63 +256,87 @@ export default function FAQPage() {
       </section>
 
       {/* Accordion Section */}
-      <section className="py-16 flex-1">
-        <div className="container px-4 mx-auto max-w-3xl">
-          <div className="space-y-4">
-            {faqs.map((faq, index) => {
-              const isOpen = activeIndex === index;
-              return (
-                <div
-                  key={index}
-                  className={`bg-white rounded-2xl border transition-all duration-300 ${
-                    isOpen
-                      ? "border-[#2563EB] shadow-lg shadow-blue-500/5"
-                      : "border-slate-100 shadow-sm hover:border-slate-200"
-                  }`}
-                >
-                  <button
-                    onClick={() => toggleAccordion(index)}
-                    className="w-full flex items-center justify-between p-6 text-left cursor-pointer group"
-                    aria-expanded={isOpen}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
-                          isOpen ? "bg-[#EFF6FF] text-[#2563EB]" : "bg-slate-50 text-slate-400 group-hover:bg-slate-100"
-                        }`}
-                      >
-                        <MessageSquare className="w-5 h-5" />
-                      </div>
-                      <h3
-                        className={`font-bold text-base md:text-lg transition-colors ${
-                          isOpen ? "text-[#2563EB]" : "text-[#111827]"
-                        }`}
-                      >
-                        {faq.question}
-                      </h3>
-                    </div>
-                    <ChevronDown
-                      className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${
-                        isOpen ? "rotate-180 text-[#2563EB]" : ""
-                      }`}
-                    />
-                  </button>
+      <section className="py-20 flex-1 relative overflow-hidden">
+        {/* Subtle background glow effect */}
+        <div className="absolute top-40 left-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl -translate-x-1/2 pointer-events-none" />
+        <div className="absolute bottom-40 right-0 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-3xl translate-x-1/2 pointer-events-none" />
 
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="overflow-hidden"
-                      >
-                        <div className="p-6 pt-0 border-t border-slate-50 text-slate-500 text-sm md:text-base leading-relaxed ml-14">
-                          {faq.answer}
+        <div className="container px-4 mx-auto max-w-6xl relative z-10">
+          <div className="space-y-16">
+            {sections.map((section, sIndex) => {
+              const SectionIcon = section.icon;
+              return (
+                <div key={sIndex} className="space-y-8">
+                  {/* Category Header */}
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-white rounded-xl shadow-md border border-slate-100 text-[#2563EB]">
+                      <SectionIcon className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl md:text-2xl font-bold text-[#111827]">{section.title}</h2>
+                      <p className="text-slate-500 text-sm md:text-base mt-1">{section.description}</p>
+                    </div>
+                  </div>
+
+                  {/* Two columns grid for large screens */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {section.faqs.map((faq, fIndex) => {
+                      const globalIndex = sIndex * 100 + fIndex;
+                      const isOpen = activeIndex === globalIndex;
+                      return (
+                        <div
+                          key={fIndex}
+                          className={`bg-white/80 backdrop-blur-md rounded-2xl border transition-all duration-300 ${
+                            isOpen
+                              ? "border-[#2563EB]/40 shadow-xl shadow-blue-500/5"
+                              : "border-slate-100 shadow-sm hover:border-[#2563EB]/20 hover:shadow-lg hover:shadow-slate-200/40"
+                          }`}
+                        >
+                          <button
+                            onClick={() => toggleAccordion(globalIndex)}
+                            className="w-full flex items-start justify-between p-6 text-left cursor-pointer group"
+                            aria-expanded={isOpen}
+                          >
+                            <div className="flex items-start gap-4 pr-4">
+                              <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0 mt-0.5 bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-[#2563EB]">
+                                <MessageSquare className="w-4 h-4" />
+                              </div>
+                              <h3
+                                className={`font-semibold text-base transition-colors leading-snug ${
+                                  isOpen ? "text-[#2563EB]" : "text-[#111827]"
+                                }`}
+                              >
+                                {faq.question}
+                              </h3>
+                            </div>
+                            <ChevronDown
+                              className={`w-5 h-5 text-slate-400 transition-transform duration-300 mt-1 flex-shrink-0 ${
+                                isOpen ? "rotate-180 text-[#2563EB]" : "group-hover:text-amber-500"
+                              }`}
+                            />
+                          </button>
+
+                          <AnimatePresence initial={false}>
+                            {isOpen && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                className="overflow-hidden"
+                              >
+                                <div className="p-6 pt-0 border-t border-slate-50 text-slate-500 text-sm md:text-base leading-relaxed">
+                                  <div className="pl-12">
+                                    {faq.answer}
+                                  </div>
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                      );
+                    })}
+                  </div>
                 </div>
               );
             })}
