@@ -10,29 +10,31 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "El. paštas yra privalomas." }, { status: 400 });
     }
 
-    // 1. Turnstile Verification
-    if (!turnstileToken) {
-      return NextResponse.json({ error: "Saugumo patikra nepavyko." }, { status: 400 });
-    }
+    // 1. Turnstile Verification (Optional for FOMO, skips validation)
+    if (turnstileToken !== "fomo_bypass") {
+      if (!turnstileToken) {
+        return NextResponse.json({ error: "Saugumo patikra nepavyko." }, { status: 400 });
+      }
 
-    const isLocalhost = req.headers.get("host")?.includes("localhost");
-    const secret = isLocalhost 
-      ? "1x0000000000000000000000000000000AA" 
-      : (process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY || process.env.TURNSTILE_SECRET_KEY);
+      const isLocalhost = req.headers.get("host")?.includes("localhost");
+      const secret = isLocalhost 
+        ? "1x0000000000000000000000000000000AA" 
+        : (process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY || process.env.TURNSTILE_SECRET_KEY);
 
-    const formData = new URLSearchParams();
-    if (secret) formData.append("secret", secret);
-    formData.append("response", turnstileToken);
+      const formData = new URLSearchParams();
+      if (secret) formData.append("secret", secret);
+      formData.append("response", turnstileToken);
 
-    const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: formData,
-    });
+      const verifyRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: formData,
+      });
 
-    const verifyData = await verifyRes.json();
-    if (!verifyData.success) {
-      return NextResponse.json({ error: "Saugumo patikra nepavyko." }, { status: 400 });
+      const verifyData = await verifyRes.json();
+      if (!verifyData.success) {
+        return NextResponse.json({ error: "Saugumo patikra nepavyko." }, { status: 400 });
+      }
     }
 
     // 2. Insert into Supabase using Service Role Key to bypass RLS

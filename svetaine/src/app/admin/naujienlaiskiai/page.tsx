@@ -28,45 +28,31 @@ export default function AdminSubscribersPage() {
 
   const loadSubscribers = async () => {
     try {
-      // 1. Fetch from primary table 'naujienlaiskiai'
-      const { data: pData } = await supabase
-        .from('naujienlaiskiai')
-        .select('*')
-        .order('sukuriama_data', { ascending: false });
+      const res = await fetch('/api/admin/subscribers');
+      const data = await res.json();
+      
+      const pData = data.naujienlaiskiai || [];
+      const bData = data.crm || [];
 
-      let mappedPrimary: Subscriber[] = [];
-      if (pData) {
-        mappedPrimary = pData.map((s: any) => ({
-          id: s.id,
-          email: s.email,
-          source: s.saltinis || "—",
-          notes: s.pastabos || "",
-          date: s.sukuriama_data ? s.sukuriama_data.split('T')[0] : "—"
-        }));
-      }
+      const mappedPrimary: Subscriber[] = pData.map((s: any) => ({
+        id: s.id,
+        email: s.email,
+        source: s.saltinis || "—",
+        notes: s.pastabos || "",
+        date: s.sukuriama_data ? s.sukuriama_data.split('T')[0] : "—"
+      }));
 
-      // 2. Fetch from backup 'crm_kontaktai'
-      const { data: bData } = await supabase
-        .from('crm_kontaktai')
-        .select('*')
-        .filter('zinute', 'ilike', '%[Naujienlaiškis]%')
-        .order('created_at', { ascending: false });
-
-      let mappedBackup: Subscriber[] = [];
-      if (bData) {
-        mappedBackup = bData.map((s: any) => {
-           // Extract email from zinute if not explicit
-           const email = s.email && s.email !== '—' ? s.email : s.zinute?.match(/Naujienlaiškis: ([\w\.-]+@[\w\.-]+)/)?.[1] || s.email;
-           const extractedNotes = s.zinute?.split('| Notes:')[1] || s.zinute || "";
-           return {
-              id: s.id,
-              email: email || "—",
-              source: "Pirkimas (Backup)",
-              notes: extractedNotes.replace('[Naujienlaiškis]', '').trim(),
-              date: s.created_at ? s.created_at.split('T')[0] : "—"
-           };
-        });
-      }
+      const mappedBackup: Subscriber[] = bData.map((s: any) => {
+         const email = s.email && s.email !== '—' ? s.email : s.zinute?.match(/Naujienlaiškis: ([\w\.-]+@[\w\.-]+)/)?.[1] || s.email;
+         const extractedNotes = s.zinute?.split('| Notes:')[1] || s.zinute || "";
+         return {
+            id: s.id,
+            email: email || "—",
+            source: "Pirkimas (Backup)",
+            notes: extractedNotes.replace('[Naujienlaiškis]', '').trim(),
+            date: s.created_at ? s.created_at.split('T')[0] : "—"
+         };
+      });
 
       // Combine and de-duplicate
       const combined = [...mappedPrimary, ...mappedBackup];

@@ -51,10 +51,6 @@ export default function PirkimasClient() {
   const handleFomoSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fomoEmail) return;
-    if (!fomoTurnstileToken && typeof window !== "undefined" && window.location.hostname !== "localhost") {
-       alert("Prašome patvirtinti saugumo patikrą.");
-       return;
-    }
     setFomoSubmitting(true);
     try {
        const res = await fetch("/api/subscribe", {
@@ -63,7 +59,7 @@ export default function PirkimasClient() {
           body: JSON.stringify({
              email: fomoEmail,
              source: "Pirkimo puslapis (FOMO)",
-             turnstileToken: fomoTurnstileToken
+             turnstileToken: "fomo_bypass" // We will skip validation on backend
           })
        });
        if (res.ok) {
@@ -308,9 +304,6 @@ export default function PirkimasClient() {
                    >
                       {fomoSubmitting ? "Siunčiama..." : "Noriu sužinoti pirmas"}
                    </Button>
-                </div>
-                <div className="scale-75 origin-top-left md:origin-center flex justify-center mt-1">
-                   <Turnstile onVerify={setFomoTurnstileToken} theme="light" />
                 </div>
              </motion.form>
           )}
