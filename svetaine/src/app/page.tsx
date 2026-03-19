@@ -59,7 +59,7 @@ export default function HomePage() {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full md:w-6/12 flex flex-col items-start text-left relative z-10"
+            className="w-full md:w-6/12 flex flex-col items-start text-left relative z-10 mb-12 md:mb-0"
           >
             <motion.div
               initial={{ opacity: 0, y: 10 }}
