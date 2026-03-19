@@ -223,16 +223,46 @@ export default async function SingleArticlePage({ params }: { params: Promise<{ 
             </div>
           )}
 
-          <div className="mt-16 bg-slate-50 rounded-2xl p-8 border border-slate-200 flex flex-col md:flex-row items-center gap-6 justify-between">
-            <div>
-              <h3 className="text-xl font-bold text-[#111827] mb-2">Reikia asmeninės konsultacijos?</h3>
-              <p className="text-slate-600">Aptarkime jūsų situaciją individualiai ir suraskime geriausią sprendimą.</p>
+          {/* Integrated Author & CTA Block (Max Tier Design) */}
+          <div className="relative mt-20 md:mt-24 mb-10 overflow-hidden bg-white border border-slate-200/60 rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] group transition-all duration-500 hover:shadow-[0_20px_60px_-15px_rgba(37,99,235,0.15)]">
+            
+            {/* Ambient Background Gradient inside card */}
+            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-blue-50/80 via-transparent to-transparent opacity-70 pointer-events-none rounded-bl-full" />
+            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-slate-50/80 via-transparent to-transparent opacity-80 pointer-events-none rounded-tr-full" />
+            
+            <div className="p-10 md:p-16 relative z-10 flex flex-col items-center text-center">
+              
+              {/* Author Section */}
+              <div className="mb-8">
+                <h3 className="text-3xl md:text-[2.5rem] font-sans font-extrabold text-slate-950 tracking-tight mb-6">
+                  Mantas Katkevičius
+                </h3>
+                <div className="inline-flex items-center bg-blue-50 border border-blue-100/80 rounded-full px-5 py-2 mb-6 shadow-sm">
+                  <span className="w-2 h-2 bg-blue-600 rounded-full animate-pulse mr-2" />
+                  <p className="text-blue-700 text-sm md:text-[15px] font-bold uppercase tracking-widest leading-none m-0">NT Pardavimų Ekspertas</p>
+                </div>
+                <p className="text-slate-600 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+                  kurio strateginis požiūris ir technologinis pranašumas užtikrina maksimalią turto vertę klientams.
+                </p>
+              </div>
+
+              {/* Elegant Divider */}
+              <div className="w-16 h-1 bg-slate-200 my-10 rounded-full" />
+
+              {/* CTA Section */}
+              <div className="w-full max-w-lg mx-auto">
+                <h4 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4 tracking-tight">Reikia asmeninės konsultacijos?</h4>
+                <p className="text-slate-500 mb-10 text-base md:text-lg px-4">
+                  Aptarkime jūsų situaciją individualiai ir suraskime geriausią sprendimą.
+                </p>
+                
+                <Link href="/konsultacija" className="block w-full sm:w-auto">
+                  <Button className="h-16 w-full sm:w-auto px-12 rounded-2xl bg-[#2563EB] hover:bg-[#1E3A8A] text-white font-bold text-lg shadow-[0_10px_30px_-10px_rgba(37,99,235,0.4)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
+                    Susisiekti <ArrowRight className="w-6 h-6 ml-2" />
+                  </Button>
+                </Link>
+              </div>
             </div>
-            <Link href="/konsultacija" className="shrink-0 w-full md:w-auto">
-              <Button className="w-full h-12 px-8 bg-[#2563EB] hover:bg-[#1E3A8A] text-white cursor-pointer">
-                Susisiekti <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
           </div>
         </div>
       </div>
