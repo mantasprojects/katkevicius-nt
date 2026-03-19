@@ -46,79 +46,90 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen bg-white text-slate-900 overflow-hidden">
       
       {/* Hero Section with Cinematic Slider */}
-      <section className="relative h-[90vh] md:h-screen flex items-center overflow-hidden z-20 bg-white">
-        {/* Left Side (White/Grey Flat Layout for text) */}
-        <div className="hidden md:block absolute inset-y-0 left-0 w-1/2 bg-slate-50 border-r border-slate-100" />
-
-        {/* Right Side (Single Bright Ambient Image Background) */}
-        <div className="absolute inset-y-0 right-0 w-full md:w-1/2 h-full">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img 
-            src="/images/minimalist_bg.png" 
-            alt="Prabangus NT" 
-            className="w-full h-full object-cover"
-          />
-          {/* Subtle gradient overlay to blend into the left seam on mobile and tablet */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-50/90 via-slate-50/40 to-transparent md:from-slate-100/10" />
+      <section className="relative h-[90vh] md:h-screen flex items-center justify-center overflow-hidden z-20">
+        {/* Cinematic Slider Background */}
+        <div className="absolute inset-0 z-0">
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, scale: 1 }}
+              animate={{ opacity: 1, scale: 1.06 }}
+              exit={{ opacity: 0 }}
+              transition={{ 
+                opacity: { duration: 1.5, ease: "easeInOut" },
+                scale: { duration: 6, ease: "linear" } 
+              }}
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${images[index]})` }}
+            />
+          </AnimatePresence>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/40 to-transparent backdrop-blur-[1px]" />
+          {/* Subtle Bottom Gradient */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent" />
         </div>
 
         {/* Integrated Spread Layout */}
-        <div className="container px-4 mx-auto max-w-7xl relative z-10 flex flex-col md:flex-row items-center h-full">
+        <div className="container px-4 mx-auto max-w-7xl relative z-10 flex flex-col md:flex-row items-center justify-between h-full pt-24 md:pt-16">
           {/* Left Content Side */}
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full md:w-5/12 flex flex-col items-start text-left relative z-10 py-10 md:py-20 mb-[40%] md:mb-0"
+            className="w-full md:w-6/12 flex flex-col items-start text-left relative z-10"
           >
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="inline-flex items-center gap-2 bg-blue-50/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-blue-100/50 mb-6"
+              className="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-md px-4 py-1.5 rounded-full border border-primary/20 mb-6"
             >
-              <Star className="w-4 h-4 text-primary fill-primary" />
-              <span className="text-xs font-bold text-slate-700 uppercase tracking-widest leading-none">NT Ekspertas</span>
+              <Star className="w-4 h-4 text-emerald-400 fill-emerald-400" />
+              <span className="text-xs font-bold text-white uppercase tracking-widest leading-none">NT Ekspertas</span>
             </motion.div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-sans font-black mb-6 leading-[1.05] tracking-tight text-slate-950">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-sans font-black mb-6 leading-[1.05] tracking-tight text-white drop-shadow-md">
               Nuo paieškos <br />
               iki sandorio <br />
               ramiai ir <span className="text-primary italic">užtikrintai</span>
             </h1>
 
-            <p className="text-base md:text-lg text-slate-600 mb-10 max-w-md font-medium leading-relaxed">
-              Aiški strategija ir profesionalus derybų valdymas. Pardavimo vidurkis – vos 6 savaitės.
+            <p className="text-base md:text-lg text-white/90 mb-10 max-w-md font-medium leading-relaxed drop-shadow-sm">
+              Aiški strategija, prabangus pareikimas ir profesionalus derybų valdymas. Pardavimo vidurkis – vos 6 savaitės.
             </p>
 
             <Link href="/konsultacija" className="w-full sm:w-auto">
-              <Button size="lg" className="h-14 w-full px-10 text-base shadow-lg font-bold rounded-xl bg-primary hover:bg-slate-900 text-white transition-all duration-500 hover:scale-105">
+              <Button size="lg" className="h-14 w-full px-10 text-base shadow-2xl font-bold rounded-2xl bg-primary text-white hover:bg-slate-900 transition-all duration-500 hover:scale-105">
                 Rezervuoti konsultaciją
               </Button>
             </Link>
           </motion.div>
 
-          {/* Right Profile Side - Absolute bottom right blend enabled on Mobile */}
+          {/* Right Profile Side - Floating overlapping Frame-less look */}
           <motion.div 
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
-            className="absolute bottom-0 right-0 z-10 h-[50%] md:h-[85%] aspect-[3/4]"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="w-full md:w-5/12 flex flex-col items-center justify-end h-full relative"
           >
-            <div className="relative h-full w-full">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img 
-                src="/uploads/1773775458388-profilio.png" 
-                alt="Mantas Katkevičius" 
-                className="w-full h-full object-contain object-bottom filter drop-shadow-2xl"
-              />
-              
-              {/* Floating ID Glass Title */}
-              <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 backdrop-blur-md bg-white/10 hover:bg-white/20 border border-white/20 p-4 rounded-2xl shadow-xl w-60 text-center transition-all duration-300">
-                <p className="text-white font-sans font-black text-xl tracking-tighter mb-0.5">Mantas Katkevičius</p>
-                <p className="text-primary text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 leading-none">
-                  <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" /> Jūsų NT partneris
-                </p>
+            {/* Ambient Background Glow behind profile */}
+            <div className="absolute inset-0 bg-primary/10 rounded-full blur-[120px] -z-10" />
+            
+            <div className="relative w-full max-w-sm aspect-[3/4] self-end mt-auto">
+              <div className="absolute -inset-4 bg-gradient-to-br from-primary/30 to-slate-400/10 rounded-[3rem] blur-2xl opacity-70" />
+              <div className="relative h-full w-full rounded-t-[5rem] rounded-b-3xl overflow-hidden shadow-2xl border border-white/10 group">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img 
+                  src="/uploads/1773775458388-profilio.png" 
+                  alt="Mantas Katkevičius" 
+                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-all duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+                <div className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-white/10 border border-white/20 p-5 rounded-3xl">
+                  <p className="text-white font-sans font-black text-2xl tracking-tighter mb-1">Mantas Katkevičius</p>
+                  <p className="text-primary text-xs font-bold uppercase tracking-widest flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" /> Jūsų NT partneris
+                  </p>
+                </div>
               </div>
             </div>
           </motion.div>
