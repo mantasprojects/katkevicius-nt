@@ -576,7 +576,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
                 <div className="flex items-center gap-5 mb-8 pb-8 border-b border-slate-100">
                   <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#1E3A8A] flex-shrink-0 relative shadow-md">
                     <Image 
-                      src="https://katkevicius.lt/wp-content/uploads/2026/01/profilio.png" 
+                      src="/uploads/1773775458388-profilio.png" 
                       alt="Mantas Katkevičius" 
                       fill
                       className="object-cover object-top" 

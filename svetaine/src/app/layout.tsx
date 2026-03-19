@@ -40,7 +40,7 @@ export default function RootLayout({
               "@id": "https://katkevicius.lt/#service",
               "name": "Mantas Katkevičius | NT Brokeris Kaunas",
               "description": "Profesionalios nekilnojamojo turto paslaugos Kauno regione. Aiški strategija, tikslūs sprendimai ir sklandus procesas – nuo paieškos iki sėkmingo sandorio.",
-              "image": "https://katkevicius.lt/wp-content/uploads/2026/01/profilio.png",
+              "image": "https://katkevicius.lt/uploads/1773775458388-profilio.png",
               "telephone": "+370 645 41892",
               "email": "info@katkevicius.lt",
               "url": "https://katkevicius.lt",

@@ -83,7 +83,7 @@ export default function HomePage() {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img 
-                  src="https://katkevicius.lt/wp-content/uploads/2026/01/profilio.png" 
+                  src="/uploads/1773775458388-profilio.png" 
                   alt="Mantas Katkevičius" 
                   className="w-full h-full object-cover object-top"
                 />
