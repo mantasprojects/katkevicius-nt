@@ -131,7 +131,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
               className="text-4xl md:text-5xl font-black mb-4 text-slate-950 tracking-tight"
             >
               Teikiamos paslaugos
@@ -145,7 +145,7 @@ export default function HomePage() {
               <motion.div 
                 whileHover={{ y: -8 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
-                className="bg-slate-950 rounded-[2rem] flex flex-col h-full hover:border-primary/40 shadow-sm hover:shadow-2xl transition-all relative overflow-hidden"
+                className="bg-slate-950 transform-gpu rounded-[2rem] flex flex-col h-full hover:border-primary/40 shadow-sm hover:shadow-2xl transition-all relative overflow-hidden"
               >
                 {/* Background Image Full cover layout */}
                 <div className="absolute inset-0">
@@ -184,8 +184,8 @@ export default function HomePage() {
             <Link href="/pirkimas" className="group block relative">
               <motion.div 
                 whileHover={{ y: -8 }}
-                transition={{ duration: 0.4 }}
-                className="bg-white border border-slate-100/80 rounded-[2rem] p-8 flex flex-col h-full hover:border-primary/40 shadow-sm hover:shadow-2xl transition-all relative overflow-hidden"
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="bg-white transform-gpu border border-slate-100/80 rounded-[2rem] p-8 flex flex-col h-full hover:border-primary/40 shadow-sm hover:shadow-2xl transition-all relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-40 h-40 bg-blue-400/5 rounded-full blur-2xl -z-10" />
                 
@@ -207,8 +207,8 @@ export default function HomePage() {
             {/* 3. NT Nuoma */}
             <Link href="/nuoma" className="group block relative">
               <motion.div 
-                whileHover={{ scale: 1.02, y: -4 }}
-                transition={{ duration: 0.4 }}
+                whileHover={{ y: -8 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
                 className="bg-white border border-slate-100/80 rounded-[2rem] p-8 flex flex-col h-full hover:border-primary/40 shadow-sm hover:shadow-2xl transition-all relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-400/5 rounded-full blur-2xl -z-10" />
