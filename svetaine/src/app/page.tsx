@@ -78,7 +78,7 @@ export default function HomePage() {
             </h1>
 
             <p className="text-base md:text-lg text-slate-600 mb-10 max-w-md font-medium leading-relaxed drop-shadow-sm">
-              Profesionalios nekilnojamojo turto paslaugos.
+              Strateginis požiūris ir maksimali vertė jūsų nekilnojamajam turtui.
             </p>
 
             <Link href="/konsultacija" className="w-full sm:w-auto">
@@ -107,7 +107,7 @@ export default function HomePage() {
                   alt="Mantas Katkevičius" 
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/20" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
                 <div className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-white/10 border border-white/20 p-5 rounded-2xl flex flex-col items-center text-center">
                   <p className="text-white font-sans font-black text-2xl tracking-wide mb-1">Mantas Katkevičius</p>
                   <p className="text-primary text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-1.5">
