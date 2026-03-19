@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { LazyMotion, domMax, m, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowRight, Star, Quote, CheckCircle2, Zap, TrendingUp, ShieldCheck } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/motion";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -26,20 +26,7 @@ export default function HomePage() {
     "/images/hero_luxury_interior.png"
   ];
 
-  useEffect(() => {
-    setIsMounted(true);
-
-    fetch("/api/blog")
-      .then(res => res.json())
-      .then(data => {
-        const postsArray = Array.isArray(data) ? data : (data.posts || []);
-        const published = postsArray.filter((p: any) => p.status === "published");
-        setArticles(published.slice(0, 3));
-      })
-      .catch(err => console.error("Klaida kraunant straipsnius:", err));
-
-    // Slider disabled
-  }, []);
+  
 
   
 
@@ -85,12 +72,7 @@ export default function HomePage() {
           </m.div>
 
           {/* Right Profile Side - Floating overlapping Frame-less look */}
-          <m.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="w-full md:w-5/12 flex flex-col items-center justify-end h-full relative md:-translate-y-16"
-          >
+          <div className="w-full md:w-5/12 flex flex-col items-center justify-end h-full relative md:-translate-y-16">
             {/* Ambient Background Glow behind profile */}
             <div className="absolute inset-0 bg-primary/10 rounded-full blur-[120px] -z-10" />
             
@@ -117,7 +99,7 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-          </m.div>
+          </div>
         </div>
       </section>
 
@@ -160,7 +142,7 @@ export default function HomePage() {
             </Link>
           </div>
           
-          <ArticlesGrid articles={articles} />
+          <ArticlesGrid />
 
           {/* Mobile Only Button */}
           <div className="mt-10 flex justify-center md:hidden">

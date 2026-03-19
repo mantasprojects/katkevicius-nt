@@ -1,3 +1,9 @@
+const fs = require('fs');
+const path = require('path');
+
+// 1. UPDATE ARTICLES GRID (Move fetch here)
+const articlesFile = path.join(process.cwd(), 'src/components/home/ArticlesGrid.tsx');
+let articlesContent = `
 "use client";
 
 import { useState, useEffect } from "react";
@@ -37,7 +43,7 @@ export default function ArticlesGrid() {
       ) : (
         articles.map(article => (
           <StaggerItem key={article.id}>
-            <Link href={`/naudinga-informacija/${article.slug}`} className="group bg-white rounded-3xl p-8 hover:bg-slate-50 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 flex flex-col h-full hover:-translate-y-1">
+            <Link href={\`/naudinga-informacija/\${article.slug}\`} className="group bg-white rounded-3xl p-8 hover:bg-slate-50 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 flex flex-col h-full hover:-translate-y-1">
               <div className="text-sm font-bold tracking-wider uppercase text-primary mb-4">
                 {article.category || "Patarimai"}
               </div>
@@ -56,3 +62,36 @@ export default function ArticlesGrid() {
     </StaggerContainer>
   );
 }
+`;
+fs.writeFileSync(articlesFile, articlesContent.trim(), 'utf8');
+
+// 2. UPDATE PAGE.TSX
+const pageFile = path.join(process.cwd(), 'src/app/page.tsx');
+let page = fs.readFileSync(pageFile, 'utf8');
+
+// A. Pašalinti nereikalingus lucide importus į atskirus failus and useState/useEffect
+page = page.replace('import { useState, useEffect } from "react";\n', '');
+page = page.replace(
+    'import { ArrowRight, Star, Quote, CheckCircle2, Zap, TrendingUp, ShieldCheck } from "lucide-react";',
+    'import { ArrowRight } from "lucide-react";'
+);
+
+// B. Pašalinti fetch bloką
+const useEffectRegex = /useEffect\(\(\) => \{[\s\S]*?\}, \[\]\);/;
+page = page.replace(useEffectRegex, '');
+
+// C. Pašalinti state kintamuosius
+page = page.replace('const [isMounted, setIsMounted] = useState(false);\n', '');
+page = page.replace('const [articles, setArticles] = useState<any[]>([]);\n', '');
+page = page.replace('const [index, setIndex] = useState(0);\n', '');
+
+// D. Pakeisti <ArticlesGrid articles={articles} /> į <ArticlesGrid />
+page = page.replace('<ArticlesGrid articles={articles} />', '<ArticlesGrid />');
+
+// E. PAŠALINTI LCP animaciją: <m.div initial={{ opacity: 0...> -> <div... ok
+const lcpAnimationRegex = /<m\.div\s*initial=\{\{\s*opacity:\s*0,\s*scale:\s*0\.95\s*\}\}\s*animate=\{\{\s*opacity:\s*1,\s*scale:\s*1\s*\}\}\s*transition=\{\{\s*duration:\s*1,\s*ease:\s*"easeOut"\s*\}\}\s*(className="[^"]*?")\s*>/;
+page = page.replace(lcpAnimationRegex, '<div $1>');
+page = page.replace('</m.div>\n        </div>\n      </section>', '</div>\n        </div>\n      </section>');
+
+fs.writeFileSync(pageFile, page, 'utf8');
+console.log("Extreme optimizacija baigta sėkmingai!");
