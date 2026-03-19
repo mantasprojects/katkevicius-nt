@@ -17,7 +17,7 @@ export default function HomePage() {
   const [index, setIndex] = useState(0);
 
   const images = [
-    "/images/minimalist_interior.png",
+    "/images/minimalist_interior_clean.png",
     "/images/hero_luxury_interior.png"
   ];
 
@@ -42,7 +42,7 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen bg-white text-slate-900 overflow-hidden">
       
       {/* Hero Section with Cinematic Slider */}
-      <section className="relative h-[90vh] md:h-screen flex items-center justify-center overflow-hidden z-20">
+      <section className="relative min-h-[90vh] md:h-screen flex items-center justify-center overflow-hidden z-20 py-24 md:py-0 bg-gradient-to-br from-slate-50 via-white to-indigo-50/20">
         {/* Cinematic Slider Background */}
         <div className="absolute inset-0 z-0 bg-gradient-to-br from-slate-50 via-white to-indigo-50/20">
           <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-60" />
@@ -78,7 +78,7 @@ export default function HomePage() {
             </h1>
 
             <p className="text-base md:text-lg text-slate-600 mb-10 max-w-md font-medium leading-relaxed drop-shadow-sm">
-              Skaidrūs sprendimai, derybų valdymas ir sklandus procesas jūsų ramybei.
+              Aukščiausios klasės atstovavimas, derybų menas ir sklandus nekilnojamojo turto pardavimas.
             </p>
 
             <Link href="/konsultacija" className="w-full sm:w-auto">
@@ -143,8 +143,8 @@ export default function HomePage() {
             {/* 1. NT Pardavimas (Dominant - Big Card) */}
             <Link href="/pardavimas" className="md:col-span-2 md:row-span-2 group block relative">
               <motion.div 
-                whileHover={{ scale: 1.01, y: -4 }}
-                transition={{ duration: 0.4 }}
+                whileHover={{ y: -8 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
                 className="bg-slate-950 rounded-[2rem] flex flex-col h-full hover:border-primary/40 shadow-sm hover:shadow-2xl transition-all relative overflow-hidden"
               >
                 {/* Background Image Full cover layout */}
@@ -183,7 +183,7 @@ export default function HomePage() {
             {/* 2. NT Pirkimas */}
             <Link href="/pirkimas" className="group block relative">
               <motion.div 
-                whileHover={{ scale: 1.02, y: -4 }}
+                whileHover={{ y: -8 }}
                 transition={{ duration: 0.4 }}
                 className="bg-white border border-slate-100/80 rounded-[2rem] p-8 flex flex-col h-full hover:border-primary/40 shadow-sm hover:shadow-2xl transition-all relative overflow-hidden"
               >
