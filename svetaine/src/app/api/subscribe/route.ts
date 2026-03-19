@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
 export async function POST(req: NextRequest) {
   try {
@@ -34,20 +35,29 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Saugumo patikra nepavyko." }, { status: 400 });
     }
 
-    // 2. Insert into Supabase
-    const { createClient } = await import("@/utils/supabase/server"); 
-    const supabase = await createClient();
+    // 2. Insert into Supabase using Service Role Key to bypass RLS
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !supabaseServiceKey) {
+       console.error("Missing Supabase Service Role configuration!");
+       return NextResponse.json({ error: "Sistemos konfigūracijos klaida." }, { status: 500 });
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+       auth: { autoRefreshToken: false, persistSession: false }
+    });
 
     const { error: insertError } = await supabase.from('naujienlaiskiai').insert({
-      email,
+      email: email.trim().toLowerCase(),
       saltinis: source || "pirkimas_fomo"
     });
 
     if (insertError) {
       console.error("Subscription failed:", insertError.message);
-      // Fallback to sending an email alerts or crm if table doesn't exist
-      if (insertError.message.includes("does not exist")) {
-         // Create fallback in crm_kontaktai as backup so data is NEVER lost!
+      
+      // If table truly still doesn't exist for some reason, use fallback
+      if (insertError.message.includes("does not exist") || insertError.message.includes("42P01")) {
          await supabase.from('crm_kontaktai').insert({
             vardas: "Prenumeratorius",
             email: email,
@@ -56,7 +66,7 @@ export async function POST(req: NextRequest) {
          });
          return NextResponse.json({ success: true, message: "Saved to backup CRM" });
       }
-      return NextResponse.json({ error: "Klaida išsaugant prenumeratą." }, { status: 500 });
+      return NextResponse.json({ error: `Klaida išsaugant prenumeratą: ${insertError.message}` }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
