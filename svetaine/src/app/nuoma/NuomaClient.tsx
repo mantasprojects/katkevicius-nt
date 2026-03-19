@@ -153,8 +153,8 @@ export default function NuomaClient() {
                 viewport={{ once: true }}
                 className="bg-white/70 backdrop-blur-sm border border-slate-100 p-8 rounded-3xl shadow-sm hover:shadow-xl hover:border-primary/20 transition-all group flex flex-col items-center text-center"
               >
-                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary transition-colors group-hover:scale-105 transform">
-                  <div className="group-hover:text-white transition-colors">
+                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-105 transform transition-all duration-300">
+                  <div>
                     {card.icon}
                   </div>
                 </div>

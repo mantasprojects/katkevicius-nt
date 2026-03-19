@@ -65,13 +65,13 @@ export default function HomePage() {
           <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent" />
         </div>
 
-        {/* Glassmorphic Panel Overlay */}
-        <div className="container px-4 mx-auto max-w-7xl relative z-10 flex justify-center">
+        {/* Glassmorphic Panel & Profile Grid */}
+        <div className="container px-4 mx-auto max-w-7xl relative z-10 flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-16 h-full pt-20">
           <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full max-w-4xl backdrop-blur-xl bg-white/10 hover:bg-white/[0.12] border border-white/20 p-8 md:p-12 rounded-[2.5rem] shadow-2xl flex flex-col items-center text-center transition-all duration-700"
+            className="w-full md:w-7/12 backdrop-blur-xl bg-white/10 hover:bg-white/[0.12] border border-white/20 p-8 md:p-12 rounded-[2.5rem] shadow-2xl flex flex-col items-start text-left transition-all duration-700"
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
@@ -80,25 +80,47 @@ export default function HomePage() {
               className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10 mb-6"
             >
               <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-              <span className="text-xs font-bold text-white uppercase tracking-widest leading-none">NT Pardavimų Ekspertas</span>
+              <span className="text-xs font-bold text-white uppercase tracking-widest leading-none">NT Ekspertas</span>
             </motion.div>
 
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-sans font-black mb-6 leading-[1.05] tracking-tight text-white drop-shadow-sm">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-sans font-black mb-6 leading-[1.1] tracking-tight text-white drop-shadow-sm">
               Nuo paieškos <br className="md:hidden"/>
               iki sandorio <br className="hidden md:block"/>
               ramiai ir <span className="text-primary italic drop-shadow-none">užtikrintai</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-white/80 mb-10 max-w-2xl text-balance font-medium leading-relaxed drop-shadow-sm">
+            <p className="text-base md:text-lg text-white/80 mb-10 max-w-xl font-medium leading-relaxed drop-shadow-sm">
               Aiški strategija, prabangus pateikimas ir profesionalus derybų valdymas. Pardavimo vidurkis – vos 6 savaitės.
             </p>
 
-
             <Link href="/konsultacija" className="w-full sm:w-auto">
               <Button size="lg" className="h-14 w-full px-10 text-base shadow-lg font-bold rounded-xl bg-white text-slate-900 hover:bg-slate-100 transition-all duration-500">
-                Rezervuoti konsultaciją <ArrowRight className="ml-2 w-5 h-5" />
+                Rezervuoti konsultaciją
               </Button>
             </Link>
+          </motion.div>
+
+          {/* Profile Picture Column */}
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="hidden md:block relative w-full md:w-4/12 max-w-sm aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/20 self-end"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img 
+              src="/uploads/1773775458388-profilio.png" 
+              alt="Mantas Katkevičius" 
+              className="w-full h-full object-cover object-top"
+            />
+            {/* Gradient shadow overlay at bottom */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            
+            {/* Floating text content */}
+            <div className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-white/10 border border-white/20 p-4 rounded-2xl">
+              <p className="text-white font-black text-xl tracking-tight leading-none mb-1">Mantas Katkevičius</p>
+              <p className="text-white/70 text-[10px] font-bold uppercase tracking-widest">Jūsų asmeninis NT partneris</p>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -126,37 +148,40 @@ export default function HomePage() {
             {/* 1. NT Pardavimas (Dominant - Big Card) */}
             <Link href="/pardavimas" className="md:col-span-2 md:row-span-2 group block relative">
               <motion.div 
-                whileHover={{ scale: 1.02, y: -4 }}
+                whileHover={{ scale: 1.01, y: -4 }}
                 transition={{ duration: 0.4 }}
-                className="bg-white border border-slate-100/80 rounded-[2rem] p-8 md:p-12 flex flex-col h-full hover:border-primary/40 shadow-sm hover:shadow-2xl transition-all relative overflow-hidden bg-gradient-to-br from-white to-slate-50/50"
+                className="bg-white border border-slate-100/80 rounded-[2rem] flex flex-col md:flex-row h-full hover:border-primary/40 shadow-sm hover:shadow-2xl transition-all relative overflow-hidden bg-gradient-to-br from-white to-slate-50/50"
               >
-                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10 group-hover:scale-110 transition-transform duration-700" />
-                <div className="absolute bottom-0 right-0 w-80 h-80 opacity-10 group-hover:opacity-15 transition-opacity duration-700">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/images/hero_luxury_house.png" alt="Pardavimas" className="w-full h-full object-cover rounded-tl-[3rem]" />
+                <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
+                  <div className="w-14 h-14 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:bg-primary group-hover:text-white transition-colors duration-500">
+                    <TrendingUp className="w-6 h-6 text-primary group-hover:text-white transition-colors duration-500" />
+                  </div>
+
+                  <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full w-fit mb-4">
+                    Populiariausia paslauga
+                  </div>
+
+                  <h3 className="text-3xl md:text-4xl font-black mb-4 text-slate-950 tracking-tight">NT pardavimas</h3>
+                  <p className="text-slate-600 text-base md:text-lg leading-relaxed mb-8 max-w-md">
+                    Maksimali rinkos kaina per trumpą laiką. Stipri prezentacija, tikslinė sklaida ir profesionalus derybų valdymas jūsų ramybei.
+                  </p>
+
+                  <ul className="space-y-3 mb-8 text-slate-500 text-sm font-medium">
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> Strateginis kainos nustatymas</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> Profesionalus NT marketingas</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> Teisinių ginčų apsauga</li>
+                  </ul>
+
+                  <div className="flex items-center text-primary font-bold text-base mt-auto group-hover:gap-2 transition-all">
+                    Sužinoti daugiau<ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
 
-                <div className="w-14 h-14 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:bg-primary group-hover:text-white transition-colors duration-500">
-                  <TrendingUp className="w-6 h-6 text-primary group-hover:text-white transition-colors duration-500" />
-                </div>
-
-                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full w-fit mb-4">
-                  Populiariausia paslauga
-                </div>
-
-                <h3 className="text-3xl md:text-4xl font-black mb-4 text-slate-950 tracking-tight">NT pardavimas</h3>
-                <p className="text-slate-600 text-base md:text-lg leading-relaxed mb-8 max-w-md">
-                  Maksimali rinkos kaina per trumpą laiką. Stipri prezentacija, tikslinė sklaida ir profesionalus derybų valdymas jūsų ramybei.
-                </p>
-
-                <ul className="space-y-3 mb-8 text-slate-500 text-sm font-medium">
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> Strateginis kainos nustatymas</li>
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> Profesionalus NT marketingas</li>
-                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> Teisinių ginčų apsauga</li>
-                </ul>
-
-                <div className="flex items-center text-primary font-bold text-base mt-auto group-hover:gap-2 transition-all">
-                  Sužinoti daugiau<ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                {/* Cover image Side with fade blends reveal */}
+                <div className="w-full md:w-1/2 relative min-h-[250px] md:h-full overflow-hidden">
+                  <img src="/images/hero_luxury_house.png" alt="Pardavimas" className="w-full h-full object-cover absolute inset-0" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-white via-white/40 to-transparent hidden md:block" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent md:hidden" />
                 </div>
               </motion.div>
             </Link>
