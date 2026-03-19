@@ -112,7 +112,7 @@ export default function NuomaClient() {
             className="max-w-xl backdrop-blur-md bg-white/80 border border-white/40 p-10 md:p-12 rounded-3xl shadow-2xl shadow-black/5"
           >
             <span className="inline-flex items-center px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full text-xs font-bold tracking-wider text-primary mb-6">
-              <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Išskirtinis valdymas
+              <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Pilnas administravimas
             </span>
             
             <h1 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight leading-[1.1] text-slate-900">
