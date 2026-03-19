@@ -190,24 +190,18 @@ const faqsEn = [
 ];
 
 export default function FAQPage() {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-
-  const toggleAccordion = (index: number) => {
-    setActiveIndex(activeIndex === index ? null : index);
-  };
-
   const sections = [
-    {
-      title: "Pirkėjams",
-      description: "Profesionali pagalba ir saugūs žingsniai ieškantiems svajonių būsto.",
-      icon: HelpCircle, // Using HelpCircle since Key is imported from lucide but HelpCircle fits
-      faqs: [ faqsLt[0] ]
-    },
     {
       title: "Pardavėjams",
       description: "Strateginė kaina, Home Staging ir derybos sėkmingam pardavimui.",
       icon: TrendingUp,
       faqs: [ faqsLt[2], faqsLt[3], faqsLt[4] ]
+    },
+    {
+      title: "Pirkėjams",
+      description: "Profesionali pagalba ir saugūs žingsniai ieškantiems svajonių būsto.",
+      icon: HelpCircle,
+      faqs: [ faqsLt[0] ]
     },
     {
       title: "Procesas ir Teisė",
@@ -216,6 +210,16 @@ export default function FAQPage() {
       faqs: [ faqsLt[1] ]
     }
   ];
+
+  const [activeCategory, setActiveCategory] = useState(sections[0].title);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const toggleAccordion = (index: number) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
+
+  // Find active section items
+  const activeSection = sections.find((s) => s.title === activeCategory);
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -236,110 +240,149 @@ export default function FAQPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#0F172A] via-[#1E3A8A] to-[#1E40AF] text-white pt-32 pb-20 overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl translate-x-1/3 translate-y-1/3" />
-        </div>
 
-        <div className="container px-4 mx-auto max-w-4xl text-center relative z-10">
-          <p className="text-blue-300 font-bold tracking-wider uppercase text-sm mb-4 flex items-center justify-center gap-2">
-            <HelpCircle className="w-4 h-4" />Pagalba & Informacija
-          </p>
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-[1.1]">
-            Dažnai Užduodami{" "}
-            <span className="bg-gradient-to-r from-blue-200 to-white bg-clip-text text-transparent">Klausimai</span>
-          </h1>
-          <p className="text-blue-200/80 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">Atsakymai į svarbiausius klausimus, padedantys priimti teisingus sprendimus jūsų nekilnojamojo turto kelyje.</p>
-        </div>
-      </section>
-
-      {/* Accordion Section */}
-      <section className="py-20 flex-1 relative overflow-hidden">
-        {/* Subtle background glow effect */}
-        <div className="absolute top-40 left-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-3xl -translate-x-1/2 pointer-events-none" />
-        <div className="absolute bottom-40 right-0 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-3xl translate-x-1/2 pointer-events-none" />
+      <section className="py-24 flex-1 relative overflow-hidden">
+        {/* Glowing background highlights inspired by tech design */}
+        <div className="absolute top-20 left-10 w-[400px] h-[400px] bg-blue-500/[0.03] rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-20 right-10 w-[400px] h-[400px] bg-purple-500/[0.03] rounded-full blur-3xl pointer-events-none" />
 
         <div className="container px-4 mx-auto max-w-6xl relative z-10">
-          <div className="space-y-16">
-            {sections.map((section, sIndex) => {
-              const SectionIcon = section.icon;
-              return (
-                <div key={sIndex} className="space-y-8">
-                  {/* Category Header */}
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-white rounded-xl shadow-md border border-slate-100 text-[#2563EB]">
-                      <SectionIcon className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h2 className="text-xl md:text-2xl font-bold text-[#111827]">{section.title}</h2>
-                      <p className="text-slate-500 text-sm md:text-base mt-1">{section.description}</p>
-                    </div>
-                  </div>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12">
+            
+            {/* Left Column: Category Navigation Header Panel */}
+            <div className="md:col-span-4">
+              <div className="sticky top-24 space-y-6">
+                <div>
+                  <p className="text-[#2563EB] font-bold tracking-wider uppercase text-xs mb-2">Pagalba ir Informacija</p>
+                  <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-[#111827] leading-tight mb-2">
+                    Dažnai Užduodami
+                  </h1>
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-[#2563EB] to-blue-400 bg-clip-text text-transparent mb-5">
+                    Klausimai
+                  </h2>
+                  <p className="text-slate-500 text-sm leading-relaxed max-w-sm">
+                    Atsakymai į svarbiausius klausimus ketinantiems pirkti, parduoti ar investuoti į nekilnojamąjį turtą.
+                  </p>
+                </div>
 
-                  {/* Two columns grid for large screens */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {section.faqs.map((faq, fIndex) => {
-                      const globalIndex = sIndex * 100 + fIndex;
-                      const isOpen = activeIndex === globalIndex;
+                <div className="flex flex-col gap-2 bg-white/40 backdrop-blur-xl border border-slate-200/40 p-2 rounded-2xl shadow-sm">
+                  {sections.map((section, sIndex) => {
+                    const isSelected = activeCategory === section.title;
+                    const Icon = section.icon;
+                    return (
+                      <button
+                        key={sIndex}
+                        onClick={() => {
+                          setActiveCategory(section.title);
+                          setActiveIndex(null); // Reset accordions on tab change
+                        }}
+                        className={`w-full flex items-center gap-3 p-3.5 rounded-xl transition-all duration-300 text-left cursor-pointer group ${
+                          isSelected 
+                            ? "bg-white shadow-md border border-slate-100 text-[#2563EB]" 
+                            : "hover:bg-white/80 text-slate-600 hover:text-slate-900 border border-transparent"
+                        }`}
+                      >
+                        <div className={`p-2 rounded-lg transition-colors ${
+                          isSelected ? "bg-blue-50 text-[#2563EB]" : "bg-slate-100/50 text-slate-400 group-hover:bg-slate-100"
+                        }`}>
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <p className={`font-semibold text-sm transition-colors ${isSelected ? "text-slate-900" : "text-slate-700"}`}>
+                            {section.title}
+                          </p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Questions Grid */}
+            <div className="md:col-span-8">
+              <AnimatePresence mode="wait">
+                {activeSection && (
+                  <motion.div
+                    key={activeCategory}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                    className="flex flex-col gap-4"
+                  >
+                    <div className="mb-4">
+                      <h3 className="text-xl font-bold text-slate-900 tracking-tight">{activeSection.title}</h3>
+                      <p className="text-slate-400 text-sm mt-0.5">{activeSection.description}</p>
+                    </div>
+
+                    {activeSection.faqs.map((faq, fIndex) => {
+                      const isOpen = activeIndex === fIndex;
                       return (
-                        <div
+                        <motion.div
+                          layout
                           key={fIndex}
-                          className={`bg-white/80 backdrop-blur-md rounded-2xl border transition-all duration-300 ${
+                          className={`bg-white/80 backdrop-blur-xl rounded-2xl border transition-all duration-300 overflow-hidden ${
                             isOpen
-                              ? "border-[#2563EB]/40 shadow-xl shadow-blue-500/5"
-                              : "border-slate-100 shadow-sm hover:border-[#2563EB]/20 hover:shadow-lg hover:shadow-slate-200/40"
+                              ? "border-blue-200/60 shadow-lg shadow-blue-500/[0.04]"
+                              : "border-slate-100 shadow-sm hover:border-blue-100 hover:shadow-md hover:shadow-slate-200/30"
                           }`}
                         >
                           <button
-                            onClick={() => toggleAccordion(globalIndex)}
-                            className="w-full flex items-start justify-between p-6 text-left cursor-pointer group"
+                            onClick={() => toggleAccordion(fIndex)}
+                            className="w-full flex items-start justify-between p-6 md:p-7 text-left cursor-pointer group"
                             aria-expanded={isOpen}
                           >
                             <div className="flex items-start gap-4 pr-4">
-                              <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0 mt-0.5 bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-[#2563EB]">
+                              <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all flex-shrink-0 mt-0.5 ${
+                                isOpen ? "bg-blue-50 text-[#2563EB]" : "bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-[#2563EB]"
+                              }`}>
                                 <MessageSquare className="w-4 h-4" />
                               </div>
                               <h3
-                                className={`font-semibold text-base transition-colors leading-snug ${
-                                  isOpen ? "text-[#2563EB]" : "text-[#111827]"
+                                className={`font-semibold text-base md:text-lg transition-colors leading-snug tracking-tight ${
+                                  isOpen ? "text-[#2563EB]" : "text-slate-800"
                                 }`}
                               >
                                 {faq.question}
                               </h3>
                             </div>
-                            <ChevronDown
-                              className={`w-5 h-5 text-slate-400 transition-transform duration-300 mt-1 flex-shrink-0 ${
-                                isOpen ? "rotate-180 text-[#2563EB]" : "group-hover:text-amber-500"
-                              }`}
-                            />
+                            <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 flex-shrink-0 mt-1 border ${
+                              isOpen ? "border-blue-200 bg-blue-50 text-[#2563EB]" : "border-slate-200 text-slate-400 group-hover:border-blue-200 group-hover:text-[#2563EB]"
+                            }`}>
+                              <ChevronDown
+                                className={`w-3.5 h-3.5 transition-transform duration-300 ${
+                                  isOpen ? "rotate-180" : ""
+                                }`}
+                              />
+                            </div>
                           </button>
 
                           <AnimatePresence initial={false}>
                             {isOpen && (
                               <motion.div
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: "auto", opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                initial={{ height: 0 }}
+                                animate={{ height: "auto" }}
+                                exit={{ height: 0 }}
+                                transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1.0] }}
                                 className="overflow-hidden"
                               >
-                                <div className="p-6 pt-0 border-t border-slate-50 text-slate-500 text-sm md:text-base leading-relaxed">
-                                  <div className="pl-12">
+                                <div className="px-6 md:px-7 pb-6 md:pb-7 border-t border-slate-50/80 text-slate-600 text-sm md:text-base leading-relaxed">
+                                  <div className="pl-12 pt-4">
                                     {faq.answer}
                                   </div>
                                 </div>
                               </motion.div>
                             )}
                           </AnimatePresence>
-                        </div>
+                        </motion.div>
                       );
                     })}
-                  </div>
-                </div>
-              );
-            })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
           </div>
         </div>
       </section>
