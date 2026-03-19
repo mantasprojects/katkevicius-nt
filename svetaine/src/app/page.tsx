@@ -98,7 +98,7 @@ export default function HomePage() {
             {/* Ambient Background Glow behind profile */}
             <div className="absolute inset-0 bg-primary/10 rounded-full blur-[120px] -z-10" />
             
-            <div className="relative w-full max-w-sm h-[440px] md:h-auto aspect-[3/4] self-end mt-auto">
+            <div className="relative w-full max-w-sm h-[440px] md:h-auto aspect-[3/4] md:self-end self-center mt-6 md:mt-auto">
               <div className="absolute -inset-4 bg-gradient-to-br from-primary/30 to-slate-400/10 rounded-[3rem] blur-2xl opacity-70" />
               <div className="relative h-full w-full rounded-t-[5rem] rounded-b-3xl overflow-hidden shadow-2xl border border-white/10 group">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
