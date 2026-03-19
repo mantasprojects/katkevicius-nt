@@ -140,7 +140,7 @@ export default function HomePage() {
                 {/* Background Image Full cover layout */}
                 <div className="absolute inset-0">
                    <img src="/images/scandi_clean_light.png" alt="Pardavimas" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-1000" />
-                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent md:bg-gradient-to-r md:from-slate-950/70 md:via-slate-950/30 md:to-transparent" />
                 </div>
 
                 <div className="relative z-10 p-8 md:p-12 flex flex-col justify-end h-full text-white">
