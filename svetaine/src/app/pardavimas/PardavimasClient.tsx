@@ -108,7 +108,7 @@ export default function PardavimasClient() {
             animate={{ opacity: 1, y: 0 }}
             className="inline-block px-4 py-1.5 bg-white/10 backdrop-blur-md border border-white/10 rounded-full text-xs font-bold uppercase tracking-wider text-slate-200"
           >
-            NT pardavimų standartas
+            Aukščiausias NT pardavimų standartas
           </motion.span>
           
           <motion.h1 
