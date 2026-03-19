@@ -10,28 +10,28 @@ export default function PardavimasClient() {
   const [activeStep, setActiveStep] = useState(0);
 
   const steps = [
-    { id: "01", title: "Objekto Analizė & Kaina", description: "Atlieku tikslią rinkos kainų ir konkurentų analizę, nustatome maksimalią objekto starto vertę." },
-    { id: "02", title: "Home Staging & Paruošimas", description: "Subtiliais dizaino sprendimais padidiname patrauklumą ir sukuriame prabangos įspūdį nuo pirmo žvilgsnio." },
-    { id: "03", title: "Maksimali Sklaida (Ads)", description: "Targetuota Facebook, Instagram ir Google reklama nukreipiama tik į realiai būsto ieškančius pirkėjus." },
-    { id: "04", title: "Derybos & Atranka", description: "Filtruoju skambučius, organizuoju apžiūras ir ginu Jūsų finansinius interesus derybų metu." },
-    { id: "05", title: "Sėkmingas Sandoris", description: "Sutvarkau visą dokumentaciją, pažymas bei lydžiu Jus iki patiekojo sandorio užbaigimo pas notarą." }
+    { id: "01", title: "Objekto analizė ir kaina", description: "Atlieku tikslią rinkos kainų ir konkurentų analizę, nustatome maksimalią objekto starto vertę." },
+    { id: "02", title: "Home staging ir paruošimas", description: "Subtiliais dizaino sprendimais padidiname patrauklumą ir sukuriame prabangos įspūdį nuo pirmo žvilgsnio." },
+    { id: "03", title: "Maksimali sklaida (Ads)", description: "Targetuota Facebook, Instagram ir Google reklama nukreipiama tik į realiai būsto ieškančius pirkėjus." },
+    { id: "04", title: "Derybos ir atranka", description: "Filtruoju skambučius, organizuoju apžiūras ir ginu Jūsų finansinius interesus derybų metu." },
+    { id: "05", title: "Sėkmingas sandoris", description: "Sutvarkau visą dokumentaciją, pažymas bei lydžiu Jus iki patiekojo sandorio užbaigimo pas notarą." }
   ];
 
   const features = [
     {
-      title: "Profesionali Fotografija",
+      title: "Profesionali fotografija",
       description: "Aukščiausios kokybės HDR kadrai, pabrėžiantys erdves ir šviesą.",
       icon: Camera,
       badge: "Cinematic"
     },
     {
-      title: "Dronų Kadrai (4K)",
+      title: "Dronų kadrai (4K)",
       description: "Parodome infrastruktūrą, apylinkes ir sklypą iš paukščio skrydžio.",
       icon: Award,
       badge: "Aerial"
     },
     {
-      title: "3D Virtualūs Turai",
+      title: "3D virtualūs turai",
       description: "Suteikiame galimybę lankytojui apžiūrėti būstą bet kuriuo paros metu.",
       icon: Eye,
       badge: "Interact"
@@ -236,7 +236,7 @@ export default function PardavimasClient() {
 
          <div className="container px-4 mx-auto max-w-md relative z-10 text-center space-y-6">
             <motion.div {...fadeInUp} className="space-y-4">
-               <h2 className="text-3xl font-extrabold tracking-tight text-white">Pasiruošę Maksimaliam Rezultatui?</h2>
+               <h2 className="text-3xl font-extrabold tracking-tight text-white">Pasiruošę maksimaliam rezultatui?</h2>
                <p className="text-slate-300 text-sm leading-relaxed mb-4">Užpildykite užklausą ir gausite nemokamą turto vertinimą jau rytoj.</p>
             </motion.div>
 
