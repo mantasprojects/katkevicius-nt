@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight, Star, Quote, CheckCircle2, Zap, TrendingUp, ShieldCheck } from "lucide-react";
@@ -14,6 +14,12 @@ import { cn } from "@/lib/utils";
 export default function HomePage() {
   const [isMounted, setIsMounted] = useState(false);
   const [articles, setArticles] = useState<any[]>([]);
+  const [index, setIndex] = useState(0);
+
+  const images = [
+    "/images/hero_luxury_house.png",
+    "/images/hero_luxury_interior.png"
+  ];
 
   useEffect(() => {
     setIsMounted(true);
@@ -26,78 +32,74 @@ export default function HomePage() {
         setArticles(published.slice(0, 3));
       })
       .catch(err => console.error("Klaida kraunant straipsnius:", err));
+
+    const setIntervalId = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 6000);
+
+    return () => clearInterval(setIntervalId);
   }, []);
 
   if (!isMounted) return null;
 
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50 text-slate-900 overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-white text-slate-900 overflow-hidden">
       
-      {/* Dynamic Background Orbs */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[150px]" />
-      </div>
-
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden z-10 bg-white border-b border-slate-100">
-        <div className="container px-4 mx-auto max-w-7xl relative z-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-16 lg:gap-24">
-            
-            <div className="flex-1 text-center md:text-left">
-              <motion.h1 
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="text-5xl md:text-6xl lg:text-7xl font-sans font-black mb-8 leading-[1.05] tracking-tight text-balance text-slate-950"
-              >Nuo paieškos <br className="md:hidden"/>iki sandorio <br className="hidden md:block"/>ramiai, aiškiai ir <span className="text-primary italic">užtikrintai</span>
-              </motion.h1>
-              
-              <motion.p 
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                className="text-xl md:text-xl text-slate-600 mb-12 max-w-2xl text-balance font-medium leading-relaxed"
-              >Aiški strategija, stipri prezentacija. Pardavimo vidurkis – vos 6 savaitės.</motion.p>
-              
-              <FadeIn delay={0.4}>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                  <Link href="/konsultacija" className="w-full sm:w-auto">
-                    <Button size="lg" className="h-16 w-full px-10 text-lg shadow-xl shadow-primary/20 font-bold rounded-2xl bg-primary hover:bg-slate-950 transition-all duration-500 hover:-translate-y-1">Rezervuoti konsultaciją<ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
-                </div>
-              </FadeIn>
-            </div>
-
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95 }}
+      {/* Hero Section with Cinematic Slider */}
+      <section className="relative h-[90vh] md:h-screen flex items-center justify-center overflow-hidden z-20">
+        {/* Cinematic Slider Background */}
+        <div className="absolute inset-0 z-0">
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, scale: 1.08 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-              className="flex-1 relative max-w-lg w-full group"
+              exit={{ opacity: 0 }}
+              transition={{ duration: 2, ease: "easeOut" }}
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${images[index]})` }}
+            />
+          </AnimatePresence>
+          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px]" />
+          {/* Subtle Bottom Gradient */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent" />
+        </div>
+
+        {/* Glassmorphic Panel Overlay */}
+        <div className="container px-4 mx-auto max-w-7xl relative z-10 flex justify-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="w-full max-w-4xl backdrop-blur-xl bg-white/10 hover:bg-white/[0.12] border border-white/20 p-8 md:p-12 rounded-[2.5rem] shadow-2xl flex flex-col items-center text-center transition-all duration-700"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10 mb-6"
             >
-              <motion.div 
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="relative aspect-[4/5] rounded-[3rem] overflow-hidden bg-white shadow-2xl border border-slate-100 transition-transform duration-700 group-hover:scale-[1.02]"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img 
-                  src="/uploads/1773775458388-profilio.png" 
-                  alt="Mantas Katkevičius" 
-                  className="w-full h-full object-cover object-top"
-                />
-                
-                {/* Floating Glassmorphism text badge */}
-                <div className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-slate-950/70 border border-white/10 p-5 rounded-2xl text-left shadow-lg">
-                  <p className="font-extrabold text-2xl tracking-tight mb-1 text-white">Mantas Katkevičius</p>
-                  <p className="font-bold text-slate-300 text-xs uppercase tracking-widest opacity-90">Jūsų NT partneris</p>
-                </div>
-              </motion.div>
-              <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-primary/20 rounded-full blur-3xl -z-10"></div>
+              <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+              <span className="text-xs font-bold text-white uppercase tracking-widest leading-none">NT Pardavimų Ekspertas</span>
             </motion.div>
 
-          </div>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-sans font-black mb-6 leading-[1.05] tracking-tight text-white drop-shadow-sm">
+              Nuo paieškos <br className="md:hidden"/>
+              iki sandorio <br className="hidden md:block"/>
+              ramiai ir <span className="text-primary italic drop-shadow-none">užtikrintai</span>
+            </h1>
+
+            <p className="text-lg md:text-xl text-white/80 mb-10 max-w-2xl text-balance font-medium leading-relaxed drop-shadow-sm">
+              Aiški strategija, prabangus pateikimas ir profesionalus derybų valdymas. Pardavimo vidurkis – vos 6 savaitės.
+            </p>
+
+
+            <Link href="/konsultacija" className="w-full sm:w-auto">
+              <Button size="lg" className="h-14 w-full px-10 text-base shadow-lg font-bold rounded-xl bg-white text-slate-900 hover:bg-slate-100 transition-all duration-500">
+                Rezervuoti konsultaciją <ArrowRight className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
@@ -105,55 +107,104 @@ export default function HomePage() {
       <ProcessTimeline dark={false} />
 
       {/* Services Bento Grid Section */}
-      <section className="py-24 relative z-10 bg-slate-50 border-b border-slate-100">
+      <section className="py-32 relative z-10 bg-slate-50 border-b border-slate-100">
         <div className="container px-4 mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-extrabold mb-4 text-slate-950">Teikiamos paslaugos</h2>
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-4xl md:text-5xl font-black mb-4 text-slate-950 tracking-tight"
+            >
+              Teikiamos paslaugos
+            </motion.h2>
             <p className="text-slate-500 max-w-xl mx-auto text-base">Aukščiausio lygio atstovavimas kiekviename nekilnojamojo turto etape.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* 1. Pirkimas */}
-            <Link href="/pirkimas" className="group block">
+          <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-6 md:gap-8">
+            {/* 1. NT Pardavimas (Dominant - Big Card) */}
+            <Link href="/pardavimas" className="md:col-span-2 md:row-span-2 group block relative">
               <motion.div 
-                whileHover={{ y: -8 }}
-                className="bg-white border border-slate-100 rounded-3xl p-8 flex flex-col h-full hover:border-primary/40 transition-all shadow-sm hover:shadow-xl relative overflow-hidden"
+                whileHover={{ scale: 1.02, y: -4 }}
+                transition={{ duration: 0.4 }}
+                className="bg-white border border-slate-100/80 rounded-[2rem] p-8 md:p-12 flex flex-col h-full hover:border-primary/40 shadow-sm hover:shadow-2xl transition-all relative overflow-hidden bg-gradient-to-br from-white to-slate-50/50"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-400/5 rounded-full blur-2xl" />
-                <div className="w-12 h-12 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center mb-6 shadow-sm"><Zap className="w-6 h-6 text-primary" /></div>
-                <h3 className="text-2xl font-bold mb-3 text-slate-950">NT pirkimas</h3>
-                <p className="text-slate-500 text-sm leading-relaxed mb-8 flex-1">Apžiūrime tik lūkesčius atitinkančius objektus. Identifikuoju teisinę riziką ir sutaupau jūsų laiką bei biudžetą.</p>
-                <div className="flex items-center text-primary font-bold text-sm mt-auto">Sužinoti daugiau<ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -z-10 group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute bottom-0 right-0 w-80 h-80 opacity-10 group-hover:opacity-15 transition-opacity duration-700">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/hero_luxury_house.png" alt="Pardavimas" className="w-full h-full object-cover rounded-tl-[3rem]" />
+                </div>
+
+                <div className="w-14 h-14 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:bg-primary group-hover:text-white transition-colors duration-500">
+                  <TrendingUp className="w-6 h-6 text-primary group-hover:text-white transition-colors duration-500" />
+                </div>
+
+                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold px-3 py-1 rounded-full w-fit mb-4">
+                  Populiariausia paslauga
+                </div>
+
+                <h3 className="text-3xl md:text-4xl font-black mb-4 text-slate-950 tracking-tight">NT pardavimas</h3>
+                <p className="text-slate-600 text-base md:text-lg leading-relaxed mb-8 max-w-md">
+                  Maksimali rinkos kaina per trumpą laiką. Stipri prezentacija, tikslinė sklaida ir profesionalus derybų valdymas jūsų ramybei.
+                </p>
+
+                <ul className="space-y-3 mb-8 text-slate-500 text-sm font-medium">
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> Strateginis kainos nustatymas</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> Profesionalus NT marketingas</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> Teisinių ginčų apsauga</li>
+                </ul>
+
+                <div className="flex items-center text-primary font-bold text-base mt-auto group-hover:gap-2 transition-all">
+                  Sužinoti daugiau<ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </div>
               </motion.div>
             </Link>
 
-            {/* 2. Pardavimas (Now in Middle) */}
-            <Link href="/pardavimas" className="group block">
+            {/* 2. NT Pirkimas */}
+            <Link href="/pirkimas" className="group block relative">
               <motion.div 
-                whileHover={{ y: -8 }}
-                className="bg-white border border-slate-100 rounded-3xl p-8 flex flex-col h-full hover:border-primary/40 transition-all shadow-sm hover:shadow-xl relative overflow-hidden"
+                whileHover={{ scale: 1.02, y: -4 }}
+                transition={{ duration: 0.4 }}
+                className="bg-white border border-slate-100/80 rounded-[2rem] p-8 flex flex-col h-full hover:border-primary/40 shadow-sm hover:shadow-2xl transition-all relative overflow-hidden"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl" />
-                <div className="w-12 h-12 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center mb-6 shadow-sm"><TrendingUp className="w-6 h-6 text-primary" /></div>
-                <h3 className="text-2xl font-bold mb-3 text-slate-950">NT pardavimas</h3>
-                <p className="text-slate-500 text-sm leading-relaxed mb-8 flex-1">Maksimali rinkos kaina per trumpą laiką. Stipri prezentacija, tikslinė sklaida ir profesionalus derybų valdymas.</p>
-                <div className="flex items-center text-primary font-bold text-sm mt-auto">Sužinoti daugiau<ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                <div className="absolute top-0 right-0 w-40 h-40 bg-blue-400/5 rounded-full blur-2xl -z-10" />
+                
+                <div className="w-12 h-12 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center mb-6 shadow-sm group-hover:bg-primary group-hover:text-white transition-colors duration-500">
+                  <Zap className="w-5 h-5 text-primary group-hover:text-white transition-colors duration-500" />
+                </div>
+
+                <h3 className="text-2xl font-bold mb-3 text-slate-950 tracking-tight">NT pirkimas</h3>
+                <p className="text-slate-500 text-sm leading-relaxed mb-6">
+                  Apžiūrime tik lūkesčius atitinkančius objektus. Identifikuoju teisinę riziką ir sutaupau jūsų biudžetą derybose.
+                </p>
+
+                <div className="flex items-center text-primary font-bold text-sm mt-auto">
+                  Sužinoti daugiau<ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
                 </div>
               </motion.div>
             </Link>
 
-            {/* 3. Nuoma */}
-            <Link href="/nuoma" className="group block">
+            {/* 3. NT Nuoma */}
+            <Link href="/nuoma" className="group block relative">
               <motion.div 
-                whileHover={{ y: -8 }}
-                className="bg-white border border-slate-100 rounded-3xl p-8 flex flex-col h-full hover:border-primary/40 transition-all shadow-sm hover:shadow-xl relative overflow-hidden"
+                whileHover={{ scale: 1.02, y: -4 }}
+                transition={{ duration: 0.4 }}
+                className="bg-white border border-slate-100/80 rounded-[2rem] p-8 flex flex-col h-full hover:border-primary/40 shadow-sm hover:shadow-2xl transition-all relative overflow-hidden"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-400/5 rounded-full blur-2xl" />
-                <div className="w-12 h-12 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center justify-center mb-6 shadow-sm"><ShieldCheck className="w-6 h-6 text-emerald-600" /></div>
-                <h3 className="text-2xl font-bold mb-3 text-slate-950">NT nuoma</h3>
-                <p className="text-slate-500 text-sm leading-relaxed mb-8 flex-1">Patikima nuomininkų atranka ir sklandus sutarčių administravimas. Apsaugokite savo investiciją nuo rizikų.</p>
-                <div className="flex items-center text-emerald-600 font-bold text-sm mt-auto">Sužinoti daugiau<ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-400/5 rounded-full blur-2xl -z-10" />
+                
+                <div className="w-12 h-12 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center justify-center mb-6 shadow-sm group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-500">
+                  <ShieldCheck className="w-5 h-5 text-emerald-600 group-hover:text-white transition-colors duration-500" />
+                </div>
+
+                <h3 className="text-2xl font-bold mb-3 text-slate-950 tracking-tight">NT nuoma</h3>
+                <p className="text-slate-500 text-sm leading-relaxed mb-6">
+                  Patikima nuomininkų atranka ir sklandus sutarčių administravimas. Apsaugokite savo investiciją nuo rizikų.
+                </p>
+
+                <div className="flex items-center text-emerald-600 font-bold text-sm mt-auto">
+                  Sužinoti daugiau<ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
                 </div>
               </motion.div>
             </Link>

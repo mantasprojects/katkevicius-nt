@@ -242,12 +242,12 @@ export default function PirkimasClient() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.15 }}
                   viewport={{ once: true }}
-                  className={`flex flex-col md:flex-row items-start md:items-center ${index % 2 === 0 ? "md:flex-row-reverse" : ""}`}
+                  className={`flex flex-row md:items-center ${index % 2 === 0 ? "md:flex-row-reverse" : ""} relative`}
                 >
-                  <div className={`flex items-center justify-center w-12 h-12 rounded-full font-black text-lg bg-[#2563EB] text-white shadow-lg shadow-[#2563EB]/20 z-10 flex-shrink-0 mb-4 md:mb-0 md:absolute md:left-1/2 md:-translate-x-6`}>
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full font-black text-lg bg-[#2563EB] text-white shadow-lg shadow-[#2563EB]/20 z-10 flex-shrink-0 md:absolute md:left-1/2 md:-translate-x-6">
                     {step.id}
                   </div>
-                  <div className={`w-full md:w-5/12 ml-14 md:ml-0 ${index % 2 === 0 ? "md:pl-12" : "md:pr-12 text-left md:text-right"}`}>
+                  <div className={`w-full md:w-5/12 pl-4 md:pl-0 ${index % 2 === 0 ? "md:pl-12" : "md:pr-12 text-left md:text-right"}`}>
                     <div className="bg-white border border-slate-100 p-6 rounded-2xl hover:border-blue-500/20 hover:shadow-md transition-all">
                       <h3 className="text-lg font-bold mb-2 text-slate-900">{step.title}</h3>
                       <p className="text-slate-500 text-sm leading-relaxed">{step.description}</p>

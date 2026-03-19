@@ -112,7 +112,7 @@ export default function NuomaClient() {
             className="max-w-xl backdrop-blur-md bg-white/80 border border-white/40 p-10 md:p-12 rounded-3xl shadow-2xl shadow-black/5"
           >
             <span className="inline-flex items-center px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full text-xs font-bold tracking-wider text-primary mb-6">
-              <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Elite Management
+              <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Išskirtinis valdymas
             </span>
             
             <h1 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight leading-[1.1] text-slate-900">
@@ -177,7 +177,7 @@ export default function NuomaClient() {
           {/* Timeline Track */}
           <div className="relative">
             {/* Vertical Line */}
-            <div className="absolute left-1/2 -translate-x-1/2 h-full w-0.5 bg-slate-200 z-0" />
+            <div className="absolute left-6 md:left-1/2 md:-translate-x-1/2 h-full w-0.5 bg-slate-200 z-0" />
 
             <div className="space-y-12 relative z-10">
               {timelineSteps.map((step, idx) => (
@@ -186,10 +186,10 @@ export default function NuomaClient() {
                   initial={{ opacity: 0, x: idx % 2 === 0 ? -30 : 30 }}
                   whileInView={{ opacity: 1, x: 0, transition: { duration: 0.6 } }}
                   viewport={{ once: true }}
-                  className={`flex items-center w-full ${idx % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
+                  className={`flex flex-row md:items-center w-full ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} relative`}
                 >
                   {/* Content Panel */}
-                  <div className={`w-1/2 ${idx % 2 === 0 ? 'pr-8 text-right' : 'pl-8 text-left'}`}>
+                  <div className={`w-full md:w-1/2 pl-14 md:pl-0 ${idx % 2 === 0 ? 'md:pr-8 text-left md:text-right' : 'md:pl-8 text-left'}`}>
                     <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
                       <h4 className="text-lg font-bold text-slate-900 mb-1">{step.title}</h4>
                       <p className="text-slate-500 text-sm">{step.desc}</p>
@@ -197,12 +197,12 @@ export default function NuomaClient() {
                   </div>
 
                   {/* Node Circle */}
-                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-primary/20">
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-primary/20 z-10 flex-shrink-0 absolute left-1 md:relative md:left-auto">
                     {idx + 1}
                   </div>
 
                   {/* Spacer for structure stiffness */}
-                  <div className="w-1/2" />
+                  <div className="hidden md:block w-1/2" />
                 </motion.div>
               ))}
             </div>
