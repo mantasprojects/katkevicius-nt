@@ -93,7 +93,7 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: "easeOut" }}
-            className="w-full md:w-5/12 flex flex-col items-center justify-end h-full relative"
+            className="w-full md:w-5/12 flex flex-col items-center justify-end h-full relative md:-translate-y-8"
           >
             {/* Ambient Background Glow behind profile */}
             <div className="absolute inset-0 bg-primary/10 rounded-full blur-[120px] -z-10" />
@@ -108,9 +108,9 @@ export default function HomePage() {
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-white/10 border border-white/20 p-5 rounded-3xl">
+                <div className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-white/10 border border-white/20 p-5 rounded-2xl flex flex-col items-center text-center">
                   <p className="text-white font-sans font-black text-2xl tracking-wide mb-1">Mantas Katkevičius</p>
-                  <p className="text-primary text-xs font-bold uppercase tracking-widest flex items-center gap-1.5">
+                  <p className="text-primary text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-1.5">
                     <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" /> Jūsų NT partneris
                   </p>
                 </div>
