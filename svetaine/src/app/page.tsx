@@ -17,7 +17,7 @@ export default function HomePage() {
   const [index, setIndex] = useState(0);
 
   const images = [
-    "/images/hero_luxury_house.png",
+    "/images/minimalist_interior.png",
     "/images/hero_luxury_interior.png"
   ];
 
@@ -50,16 +50,16 @@ export default function HomePage() {
         {/* Left Side (White/Grey Flat Layout for text) */}
         <div className="hidden md:block absolute inset-y-0 left-0 w-1/2 bg-slate-50 border-r border-slate-100" />
 
-        {/* Right Side (Single Bright Image Background) */}
+        {/* Right Side (Single Bright Ambient Image Background) */}
         <div className="absolute inset-y-0 right-0 w-full md:w-1/2 h-full">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img 
-            src="/images/hero_luxury_house.png" 
+            src="/images/minimalist_bg.png" 
             alt="Prabangus NT" 
             className="w-full h-full object-cover"
           />
           {/* Subtle gradient overlay to blend into the left seam on mobile and tablet */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-50/90 via-slate-50/40 to-transparent md:from-slate-50/10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-50/90 via-slate-50/40 to-transparent md:from-slate-100/10" />
         </div>
 
         {/* Integrated Spread Layout */}
@@ -69,13 +69,13 @@ export default function HomePage() {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full md:w-5/12 flex flex-col items-start text-left relative z-10 py-20"
+            className="w-full md:w-5/12 flex flex-col items-start text-left relative z-10 py-10 md:py-20 mb-[40%] md:mb-0"
           >
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="inline-flex items-center gap-2 bg-blue-50/80 backdrop-blur-md px-4 py-1 rounded-full border border-blue-100/50 mb-6"
+              className="inline-flex items-center gap-2 bg-blue-50/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-blue-100/50 mb-6"
             >
               <Star className="w-4 h-4 text-primary fill-primary" />
               <span className="text-xs font-bold text-slate-700 uppercase tracking-widest leading-none">NT Ekspertas</span>
@@ -88,7 +88,7 @@ export default function HomePage() {
             </h1>
 
             <p className="text-base md:text-lg text-slate-600 mb-10 max-w-md font-medium leading-relaxed">
-              Aiški strategija, prabangus pateikimas ir profesionalus derybų valdymas. Pardavimo vidurkis – vos 6 savaitės.
+              Aiški strategija ir profesionalus derybų valdymas. Pardavimo vidurkis – vos 6 savaitės.
             </p>
 
             <Link href="/konsultacija" className="w-full sm:w-auto">
@@ -98,12 +98,12 @@ export default function HomePage() {
             </Link>
           </motion.div>
 
-          {/* Right Profile Side - Floating overlapping seam look */}
+          {/* Right Profile Side - Absolute bottom right blend enabled on Mobile */}
           <motion.div 
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
-            className="hidden md:block absolute bottom-0 left-[42%] transform translate-x-[-15%] z-20 h-[85%] aspect-[3/4]"
+            className="absolute bottom-0 right-0 z-10 h-[50%] md:h-[85%] aspect-[3/4]"
           >
             <div className="relative h-full w-full">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -114,7 +114,7 @@ export default function HomePage() {
               />
               
               {/* Floating ID Glass Title */}
-              <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 backdrop-blur-md bg-white/10 hover:bg-white/20 border border-white/20 p-4 rounded-2xl shadow-xl w-64 text-center transition-all duration-300">
+              <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 backdrop-blur-md bg-white/10 hover:bg-white/20 border border-white/20 p-4 rounded-2xl shadow-xl w-60 text-center transition-all duration-300">
                 <p className="text-white font-sans font-black text-xl tracking-tighter mb-0.5">Mantas Katkevičius</p>
                 <p className="text-primary text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 leading-none">
                   <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" /> Jūsų NT partneris
