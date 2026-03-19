@@ -44,89 +44,7 @@ export default function HomePage() {
       {/* Hero Section with Cinematic Slider */}
       <section className="relative h-[90vh] md:h-screen flex items-center justify-center overflow-hidden z-20">
         {/* Cinematic Slider Background */}
-        <div className="absolute inset-0 z-0">
-          <AnimatePresence initial={false}>
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 1 }}
-              animate={{ opacity: 1, scale: 1.06 }}
-              exit={{ opacity: 0 }}
-              transition={{ 
-                opacity: { duration: 1.5, ease: "easeInOut" },
-                scale: { duration: 6, ease: "linear" } 
-              }}
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${images[index]})` }}
-            />
-          </AnimatePresence>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/40 to-transparent backdrop-blur-[1px]" />
-          {/* Subtle Bottom Gradient */}
-          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-white to-transparent" />
-        </div>
-
-        {/* Integrated Spread Layout */}
-        <div className="container px-4 mx-auto max-w-7xl relative z-10 flex flex-col md:flex-row items-center justify-between h-full pt-24 md:pt-16">
-          {/* Left Content Side */}
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full md:w-6/12 flex flex-col items-start text-left relative z-10"
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-              className="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-md px-4 py-1.5 rounded-full border border-primary/20 mb-6"
-            >
-              <Star className="w-4 h-4 text-emerald-400 fill-emerald-400" />
-              <span className="text-xs font-bold text-white uppercase tracking-widest leading-none">NT Ekspertas</span>
-            </motion.div>
-
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-sans font-black mb-6 leading-[1.05] tracking-tight text-white drop-shadow-md">
-              Nuo paieškos <br />
-              iki sandorio <br />
-              ramiai ir <span className="text-primary italic">užtikrintai</span>
-            </h1>
-
-            <p className="text-base md:text-lg text-white/90 mb-10 max-w-md font-medium leading-relaxed drop-shadow-sm">
-              Aiški strategija, skaitmeninis marketingas ir profesionalus derybų valdymas. Pardavimo vidurkis – vos 6 savaitės.
-            </p>
-
-            <Link href="/konsultacija" className="w-full sm:w-auto">
-              <Button size="lg" className="h-14 w-full px-10 text-base shadow-2xl font-bold rounded-2xl bg-primary text-white hover:bg-slate-900 transition-all duration-500 hover:scale-105">
-                Rezervuoti konsultaciją
-              </Button>
-            </Link>
-          </motion.div>
-
-          {/* Right Profile Side - Floating overlapping Frame-less look */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="w-full md:w-5/12 flex flex-col items-center justify-end h-full relative"
-          >
-            {/* Ambient Background Glow behind profile */}
-            <div className="absolute inset-0 bg-primary/10 rounded-full blur-[120px] -z-10" />
-            
-            <div className="relative w-full max-w-sm aspect-[3/4] self-end mt-auto">
-              <div className="absolute -inset-4 bg-gradient-to-br from-primary/30 to-slate-400/10 rounded-[3rem] blur-2xl opacity-70" />
-              <div className="relative h-full w-full rounded-t-[5rem] rounded-b-3xl overflow-hidden shadow-2xl border border-white/10 group">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img 
-                  src="/uploads/1773775458388-profilio.png" 
-                  alt="Mantas Katkevičius" 
-                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-all duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 backdrop-blur-md bg-white/10 border border-white/20 p-5 rounded-3xl">
-                  <p className="text-white font-sans font-black text-2xl tracking-tighter mb-1">Mantas Katkevičius</p>
-                  <p className="text-primary text-xs font-bold uppercase tracking-widest flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" /> Jūsų NT partneris
-                  </p>
-                </div>
-              </div>
+        <div className="absolute inset-0 z-0 bg-gradient-to-br from-slate-50 via-white to-indigo-50/20"><div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-60" /><div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-sky-100/30 rounded-full blur-3xl opacity-60" /></div>
             </div>
           </motion.div>
         </div>
@@ -161,7 +79,7 @@ export default function HomePage() {
               >
                 {/* Background Image Full cover layout */}
                 <div className="absolute inset-0">
-                   <img src="/images/hero_luxury_house.png" alt="Pardavimas" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-1000" />
+                   <img src="/images/minimalist_interior.png" alt="Pardavimas" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-1000" />
                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
                 </div>
 
@@ -182,7 +100,7 @@ export default function HomePage() {
                   <ul className="space-y-3 mb-8 text-white/70 text-sm font-medium">
                     <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> Strateginis kainos nustatymas</li>
                     <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> Profesionalus NT marketingas</li>
-                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> Teisinė ramybė</li>
+                    <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-primary" /> Saugus sandoris</li>
                   </ul>
 
                   <div className="flex items-center text-primary font-bold text-base mt-auto group-hover:gap-2 transition-all cursor-pointer">
