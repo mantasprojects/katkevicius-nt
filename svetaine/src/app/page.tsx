@@ -42,7 +42,7 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen bg-white text-slate-900 overflow-hidden">
       
       {/* Hero Section with Cinematic Slider */}
-      <section className="relative min-h-[90vh] md:h-screen flex items-center justify-center overflow-hidden z-20 py-24 md:py-0 bg-gradient-to-br from-slate-50 via-white to-indigo-50/20">
+      <section className="relative min-h-[90vh] md:h-screen flex items-center justify-center overflow-hidden z-20 pt-12 pb-20 md:py-0 bg-gradient-to-br from-slate-50 via-white to-indigo-50/20">
         {/* Cinematic Slider Background */}
         <div className="absolute inset-0 z-0 bg-gradient-to-br from-slate-50 via-white to-indigo-50/20">
           <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-60" />
@@ -53,7 +53,7 @@ export default function HomePage() {
         </div>
 
         {/* Integrated Spread Layout */}
-        <div className="container px-4 mx-auto max-w-7xl relative z-10 flex flex-col md:flex-row items-center justify-between h-full pt-24 md:pt-16">
+        <div className="container px-4 mx-auto max-w-7xl relative z-10 flex flex-col md:flex-row items-center justify-between h-full pt-6 md:pt-16">
           {/* Left Content Side */}
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
@@ -71,13 +71,13 @@ export default function HomePage() {
               <span className="text-xs font-bold text-white uppercase tracking-widest leading-none">NT Ekspertas</span>
             </motion.div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-sans font-black mb-6 leading-[1.05] tracking-tight text-slate-950 drop-shadow-sm">
+            <h1 className="text-[2.75rem] md:text-6xl lg:text-7xl font-sans font-black mb-6 leading-[1.05] tracking-tight text-slate-950 drop-shadow-sm">
               Nuo paieškos <br />
               iki sandorio <br />
               ramiai ir <span className="text-primary italic">užtikrintai</span>
             </h1>
 
-            <p className="text-base md:text-lg text-slate-600 mb-10 max-w-md font-medium leading-relaxed drop-shadow-sm">
+            <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-md font-medium leading-relaxed drop-shadow-sm">
               Strateginis požiūris ir maksimali vertė jūsų nekilnojamajam turtui.
             </p>
 
