@@ -118,7 +118,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-slate-900 pt-12 flex flex-col md:flex-row justify-between items-center text-sm font-bold text-slate-500">
-          <p className="mb-6 md:mb-0 italic opacity-80 text-center md:text-left">© {new Date().getFullYear()} Mantas Katkevičius. Visos teisės saugomos.</p>
+          <p className="mb-6 md:mb-0 italic opacity-80 text-center md:text-left">© {new Date().getFullYear()} Visos teisės saugomos.</p>
           <div className="flex gap-8">
             <Link href="/privatumo-politika">
               <span className="hover:text-white transition-colors cursor-pointer uppercase tracking-widest text-[10px]">Privatumo politika</span>
