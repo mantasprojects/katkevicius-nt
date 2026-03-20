@@ -1,0 +1,5 @@
+fix: pridėtas suliejimo fonas į fullscreen Lightbox ir užraktas nuo overflow
+
+- Atnaujinta `GalleryLightbox` struktūra `PropertyClientView.tsx` faile, pridedant giluminį suliejimo fono sluoksnį (`backdrop Image`) po pagrindine nuotrauka. Tai pilnai pašalina bet kokius "juodus tarpus" (black bars) žiūrint nuotraukas per visą ekraną, todėl atvaizdavimas tampa tolygus ir absoliučiai „Top tier“.
+- Patikslinta `globals.css` ir `layout.tsx` pločio logiką pritaikant `max-w-[100vw]` geresniam mobilios džiūvėsių dygimo apsaugojimui.
+- Nuotraukos dabar pilnai dengia erdves visose peržiūrose, išlaikant išskirtinį detail peržiūrų grakštumą.

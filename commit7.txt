@@ -1,4 +1,0 @@
-fix: grąžintas object-cover į kompiuterinę grid mozaiką ir korteles
-
-- Visi nuotraukų „Preview“ kortelių gridai (tiek pagrindiniame objektų sąraše /objektai, tiek vieno objekto kompiuterinėje grid galerijoje) atstatyti į gryną `object-cover` rėžimą (be Blur fono). Tai užtikrina galingą pirminį įspūdį, kai kortelės yra pilnai ir prabangiai dengiamos pačios nuotraukos.
-- Pilnas atvaizdavimas be karpymo (`object-contain` ir `h-auto`) dabar aktyvuojamas tik paspaudus nuotrauką į atsidarantį Lightbox, ir pačiame mobile stack sąraše. Tai tobulai sinchronizuojasi su „Top Tier“ rinkos atvaizdavimo logika.

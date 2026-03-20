@@ -122,12 +122,21 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
-      className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
+      className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center overflow-hidden"
       onClick={onClose}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Premium Blurred Background Layer for Lightbox */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img 
+          src={images[index]} 
+          alt="" 
+          className="w-full h-full object-cover blur-2xl opacity-40 scale-105 saturate-150" 
+        />
+      </div>
       {/* Close */}
       <motion.button
         initial={{ opacity: 0, scale: 0.8 }}
@@ -158,14 +167,14 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
       </button>
 
       {/* Image instantly switching without animation */}
-      <div className="max-w-[100vw] max-h-[100vh] flex items-center justify-center" onClick={e => e.stopPropagation()}>
+      <div className="max-w-[100vw] max-h-[100vh] flex items-center justify-center z-10" onClick={e => e.stopPropagation()}>
         <Image
           src={images[index]}
           alt={`Nuotrauka ${index + 1}`}
           width={1920}
           height={1080}
           unoptimized={true}
-          className="max-w-full max-h-[100vh] object-contain select-none object-center"
+          className="max-w-full max-h-[100vh] object-contain select-none object-center relative z-10"
           placeholder="blur"
           blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1920, 1080))}`}
         />
