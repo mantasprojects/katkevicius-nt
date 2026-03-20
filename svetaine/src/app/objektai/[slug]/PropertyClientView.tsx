@@ -195,6 +195,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
   const [property, setProperty] = useState(initialProperty);
   const [photoIndex, setPhotoIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [isMobileExpanded, setIsMobileExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(!initialProperty);
   const [isNotFound, setIsNotFound] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -446,55 +447,79 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
           )}
         </div>
 
-        {/* MOBILE GRID PREVIEW */}
-        <div className="flex flex-col md:hidden w-full bg-white gap-1 mb-8">
-          {/* Main Image */}
-          <div 
-            className="w-full aspect-[4/3] relative cursor-pointer group"
-            onClick={() => { setPhotoIndex(0); setIsOpen(true); }}
-          >
-            <Image 
-              src={galleryImages[0]} 
-              alt="Pagrindinė nuotrauka" 
-              fill
-              priority
-              className={`object-cover ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
-              sizes="100vw"
-            />
-            {/* Camera/Zoom Icon on Main Image */}
-            <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-sm p-3 rounded-full text-white">
-              <Camera className="w-5 h-5" />
-            </div>
-          </div>
+        {/* MOBILE GRID PREVIEW / EXPANDABLE */}
+        <div className="flex flex-col md:hidden w-full gap-1 mb-8">
+          {!isMobileExpanded ? (
+            <>
+              {/* Main Image */}
+              <div 
+                className="w-full aspect-[4/3] relative cursor-pointer group"
+                onClick={() => setIsMobileExpanded(true)}
+              >
+                <Image 
+                  src={galleryImages[0]} 
+                  alt="Pagrindinė nuotrauka" 
+                  fill
+                  priority
+                  className={`object-cover ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
+                  sizes="100vw"
+                />
+                {/* Camera/Zoom Icon on Main Image */}
+                <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-sm p-3 rounded-full text-white">
+                  <Camera className="w-5 h-5" />
+                </div>
+              </div>
 
-          {/* Thumbnails Row */}
-          {galleryImages.length > 1 && (
-            <div className="grid grid-cols-4 gap-1 px-4">
-              {galleryImages.slice(1, 5).map((src: string, i: number) => {
-                const isLast = i === 3 || (galleryImages.length <= 5 && i === galleryImages.length - 2);
-                const remainingForMobile = galleryImages.length - 5; // 1 Main + 4 Thumbs = 5 shown
-                
-                return (
-                  <div 
-                    key={i} 
-                    className="aspect-square relative cursor-pointer"
-                    onClick={() => { setPhotoIndex(0); setIsOpen(true); }}
-                  >
-                    <Image 
-                      src={src} 
-                      alt={`Nuotrauka ${i + 2}`} 
-                      fill
-                      className="object-cover"
-                      sizes="25vw"
-                    />
-                    {isLast && remainingForMobile > 0 && (
-                      <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white font-extrabold text-lg">
-                        +{remainingForMobile}
+              {/* Thumbnails Row */}
+              {galleryImages.length > 1 && (
+                <div className="grid grid-cols-4 gap-1 px-4">
+                  {galleryImages.slice(1, 5).map((src: string, i: number) => {
+                    const isLast = i === 3;
+                    const remainingForMobile = galleryImages.length - 5; // 1 Main + 4 Thumbs = 5 shown
+                    
+                    return (
+                      <div 
+                        key={i} 
+                        className="aspect-square relative cursor-pointer"
+                        onClick={() => setIsMobileExpanded(true)}
+                      >
+                        <Image 
+                          src={src} 
+                          alt={`Nuotrauka ${i + 2}`} 
+                          fill
+                          className="object-cover"
+                          sizes="25vw"
+                        />
+                        {isLast && remainingForMobile > 0 && (
+                          <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white font-extrabold text-lg">
+                            +{remainingForMobile}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                );
-              })}
+                    );
+                  })}
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="flex flex-col gap-[1px] bg-[#000000] animate-fadeIn">
+              {galleryImages.map((src: string, i: number) => (
+                <div key={i} className="w-full leading-none">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img 
+                    src={src} 
+                    alt={`Nuotrauka ${i + 1}`}
+                    loading={i < 3 ? "eager" : "lazy"} 
+                    className={`w-full h-auto object-cover block ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
+                  />
+                </div>
+              ))}
+              {/* Optional Collapse Button for good UX */}
+              <div className="p-4 bg-white flex justify-center">
+                <Button onClick={() => setIsMobileExpanded(false)} className="bg-[#111827] text-white">
+                  Suskleisti nuotraukas
+                </Button>
+              </div>
             </div>
           )}
         </div>
