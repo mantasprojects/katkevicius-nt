@@ -370,10 +370,10 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
       </div>
 
       {/* Gallery Grid — Edge-to-Edge array on mobile, contained grid on desktop */}
-      <div className="w-full md:container md:px-4 md:mx-auto md:max-w-7xl mb-0 md:mb-16">
+      <div className="w-screen -mx-4 md:w-full md:container md:px-4 md:mx-auto md:max-w-7xl mb-0 md:mb-16 overflow-hidden">
         
         {/* DESKTOP GRID */}
-        <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-3 h-[500px] lg:h-[600px] rounded-[2rem] overflow-hidden">
+        <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-[2px] bg-[#111827] h-[500px] lg:h-[600px] rounded-[2rem] overflow-hidden border border-[#111827]">
           {/* Main large image */}
           <div 
             className="md:col-span-2 md:row-span-2 relative group overflow-hidden cursor-pointer"
@@ -463,7 +463,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
         </div>
 
         {/* MOBILE STACK */}
-        <div className="flex flex-col md:hidden w-full gap-1 bg-[#0f0f0f]">
+        <div className="flex flex-col md:hidden w-full gap-0 bg-black">
           {galleryImages.map((src: string, i: number) => (
             <div 
               key={i} 

@@ -1,0 +1,6 @@
+fix: galutinis galerijos UI "Zero Gaps" šlifavimas ir gramatikos pataisymai
+
+- Mobili versija: pašalintas bet koks tarpas tarp nuotraukų (`gap-0`). Konteineriui pritaikytas `w-screen -mx-4` stilius, idant nuotraukos užpildytų ekraną edge-to-edge lygmenyje, o apgaubiantis `overflow-x-hidden` html/body lygyje apsaugo nuo šoninio scrollinimo.
+- Desktop versija: pagrindinio "Grid" konteinerio tarpai (gaps) tarp nuotraukų sumažinti iki 2px (`gap-[2px]`). Apvalūs kampai palikti tik pačiam konteineriui (`rounded-[2rem]`), o vidinių nuotraukų apvalinimai pašalinti, todėl jos vizualiai susilieja į vieną vientisą kadrų rėmą ("Grid Tightening").
+- Visi prabėgantys "Brokerio" terminai vertimų failuose pakeisti į "NT pardavimų ekspertas".
+- Visiškai užtikrinta, kad "po dvitaškio mažosios raidės" stilius (kur tai ne pažeidžia tikrinių vardų) būtų vizualiai tvarkingas.
