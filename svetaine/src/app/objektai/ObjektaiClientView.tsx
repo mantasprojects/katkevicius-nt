@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import SmartImage from "@/components/ui/SmartImage";
 import { useEffect, useState, useMemo } from "react";
 
 const shimmer = (w: number, h: number) => `
@@ -208,19 +209,17 @@ export default function ObjektaiClientView({ initialProperties }: { initialPrope
                 href={`/objektai/${property.slug}`} 
                 className="group flex flex-col bg-transparent rounded-none h-full"
               >
-                <div className="relative aspect-[4/3] overflow-hidden rounded-3xl mb-6 shadow-sm bg-[#111827]">
-                  <Image 
-                    src={property.image}
-                    alt={property.title}
-                    fill
-                    priority={idx < 4}
-                    className={`object-cover group-hover:scale-[1.05] transition-transform duration-1000 ease-out z-10 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    placeholder="blur"
-                    blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
+                <div className="relative overflow-hidden rounded-3xl mb-6 shadow-sm bg-[#111827] md:aspect-[4/3]">
+                  <SmartImage 
+                    src={property.image} 
+                    alt={property.title} 
+                    priority={idx < 4} 
+                    propertyStatus={property.status} 
+                    breakout={true} 
+                    className="md:absolute md:inset-0 md:h-full md:object-cover group-hover:scale-[1.05] transition-transform duration-1000 ease-out z-10"
                   />
                   {property.status !== "Parduodama" && (
-                    <div className={`absolute top-4 left-4 z-10 text-xs font-bold uppercase tracking-wider py-1.5 px-3 rounded-md shadow-sm text-white ${property.status === "Parduota" ? "bg-[#111827]" : "bg-[#2563EB]"}`}>
+                    <div className={`absolute top-4 left-4 z-20 text-xs font-bold uppercase tracking-wider py-1.5 px-3 rounded-md shadow-sm text-white ${property.status === "Parduota" ? "bg-[#111827]" : "bg-[#2563EB]"}`}>
                       {property.status}
                     </div>
                   )}

@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import Image from "next/image";
+import SmartImage from "@/components/ui/SmartImage";
 import { useState, useEffect, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
@@ -468,19 +469,18 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
             <>
               {/* Main Image */}
               <div 
-                className="w-full aspect-[4/3] relative cursor-pointer group"
+                className="w-full relative cursor-pointer group"
                 onClick={() => setIsMobileExpanded(true)}
               >
-                <Image 
+                <SmartImage 
                   src={galleryImages[0]} 
                   alt="Pagrindinė nuotrauka" 
-                  fill
-                  priority
-                  className={`object-cover ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
-                  sizes="100vw"
+                  priority={true} 
+                  propertyStatus={property.status} 
+                  breakout={false} 
                 />
                 {/* Camera/Zoom Icon on Main Image */}
-                <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-sm p-3 rounded-full text-white">
+                <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-sm p-3 rounded-full text-white z-10">
                   <Camera className="w-5 h-5" />
                 </div>
               </div>
@@ -519,15 +519,14 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
           ) : (
             <div className="flex flex-col gap-[1px] bg-[#000000] animate-fadeIn">
               {galleryImages.map((src: string, i: number) => (
-                <div key={i} className="w-full leading-none">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img 
-                    src={src} 
-                    alt={`Nuotrauka ${i + 1}`}
-                    loading={i < 3 ? "eager" : "lazy"} 
-                    className={`w-full h-auto object-cover block ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
-                  />
-                </div>
+                <SmartImage 
+                  key={i} 
+                  src={src} 
+                  alt={`Nuotrauka ${i + 1}`} 
+                  priority={i < 3} 
+                  propertyStatus={property.status} 
+                  breakout={false} 
+                />
               ))}
               {/* Optional Collapse Button for good UX */}
               <div className="p-4 bg-white flex justify-center">
