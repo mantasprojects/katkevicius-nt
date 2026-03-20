@@ -516,7 +516,15 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
               ))}
               {/* Optional Collapse Button for good UX */}
               <div className="p-4 bg-white flex justify-center">
-                <Button onClick={() => setIsMobileExpanded(false)} className="bg-[#111827] text-white">
+                <Button 
+                  onClick={() => {
+                    setIsMobileExpanded(false);
+                    setTimeout(() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }, 10);
+                  }} 
+                  className="bg-[#111827] text-white"
+                >
                   Suskleisti nuotraukas
                 </Button>
               </div>
