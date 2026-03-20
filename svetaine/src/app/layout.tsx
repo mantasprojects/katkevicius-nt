@@ -26,16 +26,23 @@ export const metadata: Metadata = {
   keywords: ["Nekilnojamas turtas", "Butai Kaune", "NT pardavimų ekspertas", "Mantas Katkevičius", "Parduoti butą"],
 };
 
+export const viewport: import("next").Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="lt" className={cn("font-sans", geist.variable)}>
+    <html lang="lt" className={cn("font-sans", geist.variable, "max-w-full overflow-x-hidden")}>
       
       <body
-        className={`${inter.variable} min-h-screen flex flex-col font-sans`}
+        className={`${inter.variable} min-h-screen flex flex-col font-sans max-w-full overflow-x-hidden`}
       >
         <script
           type="application/ld+json"
