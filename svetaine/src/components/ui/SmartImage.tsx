@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
 interface SmartImageProps {
@@ -21,6 +21,7 @@ export default function SmartImage({
   breakout = true
 }: SmartImageProps) {
   const [aspect, setAspect] = useState<'horizontal' | 'vertical' | null>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
 
   const handleLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const { naturalWidth, naturalHeight } = e.currentTarget;
@@ -30,6 +31,20 @@ export default function SmartImage({
       setAspect('vertical');
     }
   };
+
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img && img.complete) {
+      const { naturalWidth, naturalHeight } = img;
+      if (naturalWidth > 0 && naturalHeight > 0) {
+        if (naturalWidth >= naturalHeight) {
+          setAspect('horizontal');
+        } else {
+          setAspect('vertical');
+        }
+      }
+    }
+  }, [src]);
 
   if (aspect === 'horizontal') {
     return (
@@ -66,6 +81,7 @@ export default function SmartImage({
     <div className="w-full h-[300px] bg-slate-100 animate-pulse relative">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img 
+        ref={imgRef}
         src={src} 
         alt={alt} 
         onLoad={handleLoad} 
