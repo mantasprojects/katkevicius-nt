@@ -36,9 +36,8 @@ import {
 
 export const INITIAL_PROPERTIES: any[] = [];
 
-export default function ObjektaiClientView() {
-  const [properties, setProperties] = useState<any[]>([]);
-  const [isMounted, setIsMounted] = useState(false);
+export default function ObjektaiClientView({ initialProperties }: { initialProperties: any[] }) {
+  const [properties, setProperties] = useState<any[]>(initialProperties);
 
   // Filters state
   const [cityFilter, setCityFilter] = useState("");
@@ -47,19 +46,7 @@ export default function ObjektaiClientView() {
   const [maxPrice, setMaxPrice] = useState(""); 
   const [isFilterOpen, setIsFilterOpen] = useState(true);
 
-  useEffect(() => {
-    setIsMounted(true);
-    const loadProperties = async () => {
-      try {
-        const res = await fetch("/api/properties");
-        const data = await res.json();
-        setProperties(data);
-      } catch (err) {
-        console.error("Failed to load properties:", err);
-      }
-    };
-    loadProperties();
-  }, []);
+  // No longer fetching in useEffect, passed from Server Component
 
   const { maxPriceOfAll, maxAreaOfAll } = useMemo(() => {
     if (properties.length === 0) return { maxPriceOfAll: 1000000, maxAreaOfAll: 250 };
@@ -90,8 +77,6 @@ export default function ObjektaiClientView() {
   }, [properties, cityFilter, typeFilter, areaFilter, maxPrice]);
 
   const uniqueCities = Array.from(new Set(properties.map((p: any) => p.city)));
-
-  if (!isMounted) return null;
 
   return (
     <div className="flex flex-col gap-10">
@@ -208,7 +193,7 @@ export default function ObjektaiClientView() {
       {filteredProperties.length === 0 ? (
         <div className="text-center py-20 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
           <Search className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-          <h3 className="text-2xl font-bold text-[#111827] mb-2">Objektų nerasta</h3>
+          <h3 className="text-2xl font-bold text-[#111827] mb-2">Objektų nėra</h3>
           <p className="text-slate-500">Pabandykite pakeisti filtro kriterijus</p>
           <Button 
             onClick={() => { setCityFilter(""); setTypeFilter(""); setAreaFilter(""); setMaxPrice(""); }}
@@ -228,7 +213,7 @@ export default function ObjektaiClientView() {
                     src={property.image}
                     alt={property.title}
                     fill
-                    priority={idx < 3}
+                    priority={idx < 4}
                     className={`object-cover group-hover:scale-[1.05] transition-transform duration-1000 ease-out z-10 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     placeholder="blur"
