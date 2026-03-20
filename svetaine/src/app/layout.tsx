@@ -23,7 +23,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Mantas Katkevičius | Nekilnojamojo turto ekspertas",
   description: "Nekilnojamojo turto pardavimo, pirkimo ir nuomos paslaugos Kauno regione. Aiški strategija, tikslūs sprendimai ir profesionali eiga.",
-  keywords: ["Nekilnojamas turtas", "Butai Kaune", "NT Brokeris", "Mantas Katkevičius", "Parduoti butą"],
+  keywords: ["Nekilnojamas turtas", "Butai Kaune", "NT pardavimų ekspertas", "Mantas Katkevičius", "Parduoti butą"],
 };
 
 export default function RootLayout({
@@ -44,7 +44,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "ProfessionalService",
               "@id": "https://katkevicius.lt/#service",
-              "name": "Mantas Katkevičius | NT Brokeris Kaunas",
+              "name": "Mantas Katkevičius | NT pardavimų ekspertas Kaunas",
               "description": "Profesionalios nekilnojamojo turto paslaugos Kauno regione. Aiški strategija, tikslūs sprendimai ir sklandus procesas – nuo paieškos iki sėkmingo sandorio.",
               "image": "https://katkevicius.lt/uploads/1773775458388-profilio.png",
               "telephone": "+370 645 41892",
@@ -107,7 +107,7 @@ export default function RootLayout({
               if (anchor && anchor.href && anchor.href.startsWith('tel:')) {
                 // GA4 Event
                 if (typeof window.gtag === 'function') {
-                  window.gtag('event', 'skambutis_brokeriui', {
+                  window.gtag('event', 'skambutis_ekspertui', {
                     'event_category': 'Engagement',
                     'event_label': anchor.href
                   });

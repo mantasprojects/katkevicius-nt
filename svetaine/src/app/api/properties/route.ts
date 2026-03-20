@@ -10,11 +10,12 @@ export async function GET() {
     
     if (error) throw error;
 
-    const mapped = (data || []).map(p => {
+    const mapped = (data || [])
+      .filter(p => p.is_public !== false) // Filtruojame paslėptus objektus
+      .map(p => {
        const gallery = p.nuotraukos_urls ? (typeof p.nuotraukos_urls === 'string' ? JSON.parse(p.nuotraukos_urls) : p.nuotraukos_urls) : [];
        const title = p.pavadinimas || "";
        
-       // Fallback URL or first image
        const image = gallery[0] || "https://images.unsplash.com/photo-1560518883-ce09059eeffa"; 
        
        return {
@@ -28,7 +29,7 @@ export async function GET() {
          gallery: gallery,
          image: image,
          area: p.plotas || 0,
-         type: title.toLowerCase().includes("butas") ? "Butas" : title.toLowerCase().includes("namas") ? "Namas" : title.toLowerCase().includes("sklypas") ? "Sklypas" : "Butas",
+         type: p.type || (title.toLowerCase().includes("butas") ? "Butas" : title.toLowerCase().includes("namas") ? "Namas" : title.toLowerCase().includes("sklypas") ? "Sklypas" : "Butas"),
          rooms: p.rooms || 0,
          floor: p.floor || "",
          year: p.year || 0,

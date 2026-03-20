@@ -217,7 +217,7 @@ export default function ObjektaiClientView() {
         </div>
       ) : (
         <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-          {filteredProperties.map(property => (
+          {filteredProperties.map((property, idx) => (
             <StaggerItem key={property.id}>
               <Link 
                 href={`/objektai/${property.slug}`} 
@@ -228,6 +228,7 @@ export default function ObjektaiClientView() {
                     src={property.image}
                     alt={property.title}
                     fill
+                    priority={idx < 3}
                     className={`object-cover group-hover:scale-105 transition-transform duration-1000 ease-out ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     placeholder="blur"

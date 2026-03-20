@@ -16,6 +16,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
+import { motion, AnimatePresence } from "framer-motion";
 
 const PropertyMap = dynamic(() => import("@/components/objects/PropertyMap"), { ssr: false });
 
@@ -69,12 +70,15 @@ const createGeoJSONCircle = (center: [number, number], radiusInKm: number, point
 
 
 
-/* ─── Custom High‑Performance Lightbox ────────────────────────────── */
+/* ─── Fullscreen Lightbox su framer-motion ─────────────────────────── */
 function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; startIndex: number; onClose: () => void }) {
   const [index, setIndex] = useState(startIndex);
+  const [direction, setDirection] = useState(0);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
-  const goPrev = useCallback(() => setIndex(i => (i + images.length - 1) % images.length), [images.length]);
-  const goNext = useCallback(() => setIndex(i => (i + 1) % images.length), [images.length]);
+  const goPrev = useCallback(() => { setDirection(-1); setIndex(i => (i + images.length - 1) % images.length); }, [images.length]);
+  const goNext = useCallback(() => { setDirection(1); setIndex(i => (i + 1) % images.length); }, [images.length]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -100,17 +104,55 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
     return () => { document.body.style.overflow = ""; };
   }, []);
 
+  // Touch swipe support
+  const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchMove = (e: React.TouchEvent) => { touchEndX.current = e.touches[0].clientX; };
+  const handleTouchEnd = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > 60) {
+      if (diff > 0) goNext();
+      else goPrev();
+    }
+  };
+
+  const slideVariants = {
+    enter: (dir: number) => ({ x: dir > 0 ? 300 : -300, opacity: 0, scale: 0.95 }),
+    center: { x: 0, opacity: 1, scale: 1 },
+    exit: (dir: number) => ({ x: dir > 0 ? -300 : 300, opacity: 0, scale: 0.95 }),
+  };
+
   return (
-    <div className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center" onClick={onClose}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+      className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
+      onClick={onClose}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Close */}
-      <button onClick={onClose} className="absolute top-5 right-5 z-50 w-11 h-11 rounded-full bg-white/10 backdrop-blur-sm text-white flex items-center justify-center hover:bg-white/20 transition-colors">
+      <motion.button
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.15 }}
+        onClick={onClose}
+        className="absolute top-5 right-5 z-50 w-11 h-11 rounded-full bg-white/10 backdrop-blur-sm text-white flex items-center justify-center hover:bg-white/20 transition-colors"
+      >
         <X className="w-6 h-6" />
-      </button>
+      </motion.button>
 
       {/* Counter */}
-      <div className="absolute top-5 left-5 z-50 text-white/80 text-sm font-bold bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="absolute top-5 left-5 z-50 text-white/80 text-sm font-bold bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full"
+      >
         {index + 1} / {images.length}
-      </div>
+      </motion.div>
 
       {/* Prev */}
       <button
@@ -120,18 +162,29 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
         <ChevronLeft className="w-7 h-7" />
       </button>
 
-      {/* Image */}
+      {/* Image with animation */}
       <div className="max-w-[90vw] max-h-[90vh] flex items-center justify-center" onClick={e => e.stopPropagation()}>
-        <Image
-          key={index}
-          src={images[index]}
-          alt={`Nuotrauka ${index + 1}`}
-          width={1920}
-          height={1080}
-          className="max-w-full max-h-[90vh] object-contain select-none rounded-lg"
-          placeholder="blur"
-          blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1920, 1080))}`}
-        />
+        <AnimatePresence mode="wait" custom={direction}>
+          <motion.div
+            key={index}
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <Image
+              src={images[index]}
+              alt={`Nuotrauka ${index + 1}`}
+              width={1920}
+              height={1080}
+              className="max-w-full max-h-[90vh] object-contain select-none rounded-lg"
+              placeholder="blur"
+              blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1920, 1080))}`}
+            />
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Next */}
@@ -141,7 +194,7 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
       >
         <ChevronRight className="w-7 h-7" />
       </button>
-    </div>
+    </motion.div>
   );
 }
 
@@ -202,10 +255,6 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
       turnstileToken: turnstileToken,
     };
 
-    // LocalStorage Caches disabled per user request
-
-
-    // Send email via API
     try {
       setErrorHeader("");
       const res = await fetch("/api/send-inquiry", {
@@ -236,7 +285,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
         });
       }
       
-      setTurnstileToken(""); // Reset
+      setTurnstileToken("");
       
       setTimeout(() => {
         setIsSuccess(false);
@@ -334,9 +383,11 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
             </h1>
           </div>
         </div>
+      </div>
 
-        {/* Gallery Grid — no gradients, clean images */}
-        <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-3 h-[400px] md:h-[500px] lg:h-[600px] mb-16 rounded-[2rem] overflow-hidden">
+      {/* Gallery Grid — Edge-to-Edge on mobile, contained on desktop */}
+      <div className="w-screen md:w-auto md:container md:px-4 md:mx-auto md:max-w-7xl mb-0 md:mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-0 md:gap-3 h-[300px] md:h-[500px] lg:h-[600px] md:rounded-[2rem] overflow-hidden">
           {/* Main large image */}
           <div 
             className="md:col-span-2 md:row-span-2 relative group overflow-hidden cursor-pointer"
@@ -360,7 +411,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
             />
           </div>
 
-          {/* Second image — clean, no overlay */}
+          {/* Second image */}
           {galleryImages.length > 1 && (
             <div 
               className="hidden md:block col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
@@ -370,6 +421,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
                 src={galleryImages[1]} 
                 alt="Antra nuotrauka" 
                 fill
+                priority
                 className={`object-cover group-hover:scale-105 transition-transform duration-700 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
                 sizes="(max-width: 1024px) 50vw, 25vw"
                 placeholder="blur"
@@ -378,13 +430,12 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
             </div>
           )}
 
-          {/* Third image — always-visible dark overlay with photo count */}
+          {/* Third image — with photo count overlay */}
           {galleryImages.length > 2 && (
             <div 
               className="hidden md:block col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
               onClick={() => { setPhotoIndex(2); setIsOpen(true); }}
             >
-              {/* Always visible dark overlay with count */}
               <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 z-10 flex flex-col items-center justify-center transition-all duration-300">
                 <Camera className="w-8 h-8 text-white mb-2" />
                 <span className="text-white font-extrabold text-2xl tracking-tight">
@@ -396,6 +447,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
                 src={galleryImages[2]} 
                 alt="Trečia nuotrauka" 
                 fill
+                priority
                 className={`object-cover group-hover:scale-105 transition-transform duration-700 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
                 sizes="(max-width: 1024px) 50vw, 25vw"
                 placeholder="blur"
@@ -404,7 +456,9 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
             </div>
           )}
         </div>
-        
+      </div>
+      
+      <div className="container px-4 mx-auto max-w-7xl">
         {/* Actions Below Gallery */}
         <div className="flex flex-col md:flex-row items-center justify-between border-b border-t border-slate-100 py-6 mb-16 gap-6">
           <div className="flex items-center">
@@ -421,14 +475,16 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
           </div>
         </div>
 
-        {/* Custom Lightbox */}
-        {isOpen && (
-          <GalleryLightbox
-            images={galleryImages}
-            startIndex={photoIndex}
-            onClose={closeLightbox}
-          />
-        )}
+        {/* Fullscreen Lightbox with framer-motion */}
+        <AnimatePresence>
+          {isOpen && (
+            <GalleryLightbox
+              images={galleryImages}
+              startIndex={photoIndex}
+              onClose={closeLightbox}
+            />
+          )}
+        </AnimatePresence>
       </div>
 
 
@@ -478,7 +534,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
                 )}
               </StaggerContainer>
 
-              {/* Privalumai - ABOVE description, dynamic from admin */}
+              {/* Privalumai */}
               {(property.privalumai && property.privalumai.length > 0) && (
                 <div className="mb-16">
                   <h3 className="text-2xl md:text-3xl font-bold text-[#111827] mb-8 tracking-tight">Privalumai</h3>
@@ -495,7 +551,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
                 </div>
               )}
 
-              {/* Apie objektą - description preserves formatting */}
+              {/* Apie objektą */}
               <div className="mb-16">
                 <h3 className="text-2xl md:text-3xl font-bold text-[#111827] mb-6 tracking-tight">Apie objektą</h3>
                 <div className="prose prose-lg prose-slate max-w-none text-slate-600 leading-relaxed font-medium whitespace-pre-wrap">
@@ -519,7 +575,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
                   </div>
                   <div>
                     <p className="font-extrabold text-lg text-[#111827]">Mantas Katkevičius</p>
-                    <p className="text-slate-500 text-sm font-semibold mb-1">Jūsų NT partneris</p>
+                    <p className="text-slate-500 text-sm font-semibold mb-1">Jūsų NT pardavimų ekspertas</p>
                     <a href="tel:+37064541892" className="text-[#2563EB] font-bold tracking-tight hover:underline block">+370 645 41892</a>
                   </div>
                 </div>
@@ -534,7 +590,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
                     </div>
                   )}
 
-                  {/* Honeypot Spamo Spąstai */}
+                  {/* Honeypot */}
                   <input type="text" name="b_name" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
                   <div>
                     <Label htmlFor="name" className="sr-only">Vardas</Label>

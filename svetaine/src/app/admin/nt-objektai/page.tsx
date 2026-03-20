@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
-import { Edit, Trash2, Home, MapPin, X, Check, ChevronLeft, ChevronRight, Plus, Star, Image as ImageIcon, Upload, Search } from "lucide-react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { Edit, Trash2, Home, MapPin, X, Check, ChevronLeft, ChevronRight, Plus, Star, Image as ImageIcon, Upload, Search, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -43,9 +43,39 @@ interface Property {
   description?: string;
   privalumai?: string[];
   details?: any;
+  is_public?: boolean;
 }
 
 const STATUSES = ["Parduodama", "Rezervuota", "Parduota"];
+
+/* ── Auto-expanding Textarea ──────────────────────────────────────── */
+function AutoExpandTextarea({ defaultValue, name, id, placeholder, minHeight = 200, className = "" }: {
+  defaultValue?: string; name: string; id: string; placeholder?: string; minHeight?: number; className?: string;
+}) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+
+  const autoResize = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = Math.max(el.scrollHeight, minHeight) + "px";
+  }, [minHeight]);
+
+  useEffect(() => { autoResize(); }, [autoResize]);
+
+  return (
+    <textarea
+      ref={ref}
+      id={id}
+      name={name}
+      defaultValue={defaultValue}
+      onInput={autoResize}
+      style={{ minHeight: `${minHeight}px` }}
+      className={`w-full rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:bg-white resize-none transition-all ${className}`}
+      placeholder={placeholder}
+    />
+  );
+}
 
 export default function AdminObjectsPage() {
   const supabase = createClient();
@@ -61,6 +91,7 @@ export default function AdminObjectsPage() {
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
   const [editLocationData, setEditLocationData] = useState({ latitude: 54.8985207, longitude: 23.9035965, is_exact_location: true, address: "" });
   const [searchTerm, setSearchTerm] = useState("");
+  const [editIsPublic, setEditIsPublic] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const filteredProperties = useMemo(() => {
@@ -94,7 +125,8 @@ export default function AdminObjectsPage() {
             arai: p.arai || 0,
             heating: p.heating || "",
             type: p.type || "Butas",
-            privalumai: p.privalumai || []
+            privalumai: p.privalumai || [],
+            is_public: p.is_public !== false,
           }));
           setProperties(mapped as any);
         }
@@ -107,7 +139,6 @@ export default function AdminObjectsPage() {
   }, []);
 
   const saveProperties = async (updated: Property[]) => {
-    // legacy array fallback
     setProperties(updated);
   };
 
@@ -132,14 +163,25 @@ export default function AdminObjectsPage() {
     }
   };
 
+  const handleToggleVisibility = async (id: string | number, currentPublic: boolean) => {
+    const newValue = !currentPublic;
+    const res = await updateProperty(String(id), { is_public: newValue });
+    if (res.success) {
+      setProperties(prev => prev.map(p => String(p.id) === String(id) ? { ...p, is_public: newValue } : p));
+      showNotice(newValue ? "Objektas matomas viešai" : "Objektas paslėptas");
+    } else {
+      showNotice(res.error || "Klaida keičiant matomumą", "error");
+    }
+  };
+
   const handleAddObject = (newProperty: Property) => {
-     // Re-trigger load to fetch updated dataset
      setProperties(prev => [newProperty, ...prev]);
   };
 
   const openEdit = (property: Property) => {
     setEditingProperty({ ...property });
     setEditGallery(property.gallery || []);
+    setEditIsPublic(property.is_public !== false);
     setEditLocationData({
       latitude: property.latitude || 54.8985207,
       longitude: property.longitude || 23.9035965,
@@ -175,13 +217,6 @@ export default function AdminObjectsPage() {
     setIsUploading(true);
     const newUrls: string[] = [];
     try {
-      const compressionOptions = {
-        maxSizeMB: 0.8,
-        maxWidthOrHeight: 2000,
-        useWebWorker: true,
-        fileType: 'image/webp'
-      };
-
       const filesArray = Array.from(files);
       const totalFiles = filesArray.length;
       setUploadProgress({ current: 1, total: totalFiles });
@@ -190,23 +225,36 @@ export default function AdminObjectsPage() {
         const file = filesArray[i];
         if (file.size === 0) continue;
         setUploadProgress({ current: i + 1, total: totalFiles });
-        if (file.size === 0) continue;
+
+        // First: light client-side compression to reduce upload size
+        const compressionOptions = {
+          maxSizeMB: 2,
+          maxWidthOrHeight: 2400,
+          useWebWorker: true,
+        };
         const compressedFile = await imageCompression(file, compressionOptions);
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.webp`;
-        const filePath = `uploads/${fileName}`;
 
-        const { data, error } = await supabase.storage
-          .from('properties')
-          .upload(filePath, compressedFile);
+        // Send to server-side watermark API for watermark + WebP conversion
+        const formData = new FormData();
+        formData.append("file", compressedFile, compressedFile.name || "image.jpg");
 
-        if (error) throw error;
+        const res = await fetch("/api/watermark", {
+          method: "POST",
+          body: formData,
+        });
 
-        if (data) {
-          const { data: urlData } = supabase.storage.from('properties').getPublicUrl(filePath);
-          newUrls.push(urlData.publicUrl);
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || "Watermark processing failed");
+        }
+
+        const result = await res.json();
+        if (result.url) {
+          newUrls.push(result.url);
         }
       }
       setEditGallery(prev => [...prev, ...newUrls]);
+      showNotice(`${newUrls.length} nuotrauk${newUrls.length === 1 ? "a" : "os"} įkelta su watermark`);
     } catch (err) {
       console.error("Upload failed", err);
       showNotice("Nuotraukų įkėlimas nepavyko", "error");
@@ -238,7 +286,8 @@ export default function AdminObjectsPage() {
       latitude: editLocationData.latitude,
       longitude: editLocationData.longitude,
       is_exact_location: editLocationData.is_exact_location,
-      address: editLocationData.address
+      address: editLocationData.address,
+      is_public: editIsPublic,
     };
 
     try {
@@ -280,7 +329,8 @@ export default function AdminObjectsPage() {
         arai: payload.arai,
         heating: payload.heating,
         type: payload.type,
-        privalumai: payload.privalumai
+        privalumai: payload.privalumai,
+        is_public: editIsPublic,
       };
 
       setProperties(prev => prev.map(p => String(p.id) === String(editingProperty.id) ? updatedProp : p));
@@ -334,16 +384,20 @@ export default function AdminObjectsPage() {
                 <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs">Miestas</th>
                 <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs">Kaina</th>
                 <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs">Statusas</th>
+                <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs text-center">Matomumas</th>
                 <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs text-right">Veiksmai</th>
               </tr>
             </thead>
             <tbody>
             {filteredProperties.map((p) => (
-              <tr key={p.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
+              <tr key={p.id} className={`border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors ${p.is_public === false ? 'opacity-60' : ''}`}>
                 <td className="py-5 px-6">
                   <div className="flex items-center text-[#111827] font-bold">
                     <Home className="w-5 h-5 mr-3 text-slate-400" />
                     {p.title}
+                    {p.is_public === false && (
+                      <span className="ml-2 text-[10px] font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">paslėptas</span>
+                    )}
                   </div>
                 </td>
                 <td className="py-5 px-6 font-medium text-slate-600">
@@ -364,6 +418,19 @@ export default function AdminObjectsPage() {
                       <option key={s} value={s}>{s}</option>
                     ))}
                   </select>
+                </td>
+                <td className="py-5 px-6 text-center">
+                  <button
+                    onClick={() => handleToggleVisibility(String(p.id), p.is_public !== false)}
+                    className={`inline-flex items-center justify-center w-10 h-10 rounded-xl transition-all ${
+                      p.is_public !== false
+                        ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'
+                        : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
+                    }`}
+                    title={p.is_public !== false ? "Matomas viešai – spustelėkite paslėpti" : "Paslėptas – spustelėkite rodyti"}
+                  >
+                    {p.is_public !== false ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+                  </button>
                 </td>
                 <td className="py-5 px-6 text-right">
                   <div className="flex items-center justify-end gap-2">
@@ -410,7 +477,7 @@ export default function AdminObjectsPage() {
             ))}
             {properties.length === 0 && (
               <tr>
-                <td colSpan={5} className="py-12 text-center text-slate-500 font-medium">Nėra pridėtų objektų.</td>
+                <td colSpan={6} className="py-12 text-center text-slate-500 font-medium">Nėra pridėtų objektų.</td>
               </tr>
             )}
           </tbody>
@@ -430,9 +497,9 @@ export default function AdminObjectsPage() {
                 ></div>
               </div>
               <p className="text-sm font-extrabold text-[#111827]">
-                Keliamas failas {uploadProgress.current} iš {uploadProgress.total}... ({Math.round((uploadProgress.current / (uploadProgress.total || 1)) * 100)}%)
+                Apdorojamas failas {uploadProgress.current} iš {uploadProgress.total}... ({Math.round((uploadProgress.current / (uploadProgress.total || 1)) * 100)}%)
               </p>
-              <p className="text-xs text-slate-500 font-medium mt-1">Prašome palaukti, vykdomas suspaudimas ir kėlimas</p>
+              <p className="text-xs text-slate-500 font-medium mt-1">Watermark + WebP konvertavimas</p>
             </div>
           )}
 
@@ -458,6 +525,22 @@ export default function AdminObjectsPage() {
                 <div className="space-y-2">
                   <Label htmlFor="edit-city" className="text-xs font-bold uppercase tracking-wider text-slate-500">Miestas *</Label>
                   <Input id="edit-city" name="city" required defaultValue={editingProperty.city} className="h-12 rounded-xl bg-slate-50 border-slate-200" />
+                </div>
+                {/* Visibility Toggle */}
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase tracking-wider text-slate-500">Skelbimo matomumas</Label>
+                  <button
+                    type="button"
+                    onClick={() => setEditIsPublic(prev => !prev)}
+                    className={`w-full h-12 rounded-xl border px-4 flex items-center gap-3 text-sm font-bold transition-all ${
+                      editIsPublic
+                        ? 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                        : 'border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100'
+                    }`}
+                  >
+                    {editIsPublic ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+                    {editIsPublic ? "Matomas viešai" : "Paslėptas nuo lankytojų"}
+                  </button>
                 </div>
               </div>
 
@@ -514,23 +597,23 @@ export default function AdminObjectsPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="edit-description" className="text-xs font-bold uppercase tracking-wider text-slate-500">Aprašymas</Label>
-                <textarea
+                <AutoExpandTextarea
                   id="edit-description"
                   name="description"
                   defaultValue={editingProperty.description || ""}
-                  className="w-full min-h-[100px] rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] resize-none"
-                  placeholder="Objekto aprašymas..."
+                  placeholder="Detalus objekto aprašymas – rašykite įtaigiai ir profesionaliai..."
+                  minHeight={200}
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="edit-privalumai" className="text-xs font-bold uppercase tracking-wider text-slate-500">Privalumai (atskirti kableliais)</Label>
-                <textarea
+                <AutoExpandTextarea
                   id="edit-privalumai"
                   name="privalumai"
                   defaultValue={(editingProperty.privalumai || []).join(", ")}
-                  className="w-full min-h-[80px] rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] resize-none"
                   placeholder="Rekuperacija, Signalizacija, Parkavimas"
+                  minHeight={80}
                 />
                 <p className="text-xs text-slate-400">Kiekvieną privalumą atskirkite kableliu</p>
               </div>

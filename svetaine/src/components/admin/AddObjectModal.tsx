@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Building, MapPin, Image as ImageIcon, FileText } from "lucide-react";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { Plus, Building, MapPin, Image as ImageIcon, FileText, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,12 +18,41 @@ import { createClient } from "@/utils/supabase/client";
 
 import imageCompression from 'browser-image-compression';
 
+/* ── Auto-expanding Textarea ──────────────────────────────────────── */
+function AutoExpandTextarea({ name, id, placeholder, minHeight = 200, className = "" }: {
+  name: string; id: string; placeholder?: string; minHeight?: number; className?: string;
+}) {
+  const ref = useRef<HTMLTextAreaElement>(null);
+
+  const autoResize = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = Math.max(el.scrollHeight, minHeight) + "px";
+  }, [minHeight]);
+
+  useEffect(() => { autoResize(); }, [autoResize]);
+
+  return (
+    <textarea
+      ref={ref}
+      id={id}
+      name={name}
+      onInput={autoResize}
+      style={{ minHeight: `${minHeight}px` }}
+      className={`w-full rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:bg-white resize-none transition-all ${className}`}
+      placeholder={placeholder}
+    />
+  );
+}
+
 export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
   const supabase = createClient();
   const [open, setOpen] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
   const [locationData, setLocationData] = useState({ latitude: 54.8985207, longitude: 23.9035965, is_exact_location: true, address: "" });
+  const [isPublic, setIsPublic] = useState(true);
   
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,35 +66,42 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
     
     if (validFiles.length > 0) {
       try {
-        const compressionOptions = {
-          maxSizeMB: 0.8,
-          maxWidthOrHeight: 2000,
-          useWebWorker: true,
-          fileType: 'image/webp'
-        };
         const totalFiles = validFiles.length;
         setUploadProgress({ current: 1, total: totalFiles });
 
         for (let i = 0; i < totalFiles; i++) {
           const file = validFiles[i];
           setUploadProgress({ current: i + 1, total: totalFiles });
+
+          // Light client-side compression first
+          const compressionOptions = {
+            maxSizeMB: 2,
+            maxWidthOrHeight: 2400,
+            useWebWorker: true,
+          };
           const compressedFile = await imageCompression(file, compressionOptions);
-          const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.webp`;
-          const filePath = `uploads/${fileName}`;
-          
-          const { data, error } = await supabase.storage
-            .from('properties')
-            .upload(filePath, compressedFile);
-            
-          if (error) throw error;
-          
-          if (data) {
-             const { data: urlData } = supabase.storage.from('properties').getPublicUrl(filePath);
-             galleryUrls.push(urlData.publicUrl);
+
+          // Send to watermark API for server-side watermark + WebP
+          const uploadFormData = new FormData();
+          uploadFormData.append("file", compressedFile, compressedFile.name || "image.jpg");
+
+          const res = await fetch("/api/watermark", {
+            method: "POST",
+            body: uploadFormData,
+          });
+
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            throw new Error(errData.error || "Watermark processing failed");
+          }
+
+          const result = await res.json();
+          if (result.url) {
+            galleryUrls.push(result.url);
           }
         }
       } catch (err) {
-        console.error("Storage upload failed:", err);
+        console.error("Upload failed:", err);
       }
     }
     
@@ -87,7 +123,8 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
       latitude: locationData.latitude,
       longitude: locationData.longitude,
       is_exact_location: locationData.is_exact_location,
-      address: locationData.address
+      address: locationData.address,
+      is_public: isPublic,
     };
 
     try {
@@ -96,7 +133,6 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
       
       if (data && data.length > 0) {
          const p = data[0];
-         // Map back for state
          const newProperty = {
            id: p.id,
            title: p.pavadinimas,
@@ -118,6 +154,7 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
            heating: p.heating || "",
            type: p.type || "Butas",
            privalumai: p.privalumai || [],
+           is_public: p.is_public !== false,
            slug: p.pavadinimas.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
          };
          onAdd(newProperty);
@@ -127,6 +164,7 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
     }
 
     setIsUploading(false);
+    setIsPublic(true);
     setOpen(false);
   };
 
@@ -148,9 +186,9 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
               ></div>
             </div>
             <p className="text-sm font-extrabold text-[#111827]">
-              Keliamas failas {uploadProgress.current} iš {uploadProgress.total}... ({Math.round((uploadProgress.current / (uploadProgress.total || 1)) * 100)}%)
+              Apdorojamas failas {uploadProgress.current} iš {uploadProgress.total}... ({Math.round((uploadProgress.current / (uploadProgress.total || 1)) * 100)}%)
             </p>
-            <p className="text-xs text-slate-500 font-medium mt-1">Prašome palaukti, vykdomas suspaudimas ir kėlimas</p>
+            <p className="text-xs text-slate-500 font-medium mt-1">Watermark + WebP konvertavimas</p>
           </div>
         )}
 
@@ -164,7 +202,7 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
           {/* Main Info */}
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-[#1E3A8A] flex items-center border-b border-slate-100 pb-2">
-              <Building className="w-5 h-5 mr-2" /> Pagrindinė Informacija
+              <Building className="w-5 h-5 mr-2" /> Pagrindinė informacija
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
@@ -206,6 +244,23 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
                   </Select>
                 </div>
               </div>
+            </div>
+
+            {/* Visibility Toggle */}
+            <div className="space-y-2">
+              <Label className="text-xs font-bold uppercase tracking-wider text-slate-500">Skelbimo matomumas</Label>
+              <button
+                type="button"
+                onClick={() => setIsPublic(prev => !prev)}
+                className={`w-full md:w-auto h-12 rounded-xl border px-6 flex items-center gap-3 text-sm font-bold transition-all ${
+                  isPublic
+                    ? 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                    : 'border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100'
+                }`}
+              >
+                {isPublic ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+                {isPublic ? "Matomas viešai" : "Paslėptas nuo lankytojų"}
+              </button>
             </div>
           </div>
 
@@ -254,25 +309,23 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
                 <Input id="heating" name="heating" className="h-12 rounded-xl bg-slate-50 border-slate-200" placeholder="Centrinis kolektorinis" />
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-4 pt-2">
-            </div>
             <div className="space-y-2 pt-2">
               <Label htmlFor="privalumai" className="text-xs font-bold uppercase tracking-wider text-slate-500">Privalumai (atskirti kableliais)</Label>
-              <textarea
+              <AutoExpandTextarea
                 id="privalumai"
                 name="privalumai"
-                className="w-full min-h-[80px] rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] resize-none"
                 placeholder="Aukštos kokybės apdaila, Integruota buitinė technika, Dvi parkavimo vietos, Rekuperacinė sistema"
+                minHeight={80}
               />
-              <p className="text-xs text-slate-400 mt-1">Rašykite kiekvieną privalumą atskirtą kableliu. Pvz.: Rekuperacija, Signalizacija, Parkavimas</p>
+              <p className="text-xs text-slate-400 mt-1">Rašykite kiekvieną privalumą atskirtą kableliu</p>
             </div>
             <div className="space-y-2 pt-2">
-              <Label htmlFor="description" className="text-xs font-bold uppercase tracking-wider text-slate-500">Pilnas Aprašymas</Label>
-              <textarea 
-                id="description" 
-                name="description" 
-                className="w-full min-h-[100px] rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563EB] resize-none"
-                placeholder="Detalizuokite objekto privalumus..."
+              <Label htmlFor="description" className="text-xs font-bold uppercase tracking-wider text-slate-500">Pilnas aprašymas</Label>
+              <AutoExpandTextarea
+                id="description"
+                name="description"
+                placeholder="Detalus objekto aprašymas – rašykite įtaigiai ir profesionaliai..."
+                minHeight={200}
               />
             </div>
           </div>
@@ -285,7 +338,7 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
              <div className="space-y-2">
                 <Label htmlFor="imageFiles" className="text-xs font-bold uppercase tracking-wider text-slate-500">Įkelti nuotraukas iš įrenginio (galima kelias)</Label>
                 <Input id="imageFiles" name="imageFiles" type="file" accept="image/*" multiple className="h-12 pt-2.5 rounded-xl bg-slate-50 border-slate-200 cursor-pointer" />
-                <p className="text-xs text-slate-400 mt-1">Galite pažymėti neribotą kiekį nuotraukų. Pirma bus pagrindinė.</p>
+                <p className="text-xs text-slate-400 mt-1">Automatiškai bus uždėtas logotipas ir konvertuota į WebP formatą. Pirma nuotrauka bus pagrindinė.</p>
               </div>
           </div>
 
@@ -294,7 +347,7 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
                 Atšaukti
              </Button>
              <Button type="submit" disabled={isUploading} className="bg-[#111827] hover:bg-[#1E3A8A] text-white shadow-xl shadow-[#111827]/20 h-12 px-8 rounded-xl font-bold transition-all disabled:opacity-50">
-                {isUploading ? "Įkeliama..." : "Išsaugoti Objektą"}
+                {isUploading ? "Apdorojama..." : "Išsaugoti objektą"}
              </Button>
           </div>
 

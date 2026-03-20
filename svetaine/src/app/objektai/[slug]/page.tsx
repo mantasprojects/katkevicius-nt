@@ -17,6 +17,9 @@ const getProperty = async (slug: string) => {
 
     if (!matched) return null;
 
+    // Paslėpti objektai neturi būti matomi viešai
+    if (matched.is_public === false) return null;
+
     const gallery = matched.nuotraukos_urls ? (typeof matched.nuotraukos_urls === 'string' ? JSON.parse(matched.nuotraukos_urls) : matched.nuotraukos_urls) : [];
 
     return {

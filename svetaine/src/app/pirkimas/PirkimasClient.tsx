@@ -42,7 +42,7 @@ export default function PirkimasClient() {
 
   const steps = [
     { id: "01", title: "Poreikių nustatymas", description: "Išsamus susitikimas jūsų lūkesčiams, biudžetui ir esminiams lokacijų bei techniniams kriterijams apibrėžti." },
-    { id: "02", title: "Paieška ir „Off-market“ atranka", description: "Atrandu objektus, nepasiekiančius skelbimų portalų – per asmeninį tinklą, kitus brokerius ir tiesioginius savininkus." },
+    { id: "02", title: "Paieška ir „Off-market“ atranka", description: "Atrandu objektus, nepasiekiančius skelbimų portalų – per asmeninį tinklą, kitus NT pardavimų ekspertus ir tiesioginius savininkus." },
     { id: "03", title: "Apžiūros ir techninė analizė", description: "Dalyvauju apžiūrose, identifikuoju paslėptus trūkumus, vertinu dokumentaciją bei teisinį statusą prieš teikiant pasiūlymą." },
     { id: "04", title: "Derybos ir kainos fiksavimas", description: "Vedu derybas jūsų naudai, fiksuoju palankiausią kainą bei mokėjimo sąlygas, sutaupydamas jūsų biudžetą." },
     { id: "05", title: "Notarinis sandoris", description: "Saugiai lydžiu jus per visą pirkimo dokumentų pasirašymą iki naujųjų raktų gavimo." }
@@ -209,7 +209,7 @@ export default function PirkimasClient() {
                 <Scale className="w-6 h-6" />
               </div>
               <h3 className="text-2xl font-bold mb-2 text-slate-900">Derybų menas</h3>
-              <p className="text-slate-500 text-sm max-w-md">Esu derybų pozicijoje jūsų pusėje. Patirtis leidžia suderėti palankesnes sąlygas, kurios dažnai visiškai atperka brokerio paslaugas.</p>
+              <p className="text-slate-500 text-sm max-w-md">Esu derybų pozicijoje jūsų pusėje. Patirtis leidžia suderėti palankesnes sąlygas, kurios dažnai visiškai atperka eksperto paslaugas.</p>
             </motion.div>
 
             <motion.div 
