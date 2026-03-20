@@ -558,7 +558,7 @@ export default function AdminObjectsPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div className="space-y-2">
                   <Label htmlFor="edit-area" className="text-xs font-bold uppercase tracking-wider text-slate-500">Plotas (m²)</Label>
                   <Input id="edit-area" name="area" type="number" step="0.01" defaultValue={editingProperty.area || 0} className="h-12 rounded-xl bg-slate-50 border-slate-200" />
@@ -566,6 +566,10 @@ export default function AdminObjectsPage() {
                 <div className="space-y-2">
                   <Label htmlFor="edit-arai" className="text-xs font-bold uppercase tracking-wider text-slate-500">Sklypas (arai)</Label>
                   <Input id="edit-arai" name="arai" type="number" step="0.01" defaultValue={editingProperty.arai || 0} className="h-12 rounded-xl bg-slate-50 border-slate-200" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="edit-year" className="text-xs font-bold uppercase tracking-wider text-slate-500">Metai</Label>
+                  <Input id="edit-year" name="year" type="number" defaultValue={editingProperty.year || 0} className="h-12 rounded-xl bg-slate-50 border-slate-200" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="edit-status" className="text-xs font-bold uppercase tracking-wider text-slate-500">Statusas</Label>

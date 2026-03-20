@@ -655,7 +655,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
                   </div>
                   <div>
                     <p className="font-extrabold text-lg text-[#111827]">Mantas Katkevičius</p>
-                    <p className="text-slate-500 text-sm font-semibold mb-1">Jūsų NT pardavimų ekspertas</p>
+                    <p className="text-slate-500 text-sm font-semibold mb-1">Jūsų NT partneris</p>
                     <a href="tel:+37064541892" className="text-[#2563EB] font-bold tracking-tight hover:underline block">+370 645 41892</a>
                   </div>
                 </div>
