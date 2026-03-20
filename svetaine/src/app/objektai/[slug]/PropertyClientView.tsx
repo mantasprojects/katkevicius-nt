@@ -487,7 +487,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
 
               {/* Thumbnails Row */}
               {galleryImages.length > 1 && (
-                <div className="grid grid-cols-4 gap-1 px-4">
+                <div className="grid grid-cols-4 gap-1">
                   {galleryImages.slice(1, 5).map((src: string, i: number) => {
                     const isLast = i === 3;
                     const remainingForMobile = galleryImages.length - 5; // 1 Main + 4 Thumbs = 5 shown
