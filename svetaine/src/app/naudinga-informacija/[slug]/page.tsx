@@ -256,7 +256,7 @@ export default async function SingleArticlePage({ params }: { params: Promise<{ 
                   Aptarkime jūsų situaciją individualiai ir suraskime geriausią sprendimą.
                 </p>
                 
-                <Link href="/konsultacija" className="block w-full sm:w-auto">
+                <Link href="/kontaktai" className="block w-full sm:w-auto">
                   <Button className="h-16 w-full sm:w-auto px-12 rounded-2xl bg-[#2563EB] hover:bg-[#1E3A8A] text-white font-bold text-lg shadow-[0_10px_30px_-10px_rgba(37,99,235,0.4)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
                     Susisiekti <ArrowRight className="w-6 h-6 ml-2" />
                   </Button>
