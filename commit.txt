@@ -1,0 +1,8 @@
+fix: viešosios galerijos UX patobulinimai ir krovimo optimizacija
+
+- Mobiliame įrenginyje nuotraukos rodomos viena po kitos vertikaliai per visą ekraną (-mx-4)
+- Desktop versijoje atstatytas tvarkingas 4 stulpelių grid išlaikant konteinerio plotį
+- Lightbox nebeturi animacijos keičiant nuotraukas peržiūros metu
+- Pridėtas "swipe down" gestas uždaryti Lightbox mobiliuosiuose įrenginiuose
+- Ištaisytos TypeScript klaidos po ankstesnių pakeitimų
+- Pridėti Vercel Edge Cache hederiai `revalidate = 60` ir API endpointams siekiant 95+ PageSpeed

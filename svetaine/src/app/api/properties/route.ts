@@ -40,7 +40,11 @@ export async function GET() {
        };
     });
 
-    return NextResponse.json(mapped);
+    return NextResponse.json(mapped, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+      },
+    });
   } catch (err) {
     console.error("API /api/properties Error:", err);
     return NextResponse.json({ error: "Nepavyko užkrauti objektų iš Supabase" }, { status: 500 });

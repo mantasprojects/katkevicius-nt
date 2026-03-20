@@ -76,41 +76,36 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
   const [direction, setDirection] = useState(0);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+  const touchStartY = useRef(0);
+  const touchEndY = useRef(0);
 
   const goPrev = useCallback(() => { setDirection(-1); setIndex(i => (i + images.length - 1) % images.length); }, [images.length]);
   const goNext = useCallback(() => { setDirection(1); setIndex(i => (i + 1) % images.length); }, [images.length]);
 
-  // Keyboard navigation
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      if (e.key === "ArrowLeft") goPrev();
-      if (e.key === "ArrowRight") goNext();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, goPrev, goNext]);
-
-  // Preload adjacent images for instant transitions
-  useEffect(() => {
-    const preload = (src: string) => { const img = new (window as any).Image(); img.src = src; };
-    preload(images[(index + 1) % images.length]);
-    preload(images[(index + images.length - 1) % images.length]);
-  }, [index, images]);
-
-  // Prevent body scroll
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
-  }, []);
-
   // Touch swipe support
-  const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
-  const handleTouchMove = (e: React.TouchEvent) => { touchEndX.current = e.touches[0].clientX; };
+  const handleTouchStart = (e: React.TouchEvent) => { 
+    touchStartX.current = e.touches[0].clientX; 
+    touchEndX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY; 
+    touchEndY.current = e.touches[0].clientY;
+  };
+  const handleTouchMove = (e: React.TouchEvent) => { 
+    touchEndX.current = e.touches[0].clientX; 
+    touchEndY.current = e.touches[0].clientY;
+  };
   const handleTouchEnd = () => {
-    const diff = touchStartX.current - touchEndX.current;
-    if (Math.abs(diff) > 60) {
-      if (diff > 0) goNext();
+    const diffX = touchStartX.current - touchEndX.current;
+    const diffY = touchStartY.current - touchEndY.current;
+    
+    // Swipe down to close
+    if (diffY < -80 && Math.abs(diffY) > Math.abs(diffX)) {
+      onClose();
+      return;
+    }
+    
+    // Swipe left/right
+    if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY)) {
+      if (diffX > 0) goNext();
       else goPrev();
     }
   };
@@ -162,29 +157,17 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
         <ChevronLeft className="w-7 h-7" />
       </button>
 
-      {/* Image with animation */}
-      <div className="max-w-[90vw] max-h-[90vh] flex items-center justify-center" onClick={e => e.stopPropagation()}>
-        <AnimatePresence mode="wait" custom={direction}>
-          <motion.div
-            key={index}
-            custom={direction}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <Image
-              src={images[index]}
-              alt={`Nuotrauka ${index + 1}`}
-              width={1920}
-              height={1080}
-              className="max-w-full max-h-[90vh] object-contain select-none rounded-lg"
-              placeholder="blur"
-              blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1920, 1080))}`}
-            />
-          </motion.div>
-        </AnimatePresence>
+      {/* Image instantly switching without animation */}
+      <div className="max-w-[100vw] max-h-[100vh] flex items-center justify-center" onClick={e => e.stopPropagation()}>
+        <Image
+          src={images[index]}
+          alt={`Nuotrauka ${index + 1}`}
+          width={1920}
+          height={1080}
+          className="max-w-full max-h-[100vh] object-contain select-none object-center"
+          placeholder="blur"
+          blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1920, 1080))}`}
+        />
       </div>
 
       {/* Next */}
@@ -385,27 +368,23 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
         </div>
       </div>
 
-      {/* Gallery Grid — Edge-to-Edge on mobile, contained on desktop */}
-      <div className="w-screen md:w-auto md:container md:px-4 md:mx-auto md:max-w-7xl mb-0 md:mb-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-0 md:gap-3 h-[300px] md:h-[500px] lg:h-[600px] md:rounded-[2rem] overflow-hidden">
+      {/* Gallery Grid — Edge-to-Edge array on mobile, contained grid on desktop */}
+      <div className="w-full md:container md:px-4 md:mx-auto md:max-w-7xl mb-0 md:mb-16">
+        
+        {/* DESKTOP GRID */}
+        <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-3 h-[500px] lg:h-[600px] rounded-[2rem] overflow-hidden">
           {/* Main large image */}
           <div 
             className="md:col-span-2 md:row-span-2 relative group overflow-hidden cursor-pointer"
             onClick={() => { setPhotoIndex(0); setIsOpen(true); }}
           >
-            {/* Gallery badge for mobile */}
-            <div className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-sm text-white px-3 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 z-10 shadow-md border border-white/10 md:hidden">
-              <Camera className="w-4 h-4 text-white" />
-              <span>1 / {galleryImages.length}</span>
-            </div>
-
             <Image 
               src={galleryImages[0]} 
               alt="Pagrindinė nuotrauka" 
               fill
               priority
               className={`object-cover group-hover:scale-105 transition-transform duration-700 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="50vw"
               placeholder="blur"
               blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1200, 800))}`}
             />
@@ -414,7 +393,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
           {/* Second image */}
           {galleryImages.length > 1 && (
             <div 
-              className="hidden md:block col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
+              className="col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
               onClick={() => { setPhotoIndex(1); setIsOpen(true); }}
             >
               <Image 
@@ -423,7 +402,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
                 fill
                 priority
                 className={`object-cover group-hover:scale-105 transition-transform duration-700 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
-                sizes="(max-width: 1024px) 50vw, 25vw"
+                sizes="50vw"
                 placeholder="blur"
                 blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(800, 600))}`}
               />
@@ -433,7 +412,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
           {/* Third image — with photo count overlay */}
           {galleryImages.length > 2 && (
             <div 
-              className="hidden md:block col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
+              className="col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
               onClick={() => { setPhotoIndex(2); setIsOpen(true); }}
             >
               <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 z-10 flex flex-col items-center justify-center transition-all duration-300">
@@ -449,13 +428,36 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
                 fill
                 priority
                 className={`object-cover group-hover:scale-105 transition-transform duration-700 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
-                sizes="(max-width: 1024px) 50vw, 25vw"
+                sizes="50vw"
                 placeholder="blur"
                 blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(800, 600))}`}
               />
             </div>
           )}
         </div>
+
+        {/* MOBILE STACK */}
+        <div className="flex flex-col md:hidden w-full gap-1">
+          {galleryImages.map((src: string, i: number) => (
+            <div 
+              key={i} 
+              className="relative aspect-[4/3] w-full cursor-pointer overflow-hidden" 
+              onClick={() => { setPhotoIndex(i); setIsOpen(true); }}
+            >
+              <Image 
+                src={src} 
+                alt={`Nuotrauka ${i + 1}`} 
+                fill 
+                priority={i < 3} 
+                className={`object-cover ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
+                sizes="100vw"
+                placeholder="blur"
+                blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(600, 450))}`}
+              />
+            </div>
+          ))}
+        </div>
+
       </div>
       
       <div className="container px-4 mx-auto max-w-7xl">

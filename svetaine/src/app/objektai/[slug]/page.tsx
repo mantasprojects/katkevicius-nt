@@ -3,6 +3,8 @@ import { Metadata } from "next";
 import { PropertyClientView } from "./PropertyClientView";
 import { createClient } from "@/utils/supabase/server";
 
+export const revalidate = 60; // 60 sekundžių edge/ISR kešavimas
+
 // Read directly on server from Supabase
 const getProperty = async (slug: string) => {
   try {
