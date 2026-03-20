@@ -379,12 +379,21 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
             className="md:col-span-2 md:row-span-2 relative group overflow-hidden cursor-pointer"
             onClick={() => { setPhotoIndex(0); setIsOpen(true); }}
           >
+            {/* Blurred background layer */}
+            <Image 
+              src={galleryImages[0]} 
+              alt="" fill priority aria-hidden="true"
+              className="object-cover blur-xl opacity-50 scale-110 saturate-150" 
+              sizes="50vw"
+              placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(200, 150))}`}
+            />
+            {/* Real image layer */}
             <Image 
               src={galleryImages[0]} 
               alt="Pagrindinė nuotrauka" 
               fill
               priority
-              className={`object-cover group-hover:scale-105 transition-transform duration-700 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
+              className={`object-contain group-hover:scale-[1.02] transition-transform duration-700 z-10 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
               sizes="50vw"
               placeholder="blur"
               blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1200, 800))}`}
@@ -397,12 +406,20 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
               className="col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
               onClick={() => { setPhotoIndex(1); setIsOpen(true); }}
             >
+              {/* Blurred background layer */}
+              <Image 
+                src={galleryImages[1]} 
+                alt="" fill priority aria-hidden="true"
+                className="object-cover blur-xl opacity-50 scale-110 saturate-150" 
+                sizes="50vw"
+              />
+              {/* Real image layer */}
               <Image 
                 src={galleryImages[1]} 
                 alt="Antra nuotrauka" 
                 fill
                 priority
-                className={`object-cover group-hover:scale-105 transition-transform duration-700 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
+                className={`object-contain group-hover:scale-[1.02] transition-transform duration-700 z-10 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
                 sizes="50vw"
                 placeholder="blur"
                 blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(800, 600))}`}
@@ -416,41 +433,55 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
               className="col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
               onClick={() => { setPhotoIndex(2); setIsOpen(true); }}
             >
-              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 z-10 flex flex-col items-center justify-center transition-all duration-300">
+              {/* Blurred background layer */}
+              <Image 
+                src={galleryImages[2]} 
+                alt="" fill priority aria-hidden="true"
+                className="object-cover blur-xl opacity-50 scale-110 saturate-150" 
+                sizes="50vw"
+              />
+              {/* Real image layer */}
+              <Image 
+                src={galleryImages[2]} 
+                alt="Trečia nuotrauka" 
+                fill
+                priority
+                className={`object-contain group-hover:scale-[1.02] transition-transform duration-700 z-10 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
+                sizes="50vw"
+                placeholder="blur"
+                blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(800, 600))}`}
+              />
+              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 z-20 flex flex-col items-center justify-center transition-all duration-300">
                 <Camera className="w-8 h-8 text-white mb-2" />
                 <span className="text-white font-extrabold text-2xl tracking-tight">
                   {remainingPhotos > 0 ? `+${remainingPhotos}` : ""}
                 </span>
                 <span className="text-white/80 font-bold text-sm uppercase tracking-widest mt-1">Žiūrėti galeriją</span>
               </div>
-              <Image 
-                src={galleryImages[2]} 
-                alt="Trečia nuotrauka" 
-                fill
-                priority
-                className={`object-cover group-hover:scale-105 transition-transform duration-700 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
-                sizes="50vw"
-                placeholder="blur"
-                blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(800, 600))}`}
-              />
             </div>
           )}
         </div>
 
         {/* MOBILE STACK */}
-        <div className="flex flex-col md:hidden w-full gap-1">
+        <div className="flex flex-col md:hidden w-full gap-1 bg-[#0f0f0f]">
           {galleryImages.map((src: string, i: number) => (
             <div 
               key={i} 
-              className="relative aspect-[4/3] w-full cursor-pointer overflow-hidden" 
+              className="relative aspect-[4/3] w-full cursor-pointer overflow-hidden bg-black flex items-center justify-center" 
               onClick={() => { setPhotoIndex(i); setIsOpen(true); }}
             >
+              <Image 
+                src={src} 
+                alt="" fill aria-hidden="true" priority={i < 3}
+                className="object-cover blur-2xl opacity-40 scale-125 saturate-150" 
+                sizes="10vw" 
+              />
               <Image 
                 src={src} 
                 alt={`Nuotrauka ${i + 1}`} 
                 fill 
                 priority={i < 3} 
-                className={`object-cover ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
+                className={`object-contain z-10 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
                 sizes="100vw"
                 placeholder="blur"
                 blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(600, 450))}`}

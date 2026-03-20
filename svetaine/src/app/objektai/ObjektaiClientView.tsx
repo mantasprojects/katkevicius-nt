@@ -223,13 +223,23 @@ export default function ObjektaiClientView() {
                 href={`/objektai/${property.slug}`} 
                 className="group flex flex-col bg-transparent rounded-none h-full"
               >
-                <div className="relative aspect-[4/3] overflow-hidden rounded-3xl mb-6 shadow-sm">
+                <div className="relative aspect-[4/3] overflow-hidden rounded-3xl mb-6 shadow-sm bg-[#0f0f0f]">
+                  {/* Blurred background layer */}
+                  <Image 
+                    src={property.image}
+                    alt="" 
+                    fill 
+                    priority={idx < 3} aria-hidden="true"
+                    className="object-cover blur-xl opacity-40 scale-110 saturate-150"
+                    sizes="(max-width: 768px) 10vw, 5vw"
+                  />
+                  {/* Real image layer */}
                   <Image 
                     src={property.image}
                     alt={property.title}
                     fill
                     priority={idx < 3}
-                    className={`object-cover group-hover:scale-105 transition-transform duration-1000 ease-out ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`}
+                    className={`object-contain group-hover:scale-[1.02] transition-transform duration-1000 ease-out z-10 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     placeholder="blur"
                     blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}

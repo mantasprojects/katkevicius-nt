@@ -1,0 +1,8 @@
+feat: Full-Frame Content galerijos integracija "Aruodas style"
+
+- PAŠALINTAS `object-cover` apkarpymas visose mobiliojo ir desktop NT objektų galerijose (įskaitant pagrindinį gridą ir korteles).
+- Pridėtas `object-contain`, todėl vartotojas mato VISĄ nuotraukos turinį lygiai taip, kaip jis buvo nufotografuotas (jokių nupjautų stogų, kampų ar pamatų).
+- Sukurtas itin premium lygio "Blurred Background" efektas (pridėtas po visomis nuotraukomis), kuris prabangiai užpildo tuščią kraštų erdvę su 50% išblukusiu originalios nuotraukos fonu.
+- Išlaikytas `aspect-[4/3]` CSS dydis išvengti Layout Shift prieš nuotraukai užsikraunant.
+- `Lightbox` peržiūros režimas išlaiko "contain" originalią proporciją visuose įrenginiuose.
+- Pakeitimai pritaikyti tiek `ObjektaiClientView`, tiek `PropertyClientView` komponentams.
