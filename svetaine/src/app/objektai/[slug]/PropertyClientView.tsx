@@ -370,7 +370,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
       </div>
 
       {/* Gallery Grid — Edge-to-Edge array on mobile, contained grid on desktop */}
-      <div className="w-screen -mx-4 md:w-full md:container md:px-4 md:mx-auto md:max-w-7xl mb-0 md:mb-16 overflow-hidden">
+      <div className="w-[calc(100%+2rem)] -mx-4 md:w-full md:container md:px-0 md:mx-auto md:max-w-7xl mb-0 md:mb-16 overflow-hidden">
         
         {/* DESKTOP GRID */}
         <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-[2px] bg-[#111827] h-[500px] lg:h-[600px] rounded-[2rem] overflow-hidden border border-[#111827]">
@@ -379,21 +379,12 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
             className="md:col-span-2 md:row-span-2 relative group overflow-hidden cursor-pointer"
             onClick={() => { setPhotoIndex(0); setIsOpen(true); }}
           >
-            {/* Blurred background layer */}
-            <Image 
-              src={galleryImages[0]} 
-              alt="" fill priority aria-hidden="true"
-              className="object-cover blur-xl opacity-50 scale-110 saturate-150" 
-              sizes="50vw"
-              placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(200, 150))}`}
-            />
-            {/* Real image layer */}
             <Image 
               src={galleryImages[0]} 
               alt="Pagrindinė nuotrauka" 
               fill
               priority
-              className={`object-contain group-hover:scale-[1.02] transition-transform duration-700 z-10 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
+              className={`object-cover group-hover:scale-[1.02] transition-transform duration-700 z-10 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
               sizes="50vw"
               placeholder="blur"
               blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1200, 800))}`}
@@ -406,20 +397,12 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
               className="col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
               onClick={() => { setPhotoIndex(1); setIsOpen(true); }}
             >
-              {/* Blurred background layer */}
-              <Image 
-                src={galleryImages[1]} 
-                alt="" fill priority aria-hidden="true"
-                className="object-cover blur-xl opacity-50 scale-110 saturate-150" 
-                sizes="50vw"
-              />
-              {/* Real image layer */}
               <Image 
                 src={galleryImages[1]} 
                 alt="Antra nuotrauka" 
                 fill
-                priority
-                className={`object-contain group-hover:scale-[1.02] transition-transform duration-700 z-10 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
+                priority={true}
+                className={`object-cover group-hover:scale-[1.02] transition-transform duration-700 z-10 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
                 sizes="50vw"
                 placeholder="blur"
                 blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(800, 600))}`}
@@ -433,20 +416,12 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
               className="col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
               onClick={() => { setPhotoIndex(2); setIsOpen(true); }}
             >
-              {/* Blurred background layer */}
-              <Image 
-                src={galleryImages[2]} 
-                alt="" fill priority aria-hidden="true"
-                className="object-cover blur-xl opacity-50 scale-110 saturate-150" 
-                sizes="50vw"
-              />
-              {/* Real image layer */}
               <Image 
                 src={galleryImages[2]} 
                 alt="Trečia nuotrauka" 
                 fill
-                priority
-                className={`object-contain group-hover:scale-[1.02] transition-transform duration-700 z-10 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
+                priority={true}
+                className={`object-cover group-hover:scale-[1.02] transition-transform duration-700 z-10 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
                 sizes="50vw"
                 placeholder="blur"
                 blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(800, 600))}`}
@@ -463,22 +438,19 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
         </div>
 
         {/* MOBILE STACK */}
-        <div className="flex flex-col md:hidden w-full gap-0 bg-black">
+        <div className="flex flex-col md:hidden w-full gap-[1px] bg-[#000000]">
           {galleryImages.map((src: string, i: number) => (
             <div 
               key={i} 
               className="w-full cursor-pointer leading-none" 
               onClick={() => { setPhotoIndex(i); setIsOpen(true); }}
             >
-              <Image 
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
                 src={src} 
-                alt={`Nuotrauka ${i + 1}`} 
-                width={1200}
-                height={800}
-                unoptimized={true}
-                priority={i < 3} 
+                alt={`Nuotrauka ${i + 1}`}
+                loading={i < 3 ? "eager" : "lazy"} 
                 className={`w-full h-auto object-cover block ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
-                sizes="100vw"
               />
             </div>
           ))}

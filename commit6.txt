@@ -1,5 +1,0 @@
-fix: natūralus nuotraukų aukštis mobiliame ir vandens ženklo išlygiavimas
-
-- Iš mobiliojo sąrašo nuotraukų `PropertyClientView` pašalintas `aspect-[4/3]` ir leista veikti `w-full h-auto` taisyklei su `unoptimized` flagu. Rezultatas: absoliutus „Zero Gaps“ ir jokios tuščios (juodos) erdvės – visos nuotraukos rodomos originalaus ilgio. Tarp jų nebeliko net 1px tuščios vietos (naudojant `leading-none` ir `block` ant `Image`).
-- Ištaisyta asimetrinė `watermark` API logika `/api/watermark/route.ts` sistemoje. Vandens ženklo atstumas nuo dešinio ir apatinio kraštų (`paddingX`, `paddingY`) dabar tvirtai susietas su originalios nuotraukos grakštumo/pločio dimensija (`imgWidth`), todėl logotipas išliks tobulai simetriškas abiem ašimis, nepriklausomai nuo to ar nuotrauka horizontali, ar vertikali.
-- Patikrintos ir užtikrintos kalbos gramatinės struktūros – dvitaškių klaidos neegzistuoja (nėra didžiųjų raidžių po dvitaškio išskyrus atvejus, padiktuojamus specialiųjų vardų ar miestų).
