@@ -24,7 +24,7 @@ async function syncDbToJson() {
   while (true) {
     const { data, error } = await supabase
       .from('tinklarastis_irasai')
-      .select('id, turinys, slug')
+      .select('id, turinys, slug, seo_title, seo_description')
       .range(from, from + PAGE_SIZE - 1);
 
     if (error) {
@@ -51,14 +51,23 @@ async function syncDbToJson() {
 
   for (let i = 0; i < localPosts.length; i++) {
     const post = localPosts[i];
-    // Find matching DB record by slug (most reliable if IDs sometimes differ)
     const dbRecord = allArticles.find(a => a.slug === post.slug || a.id === post.id);
     
-    if (dbRecord && dbRecord.turinys) {
-      if (post.content !== dbRecord.turinys) {
+    if (dbRecord) {
+      let isModified = false;
+      if (dbRecord.turinys && post.content !== dbRecord.turinys) {
         post.content = dbRecord.turinys;
-        updatedCount++;
+        isModified = true;
       }
+      if (dbRecord.seo_description && post.excerpt !== dbRecord.seo_description) {
+        post.excerpt = dbRecord.seo_description;
+        isModified = true;
+      }
+      if (dbRecord.seo_title && post.seo_title !== dbRecord.seo_title) {
+        post.seo_title = dbRecord.seo_title;
+        isModified = true;
+      }
+      if (isModified) updatedCount++;
     }
   }
 
