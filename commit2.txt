@@ -1,5 +1,0 @@
-fix: kritinis mobilios versijos "Horizontal Overflow" pataisymas
-
-- Pridėta `export const viewport` konfigūracija `layout.tsx` (width=device-width, initial-scale=1, maximum-scale=1, user-scalable=false), kad apsaugotų nuo nepageidaujamo viewport mastelio keitimo.
-- Globaliame CSS (`globals.css`) užrakintas maksimalus plotis pridėjus `max-w-full overflow-x-hidden` prie `html` ir `body` žymių.
-- Patikrinta Edge-to-Edge galerija, siekiant užtikrinti, kad joje neliko konfliktinių neigiamų paraščių ar w-screen klasių.

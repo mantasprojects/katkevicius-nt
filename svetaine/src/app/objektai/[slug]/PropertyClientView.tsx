@@ -164,6 +164,7 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
           alt={`Nuotrauka ${index + 1}`}
           width={1920}
           height={1080}
+          unoptimized={true}
           className="max-w-full max-h-[100vh] object-contain select-none object-center"
           placeholder="blur"
           blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1920, 1080))}`}

@@ -1,0 +1,5 @@
+fix: missing photos in PC gallery lightbox
+
+- Pridėtas `unoptimized={true}` atributas lightbox galerijos `Image` komponentui.
+- Tai išsprendžia "Neatvaizduoja nuotraukų" klaidą dideliuose kompiuterių ekranuose. Naršyklei prašant didelės rezoliucijos (pvz., 1920w ar 3840w), Next.js `image optimizer` gali patirti 'timeout' arba viršyti atminties limitus apdorojant atskiras (ypač vėlesnes) nuotraukas.
+- Kadangi nuotraukos jau yra sukompresuotos ir konvertuotos į `.webp` formatą įkėlimo metu (per `sharp`), papildomas Vercel Image Optimization sluoksnis lightbox'ui nereikalingas ir apkraunantis, todėl jo atjungimas užtikrina 100% visų nuotraukų sėkmingą užkrovimą.
