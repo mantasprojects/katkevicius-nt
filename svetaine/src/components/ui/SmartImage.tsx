@@ -69,7 +69,7 @@ export default function SmartImage({
            alt={alt}
            fill
            priority={priority}
-           className={`object-cover ${propertyStatus !== "Parduodama" ? "grayscale-[30%]" : ""} ${className}`} 
+           className={`object-contain md:object-cover ${propertyStatus !== "Parduodama" ? "grayscale-[30%]" : ""} ${className}`} 
            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
          />
       </div>
