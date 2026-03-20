@@ -467,24 +467,18 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
           {galleryImages.map((src: string, i: number) => (
             <div 
               key={i} 
-              className="relative aspect-[4/3] w-full cursor-pointer overflow-hidden bg-black flex items-center justify-center" 
+              className="w-full cursor-pointer leading-none" 
               onClick={() => { setPhotoIndex(i); setIsOpen(true); }}
             >
               <Image 
                 src={src} 
-                alt="" fill aria-hidden="true" priority={i < 3}
-                className="object-cover blur-2xl opacity-40 scale-125 saturate-150" 
-                sizes="10vw" 
-              />
-              <Image 
-                src={src} 
                 alt={`Nuotrauka ${i + 1}`} 
-                fill 
+                width={1200}
+                height={800}
+                unoptimized={true}
                 priority={i < 3} 
-                className={`object-contain z-10 ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
+                className={`w-full h-auto object-cover block ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
                 sizes="100vw"
-                placeholder="blur"
-                blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(600, 450))}`}
               />
             </div>
           ))}

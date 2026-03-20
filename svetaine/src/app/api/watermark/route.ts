@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     // Watermark sizing: ~15% of image width, with 4% padding from edges
     const watermarkWidth = Math.round(imgWidth * 0.15);
     const paddingX = Math.round(imgWidth * 0.04);
-    const paddingY = Math.round(imgHeight * 0.04);
+    const paddingY = Math.round(imgWidth * 0.04);
 
     // Resize the logo to desired watermark size, maintain aspect ratio
     const resizedLogo = await sharp(logoBuffer)
