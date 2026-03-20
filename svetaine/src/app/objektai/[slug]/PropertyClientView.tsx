@@ -520,8 +520,12 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
                   onClick={() => {
                     setIsMobileExpanded(false);
                     setTimeout(() => {
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }, 10);
+                      const el = document.getElementById("price-section");
+                      if (el) {
+                        const top = el.getBoundingClientRect().top + window.scrollY - 70; // 70px Navbar offset
+                        window.scrollTo({ top, behavior: "smooth" });
+                      }
+                    }, 100);
                   }} 
                   className="bg-[#111827] text-white"
                 >
@@ -536,7 +540,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
       
       <div className="container px-4 mx-auto max-w-7xl">
         {/* Actions Below Gallery */}
-        <div className="flex flex-col md:flex-row items-center justify-between border-b border-t border-slate-100 py-6 mb-16 gap-6">
+        <div id="price-section" className="flex flex-col md:flex-row items-center justify-between border-b border-t border-slate-100 py-6 mb-16 gap-6">
           <div className="flex items-center">
             <h2 className="text-3xl md:text-4xl font-extrabold text-[#111827] tracking-tight">
               Kaina: {property.price.toLocaleString("lt-LT")} €
