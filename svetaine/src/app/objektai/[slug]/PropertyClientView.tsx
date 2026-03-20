@@ -404,7 +404,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
           {galleryImages.length > 1 && (
             <div 
               className="col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
-              onClick={() => { setPhotoIndex(1); setIsOpen(true); }}
+              onClick={() => { setPhotoIndex(0); setIsOpen(true); }}
             >
               <Image 
                 src={galleryImages[1]} 
@@ -423,7 +423,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
           {galleryImages.length > 2 && (
             <div 
               className="col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
-              onClick={() => { setPhotoIndex(2); setIsOpen(true); }}
+              onClick={() => { setPhotoIndex(0); setIsOpen(true); }}
             >
               <Image 
                 src={galleryImages[2]} 
@@ -446,23 +446,57 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
           )}
         </div>
 
-        {/* MOBILE STACK */}
-        <div className="flex flex-col md:hidden w-full gap-[1px] bg-[#000000]">
-          {galleryImages.map((src: string, i: number) => (
-            <div 
-              key={i} 
-              className="w-full cursor-pointer leading-none" 
-              onClick={() => { setPhotoIndex(i); setIsOpen(true); }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img 
-                src={src} 
-                alt={`Nuotrauka ${i + 1}`}
-                loading={i < 3 ? "eager" : "lazy"} 
-                className={`w-full h-auto object-cover block ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
-              />
+        {/* MOBILE GRID PREVIEW */}
+        <div className="flex flex-col md:hidden w-full bg-white gap-1 mb-8">
+          {/* Main Image */}
+          <div 
+            className="w-full aspect-[4/3] relative cursor-pointer group"
+            onClick={() => { setPhotoIndex(0); setIsOpen(true); }}
+          >
+            <Image 
+              src={galleryImages[0]} 
+              alt="Pagrindinė nuotrauka" 
+              fill
+              priority
+              className={`object-cover ${property.status !== "Parduodama" ? "grayscale-[30%]" : ""}`} 
+              sizes="100vw"
+            />
+            {/* Camera/Zoom Icon on Main Image */}
+            <div className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-sm p-3 rounded-full text-white">
+              <Camera className="w-5 h-5" />
             </div>
-          ))}
+          </div>
+
+          {/* Thumbnails Row */}
+          {galleryImages.length > 1 && (
+            <div className="grid grid-cols-4 gap-1 px-4">
+              {galleryImages.slice(1, 5).map((src: string, i: number) => {
+                const isLast = i === 3 || (galleryImages.length <= 5 && i === galleryImages.length - 2);
+                const remainingForMobile = galleryImages.length - 5; // 1 Main + 4 Thumbs = 5 shown
+                
+                return (
+                  <div 
+                    key={i} 
+                    className="aspect-square relative cursor-pointer"
+                    onClick={() => { setPhotoIndex(0); setIsOpen(true); }}
+                  >
+                    <Image 
+                      src={src} 
+                      alt={`Nuotrauka ${i + 2}`} 
+                      fill
+                      className="object-cover"
+                      sizes="25vw"
+                    />
+                    {isLast && remainingForMobile > 0 && (
+                      <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center text-white font-extrabold text-lg">
+                        +{remainingForMobile}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
       </div>
