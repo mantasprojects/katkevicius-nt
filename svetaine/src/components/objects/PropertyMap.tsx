@@ -40,7 +40,7 @@ export default function PropertyMap({ latitude, longitude, isExact }: { latitude
       container: mapContainerRef.current,
       style: "mapbox://styles/mapbox/light-v11",
       center: [longitude, latitude],
-      zoom: 16,
+      zoom: isExact ? 16 : 14,
       scrollZoom: active,
       attributionControl: false,
     });
@@ -66,6 +66,7 @@ export default function PropertyMap({ latitude, longitude, isExact }: { latitude
           type: 'geojson',
           data: geojson as any
         });
+        
         map.addLayer({
           id: 'circle-layer',
           type: 'fill',
@@ -73,7 +74,17 @@ export default function PropertyMap({ latitude, longitude, isExact }: { latitude
           paint: {
             'fill-color': '#2563EB',
             'fill-opacity': 0.15,
-            'fill-outline-color': '#2563EB'
+          }
+        });
+
+        map.addLayer({
+          id: 'circle-outline-layer',
+          type: 'line',
+          source: 'circle-source',
+          paint: {
+            'line-color': '#2563EB',
+            'line-width': 2,
+            'line-dasharray': [2, 2]
           }
         });
       }
