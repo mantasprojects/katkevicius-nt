@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { Home, Edit, Trash2, Search, MapPin, Eye, EyeOff, Plus, Check, X, ImageIcon, Star, ChevronLeft, ChevronRight, Share, Copy, FileText, RefreshCw, XCircle, Upload } from "lucide-react";
+import { Home, Edit, Trash2, Search, MapPin, Eye, EyeOff, Plus, Check, X, ImageIcon, Star, ChevronLeft, ChevronRight, Share, Copy, FileText, RefreshCw, XCircle, Upload, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -434,10 +434,7 @@ export default function AdminObjectsPage() {
                     Redaguoti
                   </button>
 
-                  <button className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-lg hover:bg-slate-100 transition-colors shadow-sm">
-                    <RefreshCw className="w-3.5 h-3.5 text-slate-400" />
-                    Atnaujinti
-                  </button>
+                  
                   
                   <button onClick={() => handleToggleVisibility(String(p.id), p.is_public !== false)} className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-lg hover:bg-slate-100 transition-colors shadow-sm">
                     {p.is_public !== false ? (
@@ -651,43 +648,61 @@ export default function AdminObjectsPage() {
                 {editGallery.length > 0 ? (
                   <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
                     {editGallery.map((url, i) => (
-                      <div key={`${url}-${i}`} className="relative group rounded-xl overflow-hidden border-2 border-slate-200 aspect-square bg-slate-100 hover:border-[#2563EB] transition-colors">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={url} alt={`Nuotrauka ${i + 1}`} className="w-full h-full object-cover" />
+                       <div key={`${url}-${i}`} className="flex flex-col rounded-xl overflow-hidden border border-slate-200 bg-white hover:border-[#2563EB] hover:shadow-md transition-all">
+                         <div className="aspect-square relative bg-slate-50 overflow-hidden">
+                           {/* eslint-disable-next-line @next/next/no-img-element */}
+                           <img src={url} alt={`Nuotrauka ${i + 1}`} className="w-full h-full object-cover" />
 
-                        {/* Cover badge */}
-                        {i === 0 && (
-                          <div className="absolute top-1.5 left-1.5 bg-[#2563EB] text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1">
-                            <Star className="w-3 h-3 fill-current" /> Pagrindinė
-                          </div>
-                        )}
+                           {/* Cover badge */}
+                           {i === 0 && (
+                             <div className="absolute top-2 left-2 bg-[#2563EB] text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1 shadow-sm">
+                               Pagrindinė
+                             </div>
+                           )}
+                         </div>
 
-                        {/* Overlay controls - Always visible on touch devices, hover on desktop */}
-                        <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex flex-wrap items-end justify-center gap-1.5 h-auto md:h-1/2 min-h-[50px]">
-                          <button type="button" onClick={(e) => { e.preventDefault(); setPreviewImage(url); }} className="w-8 h-8 rounded-lg bg-[#2563EB]/90 text-white flex items-center justify-center hover:bg-[#2563EB] transition-colors shadow-md" title="Padidinti">
-                            <Eye className="w-4 h-4" />
-                          </button>
-                          {i > 0 && (
-                            <button type="button" onClick={() => moveImage(i, -1)} className="w-8 h-8 rounded-lg bg-white/90 text-slate-700 flex items-center justify-center hover:bg-white transition-colors shadow-md" title="Perkelti kairėn">
-                              <ChevronLeft className="w-4 h-4" />
-                            </button>
-                          )}
-                          {i > 0 && (
-                            <button type="button" onClick={() => setCoverImage(i)} className="w-8 h-8 rounded-lg bg-yellow-400/90 text-slate-800 flex items-center justify-center hover:bg-yellow-400 transition-colors shadow-md" title="Nustatyti kaip pagrindinę">
-                              <Star className="w-4 h-4" />
-                            </button>
-                          )}
-                          {i < editGallery.length - 1 && (
-                            <button type="button" onClick={() => moveImage(i, 1)} className="w-8 h-8 rounded-lg bg-white/90 text-slate-700 flex items-center justify-center hover:bg-white transition-colors shadow-md" title="Perkelti dešinėn">
-                              <ChevronRight className="w-4 h-4" />
-                            </button>
-                          )}
-                          <button type="button" onClick={() => removeImage(i)} className="w-8 h-8 rounded-lg bg-red-500/90 text-white flex items-center justify-center hover:bg-red-500 transition-colors shadow-md" title="Pašalinti">
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                         {/* Bottom Control Bar */}
+                         <div className="grid grid-cols-4 border-t border-slate-200 divide-x divide-slate-200 bg-white">
+                           <button 
+                             type="button" 
+                             onClick={() => moveImage(i, -1)} 
+                             disabled={i === 0}
+                             className={`flex items-center justify-center h-9 hover:bg-slate-50 transition-colors ${i === 0 ? 'opacity-30 cursor-not-allowed text-slate-300' : 'text-slate-500 hover:text-[#2563EB]'}`} 
+                             title="Perkelti kairėn"
+                           >
+                             <ArrowLeft className="w-4 h-4" />
+                           </button>
+                           
+                           <button 
+                             type="button" 
+                             onClick={() => moveImage(i, 1)} 
+                             disabled={i === editGallery.length - 1}
+                             className={`flex items-center justify-center h-9 hover:bg-slate-50 transition-colors ${i === editGallery.length - 1 ? 'opacity-30 cursor-not-allowed text-slate-300' : 'text-slate-500 hover:text-[#2563EB]'}`} 
+                             title="Perkelti dešinėn"
+                           >
+                             <ArrowRight className="w-4 h-4" />
+                           </button>
+
+                           <button 
+                             type="button" 
+                             onClick={(e) => { e.preventDefault(); setPreviewImage(url); }} 
+                             className="flex items-center justify-center h-9 hover:bg-slate-50 text-slate-500 hover:text-[#2563EB] transition-colors" 
+                             title="Padidinti"
+                           >
+                             <Eye className="w-4 h-4" />
+                           </button>
+
+                           <button 
+                             type="button" 
+                             onClick={() => removeImage(i)} 
+                             className="flex items-center justify-center h-9 hover:bg-red-50 text-red-500 transition-colors" 
+                             title="Pašalinti"
+                           >
+                             <X className="w-4 h-4" />
+                           </button>
+                         </div>
+                       </div>
+                     ))}
 
                     {/* Add more button tile */}
                     <button
