@@ -17,7 +17,7 @@ import Image from "next/image";
 import SmartImage from "@/components/ui/SmartImage";
 import { useState, useEffect, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue } from "framer-motion";
 
 const PropertyMap = dynamic(() => import("@/components/objects/PropertyMap"), { ssr: false });
 
@@ -82,18 +82,20 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
   const [showControls, setShowControls] = useState(true);
   const [hasInteracted, setHasInteracted] = useState(false);
 
-  // Custom Zoom & Pan State
-  const [scale, setScale] = useState(1);
-  const [pan, setPan] = useState({ x: 0, y: 0 });
+  // Custom Zoom & Pan State (Framer Motion for 60fps)
+  const scale = useMotionValue(1);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
   const initialDistance = useRef<number | null>(null);
   const initialPan = useRef({ x: 0, y: 0 });
   const isPanning = useRef(false);
 
   // Reset zoom on image change
   useEffect(() => {
-    setScale(1);
-    setPan({ x: 0, y: 0 });
-  }, [index]);
+    scale.set(1);
+    x.set(0);
+    y.set(0);
+  }, [index, scale, x, y]);
 
   const goPrev = useCallback(() => { setDirection(-1); setIndex(i => (i + images.length - 1) % images.length); }, [images.length]);
   const goNext = useCallback(() => { setDirection(1); setIndex(i => (i + 1) % images.length); }, [images.length]);
@@ -125,9 +127,9 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
       touchStartY.current = e.touches[0].clientY; 
       touchEndY.current = e.touches[0].clientY;
 
-      if (scale > 1) {
+      if (scale.get() > 1) {
         isPanning.current = true;
-        initialPan.current = { x: pan.x - e.touches[0].clientX, y: pan.y - e.touches[0].clientY };
+        initialPan.current = { x: x.get() - e.touches[0].clientX, y: y.get() - e.touches[0].clientY };
       }
     }
   };
@@ -138,17 +140,15 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
       const dy = e.touches[0].clientY - e.touches[1].clientY;
       const distance = Math.hypot(dx, dy);
       const pinchScale = distance / initialDistance.current;
-      setScale((prev) => Math.min(Math.max(1, prev * pinchScale), 4));
+      scale.set(Math.min(Math.max(1, scale.get() * pinchScale), 4));
       initialDistance.current = distance;
     } else if (e.touches.length === 1) {
       touchEndX.current = e.touches[0].clientX; 
       touchEndY.current = e.touches[0].clientY;
-      if (scale > 1 && isPanning.current) {
+      if (scale.get() > 1 && isPanning.current) {
         // Pan when zoomed
-        setPan({
-          x: e.touches[0].clientX + initialPan.current.x,
-          y: e.touches[0].clientY + initialPan.current.y
-        });
+        x.set(e.touches[0].clientX + initialPan.current.x);
+        y.set(e.touches[0].clientY + initialPan.current.y);
       }
     }
   };
@@ -157,7 +157,7 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
     isPanning.current = false;
 
     // Prevent swiping to next image if user is zoomed in
-    if (scale > 1) return;
+    if (scale.get() > 1) return;
 
     const diffX = touchStartX.current - touchEndX.current;
     const diffY = touchStartY.current - touchEndY.current;
@@ -233,8 +233,9 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
       </button>
 
       {/* Image instantly switching without animation */}
-      <div 
+      <motion.div 
         className="max-w-[100vw] max-h-[100vh] flex items-center justify-center z-10 w-full h-full" 
+        style={{ scale, x, y, transition: 'none' }}
         onClick={e => {
           e.stopPropagation();
           setShowControls(!showControls);
@@ -247,12 +248,11 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
           width={1920}
           height={1080}
           unoptimized={true}
-          style={{ transform: `scale(${scale}) translate(${pan.x / scale}px, ${pan.y / scale}px)`, transition: scale === 1 ? 'transform 0.2s ease-out' : 'none' }}
           className="max-w-full max-h-[100vh] object-contain select-none object-center relative z-10 origin-center"
           placeholder="blur"
           blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1920, 1080))}`}
         />
-      </div>
+      </motion.div>
 
       {/* Next */}
       <button
