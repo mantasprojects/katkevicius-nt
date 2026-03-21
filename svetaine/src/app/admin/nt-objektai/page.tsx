@@ -729,6 +729,7 @@ export default function AdminObjectsPage() {
           )}
         </DialogContent>
       </Dialog>
+    </div>
 
     {/* Fullscreen Premium Image Preview Overlay */}
     {previewImage && (
