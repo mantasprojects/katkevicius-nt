@@ -510,7 +510,7 @@ export default function AdminObjectsPage() {
           </div>
 
           {editingProperty && (
-            <form onSubmit={handleEditSave} className="p-6 space-y-5 flex-1 overflow-y-auto">
+            <form onSubmit={handleEditSave} className="flex-1 overflow-y-auto p-6 pb-32 space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                   <Label htmlFor="edit-title" className="text-xs font-bold uppercase tracking-wider text-slate-500">Pavadinimas *</Label>
@@ -665,29 +665,29 @@ export default function AdminObjectsPage() {
                           </div>
                         )}
 
-                        {/* Overlay controls */}
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
-                          <button type="button" onClick={(e) => { e.preventDefault(); setPreviewImage(url); }} className="w-7 h-7 rounded-lg bg-[#2563EB]/90 text-white flex items-center justify-center hover:bg-[#2563EB] transition-colors" title="Padidinti">
-                            <Eye className="w-3.5 h-3.5" />
+                        {/* Overlay controls - Always visible on touch devices, hover on desktop */}
+                        <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex flex-wrap items-end justify-center gap-1.5 h-auto md:h-1/2 min-h-[50px]">
+                          <button type="button" onClick={(e) => { e.preventDefault(); setPreviewImage(url); }} className="w-8 h-8 rounded-lg bg-[#2563EB]/90 text-white flex items-center justify-center hover:bg-[#2563EB] transition-colors shadow-md" title="Padidinti">
+                            <Eye className="w-4 h-4" />
                           </button>
                           {i > 0 && (
-                            <button type="button" onClick={() => moveImage(i, -1)} className="w-7 h-7 rounded-lg bg-white/90 text-slate-700 flex items-center justify-center hover:bg-white transition-colors" title="Perkelti kairėn">
+                            <button type="button" onClick={() => moveImage(i, -1)} className="w-8 h-8 rounded-lg bg-white/90 text-slate-700 flex items-center justify-center hover:bg-white transition-colors shadow-md" title="Perkelti kairėn">
                               <ChevronLeft className="w-4 h-4" />
                             </button>
                           )}
                           {i > 0 && (
-                            <button type="button" onClick={() => setCoverImage(i)} className="w-7 h-7 rounded-lg bg-yellow-400/90 text-slate-800 flex items-center justify-center hover:bg-yellow-400 transition-colors" title="Nustatyti kaip pagrindinę">
-                              <Star className="w-3.5 h-3.5" />
+                            <button type="button" onClick={() => setCoverImage(i)} className="w-8 h-8 rounded-lg bg-yellow-400/90 text-slate-800 flex items-center justify-center hover:bg-yellow-400 transition-colors shadow-md" title="Nustatyti kaip pagrindinę">
+                              <Star className="w-4 h-4" />
                             </button>
                           )}
-                          <button type="button" onClick={() => removeImage(i)} className="w-7 h-7 rounded-lg bg-red-500/90 text-white flex items-center justify-center hover:bg-red-500 transition-colors" title="Ištrinti">
-                            <X className="w-4 h-4" />
-                          </button>
                           {i < editGallery.length - 1 && (
-                            <button type="button" onClick={() => moveImage(i, 1)} className="w-7 h-7 rounded-lg bg-white/90 text-slate-700 flex items-center justify-center hover:bg-white transition-colors" title="Perkelti dešinėn">
+                            <button type="button" onClick={() => moveImage(i, 1)} className="w-8 h-8 rounded-lg bg-white/90 text-slate-700 flex items-center justify-center hover:bg-white transition-colors shadow-md" title="Perkelti dešinėn">
                               <ChevronRight className="w-4 h-4" />
                             </button>
                           )}
+                          <button type="button" onClick={() => removeImage(i)} className="w-8 h-8 rounded-lg bg-red-500/90 text-white flex items-center justify-center hover:bg-red-500 transition-colors shadow-md" title="Pašalinti">
+                            <X className="w-4 h-4" />
+                          </button>
                         </div>
                       </div>
                     ))}
@@ -730,23 +730,23 @@ export default function AdminObjectsPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Fullscreen Image Preview Dialog */}
-      <Dialog open={!!previewImage} onOpenChange={(open) => !open && setPreviewImage(null)}>
-        <DialogContent className="max-w-7xl w-full h-[90vh] bg-transparent border-none shadow-none flex items-center justify-center p-0">
-          <button 
-            type="button" 
-            onClick={() => setPreviewImage(null)} 
-            className="absolute top-4 right-4 z-50 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md text-white flex items-center justify-center hover:bg-white/20 transition-all"
-          >
-            <X className="w-6 h-6" />
-          </button>
-          {previewImage && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={previewImage} alt="Preview" className="max-w-full max-h-full object-contain select-none" />
-          )}
-        </DialogContent>
-      </Dialog>
-    </div>
+    {/* Fullscreen Premium Image Preview Overlay */}
+    {previewImage && (
+      <div 
+        className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-xl flex items-center justify-center opacity-100 transition-opacity"
+        onClick={() => setPreviewImage(null)}
+      >
+        <button 
+          type="button" 
+          onClick={() => setPreviewImage(null)} 
+          className="absolute top-6 right-6 z-50 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-all backdrop-blur-md border border-white/20"
+        >
+          <X className="w-6 h-6" />
+        </button>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={previewImage} alt="Preview" className="max-w-[95vw] max-h-[95vh] object-contain select-none shadow-2xl rounded-sm" />
+      </div>
+    )}
     </>
   );
 }
