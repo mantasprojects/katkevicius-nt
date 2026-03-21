@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, use } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, Save, Printer, Plus, Trash2, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,10 +10,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/utils/supabase/client";
 
 interface PropertyParams {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default function CreateProposalPage({ params }: PropertyParams) {
+  const unwrappedParams = use(params);
+  const id = unwrappedParams.id;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [property, setProperty] = useState<any>(null);
@@ -33,7 +35,7 @@ export default function CreateProposalPage({ params }: PropertyParams) {
       const { data: rawData, error } = await supabase
         .from("nt_objektai")
         .select("*")
-        .eq("id", params.id)
+        .eq("id", id)
         .single();
 
       if (rawData) {
@@ -102,7 +104,7 @@ export default function CreateProposalPage({ params }: PropertyParams) {
       setLoading(false);
     }
     fetchProperty();
-  }, [params.id]);
+  }, [id]);
 
   const handlePrint = () => {
     window.print();
@@ -122,7 +124,7 @@ export default function CreateProposalPage({ params }: PropertyParams) {
 
     const { data, error } = await supabase.from('proposals').insert([
       {
-        property_id: params.id,
+        property_id: id,
         title: `Pasiūlymas: ${title}`,
         status: 'draft',
         content_data: proposalData
