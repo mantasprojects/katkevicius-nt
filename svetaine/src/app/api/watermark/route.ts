@@ -29,10 +29,11 @@ export async function POST(req: Request) {
     const imgWidth = imageMeta.width || 1920;
     const imgHeight = imageMeta.height || 1080;
 
-    // Watermark sizing: ~20% of width for horizontal, ~35% for vertical
+    // Watermark sizing: reduced to ~80% of previous size (~16% horizontal, ~28% vertical)
     const isHorizontal = imgWidth >= imgHeight;
-    const watermarkWidth = isHorizontal ? Math.round(imgWidth * 0.20) : Math.round(imgWidth * 0.35);
-    const paddingX = Math.round(Math.min(imgWidth, imgHeight) * 0.05);
+    const watermarkWidth = isHorizontal ? Math.round(imgWidth * 0.16) : Math.round(imgWidth * 0.28);
+    // Padding from edges: slightly closer to edges (3% instead of 5%)
+    const paddingX = Math.round(Math.min(imgWidth, imgHeight) * 0.03);
     const paddingY = paddingX;
 
     // Resize the logo to desired watermark size, maintain aspect ratio
