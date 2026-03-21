@@ -39,7 +39,7 @@ export default function PropertyMap({ latitude, longitude, isExact }: { latitude
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: "mapbox://styles/mapbox/light-v11",
-      center: [longitude, latitude],
+      center: [Number(longitude), Number(latitude)],
       zoom: isExact ? 16 : 14,
       scrollZoom: active,
       attributionControl: false,
@@ -58,10 +58,10 @@ export default function PropertyMap({ latitude, longitude, isExact }: { latitude
           </div>
         `;
         new mapboxgl.Marker(el)
-          .setLngLat([longitude, latitude])
+          .setLngLat([Number(longitude), Number(latitude)])
           .addTo(map);
       } else {
-        const geojson = createGeoJSONCircle([longitude, latitude], 0.5);
+        const geojson = createGeoJSONCircle([Number(longitude), Number(latitude)], 0.5);
         map.addSource('circle-source', {
           type: 'geojson',
           data: geojson as any

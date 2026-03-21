@@ -44,6 +44,8 @@ interface Property {
   privalumai?: string[];
   details?: any;
   is_public?: boolean;
+  total_views?: number;
+  today_views?: number;
 }
 
 const STATUSES = ["Parduodama", "Rezervuota", "Parduota"];
@@ -106,29 +108,36 @@ export default function AdminObjectsPage() {
     const loadProperties = async () => {
       try {
         const { data, error } = await supabase.from('nt_objektai').select('*');
+        const { data: statsData } = await supabase.from('v_nt_objektai_stats').select('*');
+        
         if (data) {
-          const mapped = data.map(p => ({
-            id: p.id,
-            title: p.pavadinimas,
-            city: p.miestas,
-            price: p.kaina,
-            status: p.statusas,
-            description: p.aprasymas,
-            gallery: p.nuotraukos_urls ? (typeof p.nuotraukos_urls === 'string' ? JSON.parse(p.nuotraukos_urls) : p.nuotraukos_urls) : [],
-            latitude: p.latitude,
-            longitude: p.longitude,
-            address: p.address,
-            is_exact_location: p.is_exact_location,
-            area: p.plotas || 0,
-            rooms: p.rooms || 0,
-            floor: p.floor || "",
-            year: p.year || 0,
-            arai: p.arai || 0,
-            heating: p.heating || "",
-            type: p.type || "Butas",
-            privalumai: p.privalumai || [],
-            is_public: p.is_public !== false,
-          }));
+          const mapped = data.map(p => {
+            const stats = statsData?.find((s: any) => s.object_id === p.id);
+            return {
+              id: p.id,
+              title: p.pavadinimas,
+              city: p.miestas,
+              price: p.kaina,
+              status: p.statusas,
+              description: p.aprasymas,
+              gallery: p.nuotraukos_urls ? (typeof p.nuotraukos_urls === 'string' ? JSON.parse(p.nuotraukos_urls) : p.nuotraukos_urls) : [],
+              latitude: p.latitude,
+              longitude: p.longitude,
+              address: p.address,
+              is_exact_location: p.is_exact_location,
+              area: p.plotas || 0,
+              rooms: p.rooms || 0,
+              floor: p.floor || "",
+              year: p.year || 0,
+              arai: p.arai || 0,
+              heating: p.heating || "",
+              type: p.type || "Butas",
+              privalumai: p.privalumai || [],
+              is_public: p.is_public !== false,
+              total_views: stats?.total_views || 0,
+              today_views: stats?.today_views || 0,
+            };
+          });
           setProperties(mapped as any);
         }
       } catch (err) {
@@ -425,6 +434,15 @@ export default function AdminObjectsPage() {
                     )}
                   </div>
                   <p className="text-slate-400 text-xs max-w-lg truncate mt-1">Sistemos pavadinimas: {p.title}</p>
+
+                  <div className="flex items-center gap-2 mt-2.5 text-xs text-slate-500">
+                    <div className="bg-slate-100/80 px-2 py-1 rounded-md font-bold flex items-center gap-1 border border-slate-200">
+                      <Eye className="w-3.5 h-3.5 text-slate-500" /> Viso: {p.total_views || 0}
+                    </div>
+                    <div className="bg-blue-50/80 text-[#2563EB] px-2 py-1 rounded-md font-bold flex items-center gap-1 border border-blue-100">
+                      <Eye className="w-3.5 h-3.5" /> Šiandien: {p.today_views || 0}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Bottom Actions Row (Aruodas style) */}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, Save, Printer, Plus, Trash2, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,10 +10,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { createClient } from "@/utils/supabase/client";
 
 interface ProposalParams {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default function EditProposalPage({ params }: ProposalParams) {
+  const unwrappedParams = use(params);
+  const id = unwrappedParams.id;
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -32,7 +34,7 @@ export default function EditProposalPage({ params }: ProposalParams) {
       const { data, error } = await supabase
         .from("proposals")
         .select("*")
-        .eq("id", params.id)
+        .eq("id", id)
         .single();
 
       if (data && data.content_data) {
@@ -47,7 +49,7 @@ export default function EditProposalPage({ params }: ProposalParams) {
       setLoading(false);
     }
     fetchProposal();
-  }, [params.id]);
+  }, [id]);
 
   const handlePrint = () => {
     window.print();
@@ -69,7 +71,7 @@ export default function EditProposalPage({ params }: ProposalParams) {
       title: `Pasiūlymas: ${title}`,
       content_data: proposalData,
       updated_at: new Date().toISOString()
-    }).eq('id', params.id);
+    }).eq('id', id);
 
     setIsSaving(false);
     if (error) {

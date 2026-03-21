@@ -332,6 +332,25 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
     });
   }, [property]);
 
+  // Registruoti peržiūrą apsilankius puslapyje
+  useEffect(() => {
+    if (!property?.id) return;
+
+    const logView = async () => {
+      try {
+        await fetch("/api/log-view", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ objectId: property.id }),
+        });
+      } catch (err) {
+        console.error("Failed to log view", err);
+      }
+    };
+
+    logView();
+  }, [property?.id]);
+
   const closeLightbox = useCallback(() => setIsOpen(false), []);
 
   const handleInquirySubmit = async (e: React.FormEvent<HTMLFormElement>) => {
