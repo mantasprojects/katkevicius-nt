@@ -83,6 +83,21 @@ export default function EditProposalPage({ params }: ProposalParams) {
 
   if (loading) return <div className="p-10 text-center font-bold">Kraunama...</div>;
 
+    // Config dynamic pages
+  const pages: any[] = [
+    { type: 'cover', content: selectedPhotos[0] },
+  ];
+  if (description) {
+    pages.push({ type: 'text', content: description });
+  }
+  if (selectedPhotos && selectedPhotos.length > 1) {
+    const list = selectedPhotos.slice(1);
+    const chunkSize = 4;
+    for (let i = 0; i < list.length; i += chunkSize) {
+      pages.push({ type: 'gallery', content: list.slice(i, i + chunkSize) });
+    }
+  }
+
   return (
     <div className="flex h-screen overflow-hidden bg-slate-100 flex-col md:flex-row w-full font-sans print:bg-white print:h-auto print:block">
       
@@ -153,116 +168,72 @@ export default function EditProposalPage({ params }: ProposalParams) {
           }
         `}</style>
         
-        {/* A4 PAGE 1: COVER */}
-        <div className="w-[794px] shrink-0 print:w-full h-[1123px] bg-white shadow-xl mb-8 relative flex flex-col print:shadow-none print:mb-0 print:break-after-page mx-auto">
-          <div className="h-2 w-full bg-[#111827] absolute top-0 left-0" />
-          
-          <div className="flex-1 pt-12">
-             <div className="w-full h-[500px] bg-slate-100 mb-8 relative overflow-hidden">
-               {selectedPhotos[0] ? (
-                 // eslint-disable-next-line @next/next/no-img-element
-                 <img src={selectedPhotos[0]} className="w-full h-full object-cover" alt="Cover" />
-               ) : (
-                 <div className="flex items-center justify-center h-full text-slate-300"><ImageIcon className="w-20 h-20" /></div>
-               )}
+        {pages.map((page, index) => (
+          <div key={index} className="w-[794px] shrink-0 h-[1123px] bg-white shadow-xl mb-8 relative flex flex-col print:shadow-none print:mb-0 print:break-after-page mx-auto print:w-full">
+             <div className="h-2 w-full bg-[#2563EB] absolute top-0 left-0" />
+             
+             <div className="px-12 pt-12">
+                <h1 className="text-xl font-extrabold text-[#111827] mb-1">{title || "Pavadinimas"}</h1>
+                <p className="text-sm text-slate-600">{subtitle || "Poraštė"}</p>
+                <p className="text-base font-extrabold text-[#2563EB] mt-1">{price || "0 €"} <span className="text-xs text-slate-500 font-normal">{pricePerSqM}</span></p>
              </div>
 
-             <div className="px-12">
-               <h1 className="text-3xl font-extrabold text-[#111827] mb-2">{title || "Pavadinimas"}</h1>
-               <p className="text-lg text-slate-600 mb-6">{subtitle || "Poraštė"}</p>
-               <div className="flex items-baseline gap-2">
-                 <p className="text-2xl font-extrabold text-[#2563EB]">{price || "0 €"}</p>
-                 <p className="text-slate-500">{pricePerSqM}</p>
-               </div>
+             <div className="flex-1 px-12 pt-8">
+                {page.type === 'cover' && (
+                   <div className="w-full h-[650px] relative overflow-hidden bg-slate-50 border border-slate-100 flex items-center justify-center">
+                       {page.content ? (
+                          <img src={page.content} className="w-full h-full object-cover" alt="Cover" />
+                       ) : (
+                          <div className="flex items-center justify-center h-full text-slate-300"><ImageIcon className="w-20 h-20" /></div>
+                       )}
+                   </div>
+                )}
+                {page.type === 'text' && (
+                   <div className="prose prose-slate max-w-none text-sm text-[#111827] whitespace-pre-wrap leading-relaxed">
+                       {page.content}
+                   </div>
+                )}
+                {page.type === 'gallery' && (
+                   <div className="grid grid-cols-2 gap-4 h-[780px]">
+                       {page.content.map((photo: any, i: any) => (
+                          <div key={i} className="bg-slate-50 overflow-hidden border border-slate-100 h-[380px]">
+                             <img src={photo} className="w-full h-full object-cover" alt="Galerija" />
+                          </div>
+                      ))}
+                   </div>
+                )}
+             </div>
+
+             <div className="w-full bg-[#f8f9fa] h-44 mt-auto flex flex-col justify-end">
+                <div className="flex items-center justify-between px-12 py-6">
+                   <div className="flex items-center gap-6">
+                      <div className="w-20 h-20 bg-slate-300 rounded overflow-hidden shadow-sm shrink-0">
+                         <img src="/uploads/1773775458388-profilio.png" alt="Mantas" className="w-full h-full object-cover" />
+                      </div>
+                      <div>
+                         <h3 className="text-lg font-bold text-[#111827]">Mantas Katkevičius</h3>
+                         <p className="text-xs text-slate-500 mb-1">Jūsų NT partneris</p>
+                         <p className="text-xs font-bold text-slate-700">+370 645 41892</p>
+                         <p className="text-xs font-bold text-slate-700">info@katkevicius.lt</p>
+                      </div>
+                   </div>
+                   <div className="text-right">
+                      <h2 className="text-xl font-extrabold tracking-tighter text-[#111827]">KATKEVIČIUS</h2>
+                      <p className="text-[8px] font-bold tracking-widest uppercase text-slate-500 text-right">Real Estate</p>
+                   </div>
+                </div>
+                <div className="w-full bg-[#111827] h-8 flex items-center justify-center text-white text-[9px] uppercase tracking-widest gap-2">
+                   <span>katkevicius.lt</span>
+                   <span className="opacity-40">|</span>
+                   <span>Nr. 1</span>
+                   <span className="opacity-40">|</span>
+                   <span>Nekilnojamasis turtas</span>
+                </div>
              </div>
           </div>
+        ))}
 
-          <div className="w-full bg-[#f8f9fa] h-40 mt-auto flex flex-col justify-end">
-            <div className="flex items-center justify-between px-12 py-6">
-              <div className="flex items-center gap-6">
-                 <div className="w-24 h-24 bg-slate-300 rounded overflow-hidden shadow-sm shrink-0">
-                    <img src="/logo.png" alt="Mantas" className="w-full h-full object-cover" onError={(e) => e.currentTarget.style.display='none'} />
-                 </div>
-                 <div>
-                   <h3 className="text-2xl font-bold text-[#111827]">Mantas Katkevičius</h3>
-                   <p className="text-slate-500 mb-2">Nekilnojamojo turto brokeris</p>
-                   <p className="text-sm font-bold text-slate-700">+37064541892</p>
-                   <p className="text-sm font-bold text-slate-700">info@katkevicius.lt</p>
-                   <p className="text-sm font-bold text-[#2563EB] mt-1">katkevicius.lt</p>
-                 </div>
-              </div>
-              <div className="text-right">
-                <h2 className="text-2xl font-extrabold tracking-tighter text-[#111827]">KATKEVIČIUS</h2>
-                <p className="text-[10px] font-bold tracking-widest uppercase text-slate-500 text-right">Real Estate</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* A4 PAGE 2: TEXT DETAILS */}
-        <div className="w-[794px] shrink-0 print:w-full h-[1123px] bg-white shadow-xl mb-8 relative flex flex-col print:shadow-none print:mb-0 print:break-after-page mx-auto">
-          <div className="h-2 w-full bg-[#111827] absolute top-0 left-0" />
-          
-          <div className="px-12 pt-16 flex-1">
-             <h1 className="text-2xl font-extrabold text-[#111827] mb-1">{title}</h1>
-             <p className="text-slate-600 mb-4">{subtitle}</p>
-             <p className="text-xl font-extrabold text-[#2563EB] mb-12">{price} <span className="text-sm text-slate-500 font-normal">{pricePerSqM}</span></p>
-
-             {description && (
-               <div className="mb-8">
-                 <p className="text-base text-[#111827] whitespace-pre-wrap leading-relaxed">{description}</p>
-               </div>
-             )}
-          </div>
-
-          <div className="w-full bg-[#f8f9fa] h-40 mt-auto flex flex-col justify-end">
-            <div className="flex items-center justify-between px-12 py-6">
-              <div className="flex items-center gap-6">
-                 <div className="w-20 h-20 bg-slate-300 rounded overflow-hidden shadow-sm shrink-0">
-                    <img src="/logo.png" alt="Mantas" className="w-full h-full object-cover" onError={(e) => e.currentTarget.style.display='none'} />
-                 </div>
-                 <div>
-                   <h3 className="text-lg font-bold text-[#111827]">Mantas Katkevičius</h3>
-                   <p className="text-xs text-slate-500 mb-1">Nekilnojamojo turto brokeris</p>
-                   <p className="text-xs font-bold text-slate-700">+37064541892</p>
-                   <p className="text-xs font-bold text-slate-700">info@katkevicius.lt</p>
-                 </div>
-              </div>
-              <div className="text-right">
-                <h2 className="text-lg font-extrabold tracking-tighter text-[#111827]">KATKEVIČIUS</h2>
-                <p className="text-[8px] font-bold tracking-widest uppercase text-slate-500 text-right">Real Estate</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* A4 PAGE 3: GALLERY GRID */}
-        {selectedPhotos.length > 1 && (
-          <div className="w-[794px] shrink-0 print:w-full h-[1123px] bg-white shadow-xl mb-8 relative flex flex-col print:shadow-none print:mb-0 print:break-after-page mx-auto">
-            <div className="h-2 w-full bg-[#111827] absolute top-0 left-0" />
-            <div className="px-12 pt-16 flex-1">
-              <div className="grid grid-cols-2 gap-4 h-[850px]">
-                {selectedPhotos.slice(1, 7).map((photo, i) => (
-                  <div key={i} className="bg-slate-100 overflow-hidden shadow-sm">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={photo} className="w-full h-full object-cover" alt={`Nuotrauka ${i+1}`} />
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="w-full bg-[#f8f9fa] h-40 mt-auto flex flex-col justify-end">
-              <div className="flex items-center justify-between px-12 py-6">
-                <div className="flex flex-col text-left">
-                  <h3 className="text-sm font-bold text-[#111827]">Mantas Katkevičius</h3>
-                  <p className="text-xs text-[#2563EB] font-bold">katkevicius.lt</p>
-                </div>
-                <div className="text-right">
-                  <h2 className="text-lg font-extrabold tracking-tighter text-[#111827]">KATKEVIČIUS</h2>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
       </div>
 
