@@ -138,7 +138,7 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
-      className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center overflow-hidden"
+      className="fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden"
       onClick={onClose}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -421,7 +421,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
           {galleryImages.length > 1 && (
             <div 
               className="col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
-              onClick={() => { setPhotoIndex(0); setIsOpen(true); }}
+              onClick={() => { setPhotoIndex(1); setIsOpen(true); }}
             >
               <Image 
                 src={galleryImages[1]} 
@@ -440,7 +440,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
           {galleryImages.length > 2 && (
             <div 
               className="col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
-              onClick={() => { setPhotoIndex(0); setIsOpen(true); }}
+              onClick={() => { setPhotoIndex(2); setIsOpen(true); }}
             >
               <Image 
                 src={galleryImages[2]} 
@@ -519,14 +519,19 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
           ) : (
             <div className="flex flex-col gap-[1px] bg-[#000000] animate-fadeIn">
               {galleryImages.map((src: string, i: number) => (
-                <SmartImage 
+                <div 
                   key={i} 
-                  src={src} 
-                  alt={`Nuotrauka ${i + 1}`} 
-                  priority={i < 3} 
-                  propertyStatus={property.status} 
-                  breakout={false} 
-                />
+                  className="cursor-pointer w-full" 
+                  onClick={() => { setPhotoIndex(i); setIsOpen(true); }}
+                >
+                  <SmartImage 
+                    src={src} 
+                    alt={`Nuotrauka ${i + 1}`} 
+                    priority={i < 3} 
+                    propertyStatus={property.status} 
+                    breakout={false} 
+                  />
+                </div>
               ))}
               {/* Optional Collapse Button for good UX */}
               <div className="p-4 bg-white flex justify-center">
