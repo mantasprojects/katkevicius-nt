@@ -92,6 +92,7 @@ export default function AdminObjectsPage() {
   const [editLocationData, setEditLocationData] = useState({ latitude: 54.8985207, longitude: 23.9035965, is_exact_location: true, address: "" });
   const [searchTerm, setSearchTerm] = useState("");
   const [editIsPublic, setEditIsPublic] = useState(true);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const filteredProperties = useMemo(() => {
@@ -666,6 +667,9 @@ export default function AdminObjectsPage() {
 
                         {/* Overlay controls */}
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                          <button type="button" onClick={(e) => { e.preventDefault(); setPreviewImage(url); }} className="w-7 h-7 rounded-lg bg-[#2563EB]/90 text-white flex items-center justify-center hover:bg-[#2563EB] transition-colors" title="Padidinti">
+                            <Eye className="w-3.5 h-3.5" />
+                          </button>
                           {i > 0 && (
                             <button type="button" onClick={() => moveImage(i, -1)} className="w-7 h-7 rounded-lg bg-white/90 text-slate-700 flex items-center justify-center hover:bg-white transition-colors" title="Perkelti kairėn">
                               <ChevronLeft className="w-4 h-4" />
@@ -722,6 +726,23 @@ export default function AdminObjectsPage() {
                 </Button>
               </div>
             </form>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Fullscreen Image Preview Dialog */}
+      <Dialog open={!!previewImage} onOpenChange={(open) => !open && setPreviewImage(null)}>
+        <DialogContent className="max-w-7xl w-full h-[90vh] bg-transparent border-none shadow-none flex items-center justify-center p-0">
+          <button 
+            type="button" 
+            onClick={() => setPreviewImage(null)} 
+            className="absolute top-4 right-4 z-50 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md text-white flex items-center justify-center hover:bg-white/20 transition-all"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          {previewImage && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={previewImage} alt="Preview" className="max-w-full max-h-full object-contain select-none" />
           )}
         </DialogContent>
       </Dialog>

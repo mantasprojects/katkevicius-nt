@@ -29,9 +29,9 @@ export async function POST(req: Request) {
     const imgWidth = imageMeta.width || 1920;
     const imgHeight = imageMeta.height || 1080;
 
-    // Watermark sizing: reduced to ~80% of previous size (~16% horizontal, ~28% vertical)
+    // Watermark sizing: 90% of original size (~18% horizontal, ~31.5% vertical)
     const isHorizontal = imgWidth >= imgHeight;
-    const watermarkWidth = isHorizontal ? Math.round(imgWidth * 0.16) : Math.round(imgWidth * 0.28);
+    const watermarkWidth = isHorizontal ? Math.round(imgWidth * 0.18) : Math.round(imgWidth * 0.315);
     // Padding from edges: slightly closer to edges (3% instead of 5%)
     const paddingX = Math.round(Math.min(imgWidth, imgHeight) * 0.03);
     const paddingY = paddingX;
