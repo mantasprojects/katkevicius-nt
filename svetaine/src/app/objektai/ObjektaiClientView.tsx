@@ -125,7 +125,7 @@ export default function ObjektaiClientView({ initialProperties }: { initialPrope
                   <SelectItem value="Butas" className="cursor-pointer font-medium hover:bg-slate-50">Butas</SelectItem>
                   <SelectItem value="Namas" className="cursor-pointer font-medium hover:bg-slate-50">Namas</SelectItem>
                   <SelectItem value="Sklypas" className="cursor-pointer font-medium hover:bg-slate-50">Sklypas</SelectItem>
-                  <SelectItem value="Komercinės patalpos" className="cursor-pointer font-medium hover:bg-slate-50">Komercinės patalpos</SelectItem>
+                  <SelectItem value="Patalpos" className="cursor-pointer font-medium hover:bg-slate-50">Patalpos</SelectItem>
                 </SelectContent>
               </Select>
             </div>

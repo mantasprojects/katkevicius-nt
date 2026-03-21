@@ -594,7 +594,7 @@ export default function AdminObjectsPage() {
                     <option value="Butas">Butas</option>
                     <option value="Namas">Namas</option>
                     <option value="Sklypas">Sklypas</option>
-                    <option value="Komercinės patalpos">Komercinės patalpos</option>
+                    <option value="Patalpos">Patalpos</option>
                   </select>
                 </div>
               </div>

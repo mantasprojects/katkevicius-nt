@@ -298,7 +298,7 @@ export default function NuomaClient() {
                   <option value="">Pasirinkite...</option>
                   <option value="Butas">Butas</option>
                   <option value="Namas">Namas</option>
-                  <option value="Komercinės">Komercinės</option>
+                  <option value="Patalpos">Patalpos</option>
                 </select>
               </div>
 

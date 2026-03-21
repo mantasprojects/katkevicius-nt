@@ -82,6 +82,19 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
   const [showControls, setShowControls] = useState(true);
   const [hasInteracted, setHasInteracted] = useState(false);
 
+  // Custom Zoom & Pan State
+  const [scale, setScale] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const initialDistance = useRef<number | null>(null);
+  const initialPan = useRef({ x: 0, y: 0 });
+  const isPanning = useRef(false);
+
+  // Reset zoom on image change
+  useEffect(() => {
+    setScale(1);
+    setPan({ x: 0, y: 0 });
+  }, [index]);
+
   const goPrev = useCallback(() => { setDirection(-1); setIndex(i => (i + images.length - 1) % images.length); }, [images.length]);
   const goNext = useCallback(() => { setDirection(1); setIndex(i => (i + 1) % images.length); }, [images.length]);
 
@@ -100,18 +113,52 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [goPrev, goNext, onClose]);
 
-  // Touch swipe support
+  // Touch swipe & pinch-zoom support
   const handleTouchStart = (e: React.TouchEvent) => { 
-    touchStartX.current = e.touches[0].clientX; 
-    touchEndX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY; 
-    touchEndY.current = e.touches[0].clientY;
+    if (e.touches.length === 2) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      initialDistance.current = Math.hypot(dx, dy);
+    } else if (e.touches.length === 1) {
+      touchStartX.current = e.touches[0].clientX; 
+      touchEndX.current = e.touches[0].clientX;
+      touchStartY.current = e.touches[0].clientY; 
+      touchEndY.current = e.touches[0].clientY;
+
+      if (scale > 1) {
+        isPanning.current = true;
+        initialPan.current = { x: pan.x - e.touches[0].clientX, y: pan.y - e.touches[0].clientY };
+      }
+    }
   };
   const handleTouchMove = (e: React.TouchEvent) => { 
-    touchEndX.current = e.touches[0].clientX; 
-    touchEndY.current = e.touches[0].clientY;
+    if (e.touches.length === 2 && initialDistance.current) {
+      // Pinch Zoom
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const distance = Math.hypot(dx, dy);
+      const pinchScale = distance / initialDistance.current;
+      setScale((prev) => Math.min(Math.max(1, prev * pinchScale), 4));
+      initialDistance.current = distance;
+    } else if (e.touches.length === 1) {
+      touchEndX.current = e.touches[0].clientX; 
+      touchEndY.current = e.touches[0].clientY;
+      if (scale > 1 && isPanning.current) {
+        // Pan when zoomed
+        setPan({
+          x: e.touches[0].clientX + initialPan.current.x,
+          y: e.touches[0].clientY + initialPan.current.y
+        });
+      }
+    }
   };
   const handleTouchEnd = () => {
+    initialDistance.current = null;
+    isPanning.current = false;
+
+    // Prevent swiping to next image if user is zoomed in
+    if (scale > 1) return;
+
     const diffX = touchStartX.current - touchEndX.current;
     const diffY = touchStartY.current - touchEndY.current;
     
@@ -121,8 +168,8 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
       return;
     }
     
-    // Swipe left/right
-    if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY)) {
+    // Swipe left/right (instant trigger with 20px threshold)
+    if (Math.abs(diffX) > 20 && Math.abs(diffX) > Math.abs(diffY)) {
       if (diffX > 0) goNext();
       else goPrev();
       setHasInteracted(true);
@@ -200,7 +247,8 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
           width={1920}
           height={1080}
           unoptimized={true}
-          className="max-w-full max-h-[100vh] object-contain select-none object-center relative z-10"
+          style={{ transform: `scale(${scale}) translate(${pan.x / scale}px, ${pan.y / scale}px)`, transition: scale === 1 ? 'transform 0.2s ease-out' : 'none' }}
+          className="max-w-full max-h-[100vh] object-contain select-none object-center relative z-10 origin-center"
           placeholder="blur"
           blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1920, 1080))}`}
         />

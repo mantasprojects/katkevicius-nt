@@ -215,34 +215,30 @@ export function AddObjectModal({ onAdd }: { onAdd: (obj: any) => void }) {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="status" className="text-xs font-bold uppercase tracking-wider text-slate-500">Statusas *</Label>
-                <div className="relative">
-                  <Select name="status" defaultValue="Parduodama">
-                    <SelectTrigger className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:bg-white transition-all">
-                      <SelectValue placeholder="Pasirinkite statusą" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white rounded-xl shadow-xl border-slate-100">
-                      <SelectItem value="Parduodama" className="cursor-pointer font-medium hover:bg-slate-50">Parduodama</SelectItem>
-                      <SelectItem value="Rezervuota" className="cursor-pointer font-medium hover:bg-slate-50">Rezervuota</SelectItem>
-                      <SelectItem value="Parduota" className="cursor-pointer font-medium hover:bg-slate-50">Parduota</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <select 
+                  name="status" 
+                  id="status"
+                  defaultValue="Parduodama"
+                  className="w-full h-12 rounded-xl bg-slate-50 border border-slate-200 px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:bg-white transition-all cursor-pointer"
+                >
+                  <option value="Parduodama">Parduodama</option>
+                  <option value="Rezervuota">Rezervuota</option>
+                  <option value="Parduota">Parduota</option>
+                </select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="type" className="text-xs font-bold uppercase tracking-wider text-slate-500">Tipas *</Label>
-                <div className="relative">
-                  <Select name="type" defaultValue="Butas">
-                    <SelectTrigger className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:bg-white transition-all">
-                      <SelectValue placeholder="Pasirinkite tipą" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white rounded-xl shadow-xl border-slate-100">
-                      <SelectItem value="Butas" className="cursor-pointer font-medium hover:bg-slate-50">Butas</SelectItem>
-                      <SelectItem value="Namas" className="cursor-pointer font-medium hover:bg-slate-50">Namas</SelectItem>
-                      <SelectItem value="Sklypas" className="cursor-pointer font-medium hover:bg-slate-50">Sklypas</SelectItem>
-                      <SelectItem value="Komercinės patalpos" className="cursor-pointer font-medium hover:bg-slate-50">Komercinės patalpos</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <select 
+                  name="type" 
+                  id="type"
+                  defaultValue="Butas"
+                  className="w-full h-12 rounded-xl bg-slate-50 border border-slate-200 px-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#2563EB] focus:bg-white transition-all cursor-pointer"
+                >
+                  <option value="Butas">Butas</option>
+                  <option value="Namas">Namas</option>
+                  <option value="Sklypas">Sklypas</option>
+                  <option value="Patalpos">Patalpos</option>
+                </select>
               </div>
             </div>
 
