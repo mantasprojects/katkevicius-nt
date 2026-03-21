@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, CheckCircle2, ChevronRight, ChevronLeft, MapPin, Building, BedDouble, Bath, Square, Calendar, Share, Heart, LandPlot, X, Camera } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ChevronRight, ChevronLeft, MapPin, Building, BedDouble, Bath, Square, Calendar, Share, Heart, LandPlot, X, Camera, Hand } from "lucide-react";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/ui/motion";
 import { Button } from "@/components/ui/button";
 import { OfferPriceModal } from "@/components/modal/OfferPriceModal";
@@ -18,7 +18,6 @@ import SmartImage from "@/components/ui/SmartImage";
 import { useState, useEffect, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 const PropertyMap = dynamic(() => import("@/components/objects/PropertyMap"), { ssr: false });
 
@@ -186,7 +185,7 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
         <ChevronLeft className="w-7 h-7" />
       </button>
 
-      {/* Image instantly switching without animation, with pinch zoom */}
+      {/* Image instantly switching without animation */}
       <div 
         className="max-w-[100vw] max-h-[100vh] flex items-center justify-center z-10 w-full h-full" 
         onClick={e => {
@@ -195,29 +194,16 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
           setHasInteracted(true);
         }}
       >
-        <TransformWrapper
-          initialScale={1}
-          minScale={1}
-          maxScale={4}
-          centerOnInit
-          onPanning={() => setHasInteracted(true)}
-          onZoom={() => setHasInteracted(true)}
-        >
-          {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
-            <TransformComponent wrapperStyle={{ width: "100%", height: "100%" }} contentStyle={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <Image
-                src={images[index]}
-                alt={`Nuotrauka ${index + 1}`}
-                width={1920}
-                height={1080}
-                unoptimized={true}
-                className="max-w-full max-h-[100vh] object-contain select-none object-center relative z-10"
-                placeholder="blur"
-                blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1920, 1080))}`}
-              />
-            </TransformComponent>
-          )}
-        </TransformWrapper>
+        <Image
+          src={images[index]}
+          alt={`Nuotrauka ${index + 1}`}
+          width={1920}
+          height={1080}
+          unoptimized={true}
+          className="max-w-full max-h-[100vh] object-contain select-none object-center relative z-10"
+          placeholder="blur"
+          blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1920, 1080))}`}
+        />
       </div>
 
       {/* Next */}
@@ -228,18 +214,28 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
         <ChevronRight className="w-7 h-7" />
       </button>
 
-      {/* Mobile Instructions Overlay */}
+      {/* Mobile Instructions Overlay (Animated Hand) */}
       <AnimatePresence>
         {!hasInteracted && showControls && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className="md:hidden absolute bottom-10 left-1/2 -translate-x-1/2 z-50 bg-black/60 backdrop-blur-md text-white text-sm font-medium px-6 py-3 rounded-full flex gap-4 pointer-events-none"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="md:hidden absolute inset-0 z-50 flex items-center justify-center pointer-events-none"
           >
-            <div className="flex items-center gap-2"><ChevronLeft className="w-4 h-4" /> Braukti <ChevronRight className="w-4 h-4" /></div>
-            <div className="w-[1px] bg-white/30"></div>
-            <div>Gnybti norint priartinti</div>
+            <div className="w-32 h-32 bg-black/50 backdrop-blur-md rounded-full flex flex-col items-center justify-center relative">
+              <motion.div
+                animate={{ x: [-15, 15, -15] }}
+                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                className="text-white"
+              >
+                <Hand className="w-12 h-12" />
+              </motion.div>
+              <div className="flex gap-4 mt-2 text-white/70">
+                <ChevronLeft className="w-5 h-5" />
+                <ChevronRight className="w-5 h-5" />
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
