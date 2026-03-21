@@ -51,7 +51,30 @@ export default function CreateProposalPage({ params }: PropertyParams) {
         }
 
         // Default info mapping
-        setDescription(data.description || "");
+        let fullContent = data.description ? `${data.description}\n\n` : "";
+        
+        if (data.privalumai && data.privalumai.length > 0) {
+          fullContent += "========================================\n\n";
+          fullContent += "PRIVALUMAI:\n";
+          data.privalumai.forEach((p: string) => {
+            if (p?.trim()) fullContent += `• ${p}\n`;
+          });
+          fullContent += "\n";
+        }
+
+        fullContent += "========================================\n\n";
+        fullContent += "PAGRINDINĖ INFORMACIJA:\n";
+        
+        if (data.address) fullContent += `• Adresas: ${data.address}, ${data.city}\n`;
+        if (data.type) fullContent += `• Paskirtis: ${data.type}\n`;
+        if (data.area) fullContent += `• Bendras plotas: ${data.area} kv. m.\n`;
+        if (data.arai) fullContent += `• Sklypo plotas: ${data.arai} aro\n`;
+        if (data.rooms) fullContent += `• Kambarių skaičius: ${data.rooms}\n`;
+        if (data.year) fullContent += `• Metai: ${data.year}\n`;
+        if (data.status) fullContent += `• Statusas: ${data.status}\n`;
+        if (data.heating) fullContent += `• Šildymas: ${data.heating}\n`;
+
+        setDescription(fullContent.trim());
 
         if (data.gallery) {
            setSelectedPhotos(data.gallery.slice(0, 7)); // cover + 6 photos
