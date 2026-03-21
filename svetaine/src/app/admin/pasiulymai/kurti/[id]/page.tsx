@@ -30,15 +30,34 @@ export default function CreateProposalPage({ params }: PropertyParams) {
   useEffect(() => {
     async function fetchProperty() {
       const supabase = createClient();
-      const { data, error } = await supabase
-        .from("properties")
+      const { data: rawData, error } = await supabase
+        .from("nt_objektai")
         .select("*")
         .eq("id", params.id)
         .single();
 
-      if (data) {
+      if (rawData) {
+        // Map raw Supabase columns to UI Property logic
+        const data = {
+          id: rawData.id,
+          title: rawData.pavadinimas,
+          city: rawData.miestas,
+          price: rawData.kaina,
+          status: rawData.statusas,
+          description: rawData.aprasymas,
+          gallery: rawData.nuotraukos_urls ? (typeof rawData.nuotraukos_urls === 'string' ? JSON.parse(rawData.nuotraukos_urls) : rawData.nuotraukos_urls) : [],
+          address: rawData.address,
+          area: rawData.plotas || 0,
+          rooms: rawData.rooms || 0,
+          year: rawData.year || 0,
+          arai: rawData.arai || 0,
+          heating: rawData.heating || "",
+          type: rawData.type || "Butas",
+          privalumai: rawData.privalumai || []
+        };
+
         setProperty(data);
-        setTitle(`${data.city}, ${data.address || ""}`);
+        setTitle(`${data.city || ""}, ${data.address || ""}`);
         
         const areaStr = data.area ? `${data.area} m²` : (data.arai ? `${data.arai} a` : "");
         const roomsStr = data.rooms ? `, ${data.rooms} kamb.` : "";
@@ -178,7 +197,7 @@ export default function CreateProposalPage({ params }: PropertyParams) {
       <div className="flex-1 h-full overflow-y-auto bg-slate-200/50 p-4 md:p-8 flex flex-col items-center print:p-0 print:bg-white print:block print:overflow-visible">
         
         {/* A4 PAGE 1: COVER */}
-        <div className="w-full max-w-[794px] h-[1123px] bg-white shadow-xl mb-8 relative flex flex-col print:shadow-none print:mb-0 print:break-after-page mx-auto">
+        <div className="w-[794px] shrink-0 h-[1123px] bg-white shadow-xl mb-8 relative flex flex-col print:shadow-none print:mb-0 print:break-after-page mx-auto print:w-full">
           {/* Top thick black line */}
           <div className="h-2 w-full bg-[#111827] absolute top-0 left-0" />
           
@@ -229,7 +248,7 @@ export default function CreateProposalPage({ params }: PropertyParams) {
         </div>
 
         {/* A4 PAGE 2: TEXT DETAILS */}
-        <div className="w-full max-w-[794px] h-[1123px] bg-white shadow-xl mb-8 relative flex flex-col print:shadow-none print:mb-0 print:break-after-page mx-auto">
+        <div className="w-[794px] shrink-0 h-[1123px] bg-white shadow-xl mb-8 relative flex flex-col print:shadow-none print:mb-0 print:break-after-page mx-auto print:w-full">
           <div className="h-2 w-full bg-[#111827] absolute top-0 left-0" />
           
           <div className="px-12 pt-16 flex-1">
@@ -268,7 +287,7 @@ export default function CreateProposalPage({ params }: PropertyParams) {
 
         {/* A4 PAGE 3: GALLERY GRID */}
         {selectedPhotos.length > 1 && (
-          <div className="w-full max-w-[794px] h-[1123px] bg-white shadow-xl mb-8 relative flex flex-col print:shadow-none print:mb-0 print:break-after-page mx-auto">
+          <div className="w-[794px] shrink-0 h-[1123px] bg-white shadow-xl mb-8 relative flex flex-col print:shadow-none print:mb-0 print:break-after-page mx-auto print:w-full">
             <div className="h-2 w-full bg-[#111827] absolute top-0 left-0" />
             <div className="px-12 pt-16 flex-1">
               <div className="grid grid-cols-2 gap-4 h-[850px]">
