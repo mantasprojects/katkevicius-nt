@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
-import { Edit, Trash2, Home, MapPin, X, Check, ChevronLeft, ChevronRight, Plus, Star, Image as ImageIcon, Upload, Search, Eye, EyeOff } from "lucide-react";
+import { Home, Edit, Trash2, Search, MapPin, Eye, EyeOff, Plus, Check, X, ImageIcon, Star, ChevronLeft, ChevronRight, Share, Copy, FileText, RefreshCw, XCircle, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -377,112 +377,108 @@ export default function AdminObjectsPage() {
       </div>
 
       <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden text-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[800px]">
-            <thead>
-              <tr className="bg-slate-50 border-b border-slate-200">
-                <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs">Pavadinimas</th>
-                <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs">Miestas</th>
-                <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs">Kaina</th>
-                <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs">Statusas</th>
-                <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs text-center">Matomumas</th>
-                <th className="py-4 px-6 font-bold text-slate-500 tracking-wider text-xs text-right">Veiksmai</th>
-              </tr>
-            </thead>
-            <tbody>
-            {filteredProperties.map((p) => (
-              <tr key={p.id} className={`border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors ${p.is_public === false ? 'opacity-60' : ''}`}>
-                <td className="py-5 px-6">
-                  <div className="flex items-center text-[#111827] font-bold">
-                    <Home className="w-5 h-5 mr-3 text-slate-400" />
-                    {p.title}
-                    {p.is_public === false && (
-                      <span className="ml-2 text-[10px] font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">paslėptas</span>
+        <div className="flex flex-col gap-6">
+          {filteredProperties.map((p) => (
+            <div key={p.id} className={`bg-white border border-slate-200 rounded-xl overflow-hidden hover:shadow-xl transition-shadow flex flex-col md:flex-row relative ${p.is_public === false ? 'opacity-70 grayscale-[20%]' : ''}`}>
+              {/* Left Side: Image Thumbnail */}
+              <div className="md:w-[320px] h-[220px] md:h-auto relative bg-slate-100 shrink-0 border-r border-slate-100">
+                {p.gallery && p.gallery.length > 0 ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={p.gallery[0] || ""} alt={p.title} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center text-slate-400">
+                    <ImageIcon className="w-10 h-10 mb-2 opacity-50" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider opacity-70">Nėra nuotraukos</span>
+                  </div>
+                )}
+                <div className="absolute top-3 left-3 bg-black/70 text-white text-[10px] font-bold px-2 py-1 rounded backdrop-blur-md shadow-lg">
+                  ID: {String(p.id).substring(0,8)}...
+                </div>
+                {p.is_public === false && (
+                  <div className="absolute bottom-3 left-3 bg-rose-600/95 text-white text-[11px] font-extrabold uppercase px-3 py-1 rounded shadow-lg backdrop-blur-sm">
+                    Pasyvus
+                  </div>
+                )}
+              </div>
+
+              {/* Right Side: Details & Actions */}
+              <div className="flex-1 flex flex-col pt-1">
+                {/* Top: Details */}
+                <div className="p-5 flex-1 flex flex-col">
+                  <h3 className="text-xl font-extrabold text-[#111827] mb-1 leading-tight hover:text-[#2563EB] cursor-pointer transition-colors" onClick={() => openEdit(p)}>
+                    {p.city}, {p.address || "Adresas nenurodytas"}
+                  </h3>
+                  <div className="flex items-end gap-3 mt-3 mb-2">
+                    <p className="text-[#111827] font-extrabold text-2xl leading-none">
+                      {p.price.toLocaleString("lt-LT")} €
+                    </p>
+                    {p.area && (
+                      <p className="text-slate-500 font-medium text-sm border-l border-slate-300 pl-3">
+                        {p.area} m² 
+                        <span className="text-slate-400 text-xs ml-1">({Math.round(p.price / p.area)} €/m²)</span>
+                      </p>
+                    )}
+                    {p.arai && !p.area && (
+                      <p className="text-slate-500 font-medium text-sm">
+                        {p.arai} a
+                      </p>
                     )}
                   </div>
-                </td>
-                <td className="py-5 px-6 font-medium text-slate-600">
-                  <div className="flex items-center">
-                    <MapPin className="w-4 h-4 mr-2 text-[#2563EB]" /> {p.city}
-                  </div>
-                </td>
-                <td className="py-5 px-6 font-extrabold text-[#111827]">
-                  € {p.price.toLocaleString("lt-LT")}
-                </td>
-                <td className="py-5 px-6">
-                  <select
-                    value={p.status}
-                    onChange={(e) => handleStatusChange(String(p.id), e.target.value)}
-                    className="px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider cursor-pointer border-0 outline-none focus:ring-2 focus:ring-[#2563EB] bg-blue-50 text-blue-700 transition-all"
-                  >
-                    {STATUSES.map(s => (
-                      <option key={s} value={s}>{s}</option>
-                    ))}
-                  </select>
-                </td>
-                <td className="py-5 px-6 text-center">
-                  <button
-                    onClick={() => handleToggleVisibility(String(p.id), p.is_public !== false)}
-                    className={`inline-flex items-center justify-center w-10 h-10 rounded-xl transition-all ${
-                      p.is_public !== false
-                        ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'
-                        : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
-                    }`}
-                    title={p.is_public !== false ? "Matomas viešai – spustelėkite paslėpti" : "Paslėptas – spustelėkite rodyti"}
-                  >
-                    {p.is_public !== false ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+                  <p className="text-slate-400 text-xs max-w-lg truncate mt-1">Sistemos pavadinimas: {p.title}</p>
+                </div>
+
+                {/* Bottom Actions Row (Aruodas style) */}
+                <div className="bg-slate-50/80 p-3 px-5 border-t border-slate-100 flex flex-wrap items-center gap-2 md:gap-3">
+                  <button onClick={() => openEdit(p)} className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 text-emerald-700 text-xs font-bold rounded-lg hover:bg-emerald-50 hover:border-emerald-200 transition-colors shadow-sm">
+                    <Edit className="w-3.5 h-3.5 fill-current" />
+                    Redaguoti
                   </button>
-                </td>
-                <td className="py-5 px-6 text-right">
-                  <div className="flex items-center justify-end gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="icon" 
-                      onClick={() => openEdit(p)}
-                      className="h-9 w-9 rounded-lg border-slate-200 text-[#2563EB] hover:bg-[#EFF6FF] hover:text-[#1E3A8A]"
-                    >
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    {deleteConfirmId === String(p.id) ? (
-                      <div className="flex items-center gap-1">
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          onClick={() => handleDelete(String(p.id))}
-                          className="h-9 w-9 rounded-lg border-red-200 bg-red-50 text-red-600 hover:bg-red-100"
-                        >
-                          <Check className="w-4 h-4" />
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="icon" 
-                          onClick={() => setDeleteConfirmId(null)}
-                          className="h-9 w-9 rounded-lg border-slate-200 text-slate-600 hover:bg-slate-100"
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      </div>
+
+                  <button className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-lg hover:bg-slate-100 transition-colors shadow-sm">
+                    <RefreshCw className="w-3.5 h-3.5 text-slate-400" />
+                    Atnaujinti
+                  </button>
+                  
+                  <button onClick={() => handleToggleVisibility(String(p.id), p.is_public !== false)} className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-lg hover:bg-slate-100 transition-colors shadow-sm">
+                    {p.is_public !== false ? (
+                      <><EyeOff className="w-3.5 h-3.5 text-slate-400" /> Pasyvuoti</>
                     ) : (
-                      <Button 
-                        variant="outline" 
-                        size="icon" 
-                        onClick={() => setDeleteConfirmId(String(p.id))}
-                        className="h-9 w-9 rounded-lg border-red-100 text-red-600 hover:bg-red-50 hover:border-red-200"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <><Eye className="w-3.5 h-3.5 text-emerald-600" /> Aktyvuoti</>
                     )}
-                  </div>
-                </td>
-              </tr>
-            ))}
-            {properties.length === 0 && (
-              <tr>
-                <td colSpan={6} className="py-12 text-center text-slate-500 font-medium">Nėra pridėtų objektų.</td>
-              </tr>
-            )}
-          </tbody>
-          </table>
+                  </button>
+
+                  <button onClick={() => window.location.href = `/admin/pasiulymai/kurti/${p.id}`} className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-lg hover:bg-[#EFF6FF] hover:border-[#BFDBFE] hover:text-[#2563EB] transition-colors shadow-sm">
+                    <FileText className="w-3.5 h-3.5 text-slate-400" />
+                    Kurti pasiūlymą
+                  </button>
+                  
+                  {deleteConfirmId === String(p.id) ? (
+                    <div className="flex items-center ml-auto gap-1">
+                      <button onClick={() => handleDelete(String(p.id))} className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 border border-red-600 text-white text-xs font-bold rounded-lg hover:bg-red-700 transition-colors shadow-sm">
+                        <Check className="w-3.5 h-3.5" />
+                        Tikrai
+                      </button>
+                      <button onClick={() => setDeleteConfirmId(null)} className="flex items-center gap-1.5 px-2 py-1.5 bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-lg hover:bg-slate-100 transition-colors shadow-sm">
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button onClick={() => setDeleteConfirmId(String(p.id))} className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-lg hover:bg-red-50 hover:text-red-700 transition-colors shadow-sm ml-auto">
+                      <XCircle className="w-3.5 h-3.5 text-slate-400" />
+                      Trinti
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+          {properties.length === 0 && (
+            <div className="py-24 flex flex-col items-center justify-center text-slate-500 font-medium bg-slate-50/50 rounded-2xl border-2 border-dashed border-slate-200">
+              <ImageIcon className="w-16 h-16 text-slate-300 mb-4" />
+              <p className="text-lg">Nėra pridėtų objektų.</p>
+              <button onClick={() => setIsEditOpen(true)} className="mt-4 text-[#2563EB] font-bold hover:underline">Pridėti naują objektą</button>
+            </div>
+          )}
         </div>
       </div>
 

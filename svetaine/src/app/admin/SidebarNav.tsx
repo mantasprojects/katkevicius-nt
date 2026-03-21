@@ -11,6 +11,7 @@ export default function SidebarNav() {
   const items = [
     { href: "/admin", label: "Apžvalga", icon: Building },
     { href: "/admin/nt-objektai", label: "NT Objektai", icon: Building },
+    { href: "/admin/pasiulymai", label: "Komerciniai pasiūlymai", icon: FileText },
     { href: "/admin/blog", label: "Tinklaraštis", icon: FileText },
     { href: "/admin/atsiliepimai", label: "Atsiliepimai", icon: Star },
     { href: "/admin/crm", label: "CRM (Kontaktai)", icon: Users },
