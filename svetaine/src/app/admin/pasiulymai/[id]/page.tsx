@@ -23,9 +23,6 @@ export default function EditProposalPage({ params }: ProposalParams) {
   const [subtitle, setSubtitle] = useState("");
   const [price, setPrice] = useState("");
   const [pricePerSqM, setPricePerSqM] = useState("");
-  const [advantages, setAdvantages] = useState<string[]>([""]);
-  const [mainInfo, setMainInfo] = useState<string[]>([""]);
-  const [locationInfo, setLocationInfo] = useState<string[]>([""]);
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
   const [description, setDescription] = useState("");
 
@@ -45,9 +42,6 @@ export default function EditProposalPage({ params }: ProposalParams) {
         setPrice(cd.price || "");
         setPricePerSqM(cd.pricePerSqM || "");
         setDescription(cd.description || "");
-        setAdvantages(cd.advantages && cd.advantages.length ? cd.advantages : [""]);
-        setMainInfo(cd.mainInfo && cd.mainInfo.length ? cd.mainInfo : [""]);
-        setLocationInfo(cd.locationInfo && cd.locationInfo.length ? cd.locationInfo : [""]);
         setSelectedPhotos(cd.selectedPhotos || []);
       }
       setLoading(false);
@@ -68,9 +62,6 @@ export default function EditProposalPage({ params }: ProposalParams) {
       price,
       pricePerSqM,
       description,
-      advantages,
-      mainInfo,
-      locationInfo,
       selectedPhotos
     };
 
@@ -88,19 +79,7 @@ export default function EditProposalPage({ params }: ProposalParams) {
     }
   };
 
-  const updateArrayField = (setter: any, array: string[], index: number, value: string) => {
-    const newArr = [...array];
-    newArr[index] = value;
-    setter(newArr);
-  };
 
-  const addArrayField = (setter: any, array: string[]) => {
-    setter([...array, ""]);
-  };
-
-  const removeArrayField = (setter: any, array: string[], index: number) => {
-    setter(array.filter((_, i) => i !== index));
-  };
 
   if (loading) return <div className="p-10 text-center font-bold">Kraunama...</div>;
 
@@ -146,61 +125,8 @@ export default function EditProposalPage({ params }: ProposalParams) {
                 </div>
               </div>
               <div>
-                <Label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">Aprašymas</Label>
-                <Textarea value={description} onChange={e => setDescription(e.target.value)} className="min-h-[120px]" placeholder="Parduodamas naujos statybos..." />
-              </div>
-            </div>
-          </div>
-
-          <hr className="border-slate-100" />
-
-          {/* DYNAMIC LISTS */}
-          <div className="space-y-6">
-            {/* PRIVALUMAI */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <Label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Privalumai</Label>
-                <Button variant="ghost" size="sm" onClick={() => addArrayField(setAdvantages, advantages)} className="h-6 text-xs text-[#2563EB]"><Plus className="w-3 h-3 mr-1"/> Pridėti</Button>
-              </div>
-              <div className="space-y-2">
-                {advantages.map((adv, i) => (
-                  <div key={i} className="flex gap-2">
-                    <Input value={adv} onChange={e => updateArrayField(setAdvantages, advantages, i, e.target.value)} className="text-sm" />
-                    <Button variant="outline" size="icon" onClick={() => removeArrayField(setAdvantages, advantages, i)} className="shrink-0 text-red-500"><Trash2 className="w-4 h-4" /></Button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* MAIN INFO */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <Label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Pagrindinė Informacija</Label>
-                <Button variant="ghost" size="sm" onClick={() => addArrayField(setMainInfo, mainInfo)} className="h-6 text-xs text-[#2563EB]"><Plus className="w-3 h-3 mr-1"/> Pridėti</Button>
-              </div>
-              <div className="space-y-2">
-                {mainInfo.map((info, i) => (
-                  <div key={i} className="flex gap-2">
-                    <Input value={info} onChange={e => updateArrayField(setMainInfo, mainInfo, i, e.target.value)} className="text-sm" />
-                    <Button variant="outline" size="icon" onClick={() => removeArrayField(setMainInfo, mainInfo, i)} className="shrink-0 text-red-500"><Trash2 className="w-4 h-4" /></Button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-             {/* LOCATION */}
-             <div>
-              <div className="flex items-center justify-between mb-2">
-                <Label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Vieta ir Susisiekimas</Label>
-                <Button variant="ghost" size="sm" onClick={() => addArrayField(setLocationInfo, locationInfo)} className="h-6 text-xs text-[#2563EB]"><Plus className="w-3 h-3 mr-1"/> Pridėti</Button>
-              </div>
-              <div className="space-y-2">
-                {locationInfo.map((loc, i) => (
-                  <div key={i} className="flex gap-2">
-                    <Input value={loc} onChange={e => updateArrayField(setLocationInfo, locationInfo, i, e.target.value)} className="text-sm" />
-                    <Button variant="outline" size="icon" onClick={() => removeArrayField(setLocationInfo, locationInfo, i)} className="shrink-0 text-red-500"><Trash2 className="w-4 h-4" /></Button>
-                  </div>
-                ))}
+                <Label className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 block">Cotas turinys (Aprašymas, Privalumai, Kita)</Label>
+                <Textarea value={description} onChange={e => setDescription(e.target.value)} className="min-h-[400px] text-sm leading-relaxed" placeholder="Parduodamas naujos statybos..." />
               </div>
             </div>
           </div>
@@ -212,7 +138,7 @@ export default function EditProposalPage({ params }: ProposalParams) {
         
         {/* A4 PAGE 1: COVER */}
         <div className="w-full max-w-[794px] h-[1123px] bg-white shadow-xl mb-8 relative flex flex-col print:shadow-none print:mb-0 print:break-after-page mx-auto">
-          <div className="h-2 w-full bg-red-600 absolute top-0 left-0" />
+          <div className="h-2 w-full bg-[#111827] absolute top-0 left-0" />
           
           <div className="flex-1 pt-12">
              <div className="w-full h-[500px] bg-slate-100 mb-8 relative overflow-hidden">
@@ -228,7 +154,7 @@ export default function EditProposalPage({ params }: ProposalParams) {
                <h1 className="text-3xl font-extrabold text-[#111827] mb-2">{title || "Pavadinimas"}</h1>
                <p className="text-lg text-slate-600 mb-6">{subtitle || "Poraštė"}</p>
                <div className="flex items-baseline gap-2">
-                 <p className="text-2xl font-extrabold text-red-600">{price || "0 €"}</p>
+                 <p className="text-2xl font-extrabold text-[#2563EB]">{price || "0 €"}</p>
                  <p className="text-slate-500">{pricePerSqM}</p>
                </div>
              </div>
@@ -245,7 +171,7 @@ export default function EditProposalPage({ params }: ProposalParams) {
                    <p className="text-slate-500 mb-2">Nekilnojamojo turto brokeris</p>
                    <p className="text-sm font-bold text-slate-700">+37064541892</p>
                    <p className="text-sm font-bold text-slate-700">info@katkevicius.lt</p>
-                   <p className="text-sm font-bold text-red-600 mt-1">katkevicius.lt</p>
+                   <p className="text-sm font-bold text-[#2563EB] mt-1">katkevicius.lt</p>
                  </div>
               </div>
               <div className="text-right">
@@ -258,45 +184,16 @@ export default function EditProposalPage({ params }: ProposalParams) {
 
         {/* A4 PAGE 2: TEXT DETAILS */}
         <div className="w-full max-w-[794px] h-[1123px] bg-white shadow-xl mb-8 relative flex flex-col print:shadow-none print:mb-0 print:break-after-page mx-auto">
-          <div className="h-2 w-full bg-red-600 absolute top-0 left-0" />
+          <div className="h-2 w-full bg-[#111827] absolute top-0 left-0" />
           
           <div className="px-12 pt-16 flex-1">
              <h1 className="text-2xl font-extrabold text-[#111827] mb-1">{title}</h1>
              <p className="text-slate-600 mb-4">{subtitle}</p>
-             <p className="text-xl font-extrabold text-red-600 mb-12">{price} <span className="text-sm text-slate-500 font-normal">{pricePerSqM}</span></p>
+             <p className="text-xl font-extrabold text-[#2563EB] mb-12">{price} <span className="text-sm text-slate-500 font-normal">{pricePerSqM}</span></p>
 
              {description && (
                <div className="mb-8">
-                 <p className="text-sm text-[#111827] whitespace-pre-line leading-relaxed">{description}</p>
-               </div>
-             )}
-
-             <div className="w-full border-t border-slate-200 my-8"></div>
-
-             {advantages.length > 0 && advantages[0] !== "" && (
-               <div className="mb-8">
-                 <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Privalumai:</h3>
-                 <ul className="list-disc pl-5 space-y-1">
-                   {advantages.map((adv, i) => adv && <li key={i} className="text-sm text-[#111827]">{adv}</li>)}
-                 </ul>
-               </div>
-             )}
-
-             {mainInfo.length > 0 && mainInfo[0] !== "" && (
-               <div className="mb-8">
-                 <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Pagrindinė Informacija:</h3>
-                 <ul className="list-disc pl-5 space-y-1">
-                   {mainInfo.map((info, i) => info && <li key={i} className="text-sm text-[#111827]">{info}</li>)}
-                 </ul>
-               </div>
-             )}
-
-             {locationInfo.length > 0 && locationInfo[0] !== "" && (
-               <div className="mb-8">
-                 <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Vieta ir Susisiekimas:</h3>
-                 <ul className="list-disc pl-5 space-y-1">
-                   {locationInfo.map((loc, i) => loc && <li key={i} className="text-sm text-[#111827]">{loc}</li>)}
-                 </ul>
+                 <p className="text-base text-[#111827] whitespace-pre-wrap leading-relaxed">{description}</p>
                </div>
              )}
           </div>
@@ -325,7 +222,7 @@ export default function EditProposalPage({ params }: ProposalParams) {
         {/* A4 PAGE 3: GALLERY GRID */}
         {selectedPhotos.length > 1 && (
           <div className="w-full max-w-[794px] h-[1123px] bg-white shadow-xl mb-8 relative flex flex-col print:shadow-none print:mb-0 print:break-after-page mx-auto">
-            <div className="h-2 w-full bg-red-600 absolute top-0 left-0" />
+            <div className="h-2 w-full bg-[#111827] absolute top-0 left-0" />
             <div className="px-12 pt-16 flex-1">
               <div className="grid grid-cols-2 gap-4 h-[850px]">
                 {selectedPhotos.slice(1, 7).map((photo, i) => (
@@ -340,7 +237,7 @@ export default function EditProposalPage({ params }: ProposalParams) {
               <div className="flex items-center justify-between px-12 py-6">
                 <div className="flex flex-col text-left">
                   <h3 className="text-sm font-bold text-[#111827]">Mantas Katkevičius</h3>
-                  <p className="text-xs text-red-600 font-bold">katkevicius.lt</p>
+                  <p className="text-xs text-[#2563EB] font-bold">katkevicius.lt</p>
                 </div>
                 <div className="text-right">
                   <h2 className="text-lg font-extrabold tracking-tighter text-[#111827]">KATKEVIČIUS</h2>

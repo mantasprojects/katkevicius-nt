@@ -506,7 +506,8 @@ export default function AdminObjectsPage() {
           </div>
 
           {editingProperty && (
-            <form onSubmit={handleEditSave} className="flex-1 overflow-y-auto p-6 pb-32 space-y-8">
+            <form onSubmit={handleEditSave} className="flex-1 overflow-hidden flex flex-col">
+              <div className="flex-1 overflow-y-auto p-6 space-y-8 pb-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                   <Label htmlFor="edit-title" className="text-xs font-bold uppercase tracking-wider text-slate-500">Pavadinimas *</Label>
@@ -713,7 +714,9 @@ export default function AdminObjectsPage() {
                 )}
               </div>
 
-              <div className="sticky bottom-0 bg-white z-10 pt-4 border-t border-slate-100 flex justify-end gap-3 -mx-6 -mb-6 p-6">
+              </div>
+
+              <div className="bg-white border-t border-slate-100 p-6 flex justify-end gap-3 shrink-0">
                 <Button type="button" variant="outline" onClick={() => setIsEditOpen(false)} className="h-12 px-6 rounded-xl font-bold bg-white text-slate-600 border-slate-200 hover:bg-slate-50">
                   Atšaukti
                 </Button>
