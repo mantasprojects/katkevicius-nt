@@ -18,6 +18,7 @@ import SmartImage from "@/components/ui/SmartImage";
 import { useState, useEffect, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 const PropertyMap = dynamic(() => import("@/components/objects/PropertyMap"), { ssr: false });
 
@@ -79,6 +80,8 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
   const touchEndX = useRef(0);
   const touchStartY = useRef(0);
   const touchEndY = useRef(0);
+  const [showControls, setShowControls] = useState(true);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   const goPrev = useCallback(() => { setDirection(-1); setIndex(i => (i + images.length - 1) % images.length); }, [images.length]);
   const goNext = useCallback(() => { setDirection(1); setIndex(i => (i + 1) % images.length); }, [images.length]);
@@ -123,6 +126,7 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
     if (Math.abs(diffX) > 60 && Math.abs(diffX) > Math.abs(diffY)) {
       if (diffX > 0) goNext();
       else goPrev();
+      setHasInteracted(true);
     }
   };
 
@@ -176,33 +180,69 @@ function GalleryLightbox({ images, startIndex, onClose }: { images: string[]; st
 
       {/* Prev */}
       <button
-        onClick={e => { e.stopPropagation(); goPrev(); }}
-        className="absolute left-3 md:left-6 z-50 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm text-white flex items-center justify-center hover:bg-white/20 transition-colors"
+        onClick={e => { e.stopPropagation(); goPrev(); setHasInteracted(true); }}
+        className="hidden md:flex absolute left-6 z-50 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm text-white items-center justify-center hover:bg-white/20 transition-colors"
       >
         <ChevronLeft className="w-7 h-7" />
       </button>
 
-      {/* Image instantly switching without animation */}
-      <div className="max-w-[100vw] max-h-[100vh] flex items-center justify-center z-10" onClick={e => e.stopPropagation()}>
-        <Image
-          src={images[index]}
-          alt={`Nuotrauka ${index + 1}`}
-          width={1920}
-          height={1080}
-          unoptimized={true}
-          className="max-w-full max-h-[100vh] object-contain select-none object-center relative z-10"
-          placeholder="blur"
-          blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1920, 1080))}`}
-        />
+      {/* Image instantly switching without animation, with pinch zoom */}
+      <div 
+        className="max-w-[100vw] max-h-[100vh] flex items-center justify-center z-10 w-full h-full" 
+        onClick={e => {
+          e.stopPropagation();
+          setShowControls(!showControls);
+          setHasInteracted(true);
+        }}
+      >
+        <TransformWrapper
+          initialScale={1}
+          minScale={1}
+          maxScale={4}
+          centerOnInit
+          onPanning={() => setHasInteracted(true)}
+          onZoom={() => setHasInteracted(true)}
+        >
+          {({ zoomIn, zoomOut, resetTransform, ...rest }) => (
+            <TransformComponent wrapperStyle={{ width: "100%", height: "100%" }} contentStyle={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Image
+                src={images[index]}
+                alt={`Nuotrauka ${index + 1}`}
+                width={1920}
+                height={1080}
+                unoptimized={true}
+                className="max-w-full max-h-[100vh] object-contain select-none object-center relative z-10"
+                placeholder="blur"
+                blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(1920, 1080))}`}
+              />
+            </TransformComponent>
+          )}
+        </TransformWrapper>
       </div>
 
       {/* Next */}
       <button
-        onClick={e => { e.stopPropagation(); goNext(); }}
-        className="absolute right-3 md:right-6 z-50 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm text-white flex items-center justify-center hover:bg-white/20 transition-colors"
+        onClick={e => { e.stopPropagation(); goNext(); setHasInteracted(true); }}
+        className="hidden md:flex absolute right-6 z-50 w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm text-white items-center justify-center hover:bg-white/20 transition-colors"
       >
         <ChevronRight className="w-7 h-7" />
       </button>
+
+      {/* Mobile Instructions Overlay */}
+      <AnimatePresence>
+        {!hasInteracted && showControls && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="md:hidden absolute bottom-10 left-1/2 -translate-x-1/2 z-50 bg-black/60 backdrop-blur-md text-white text-sm font-medium px-6 py-3 rounded-full flex gap-4 pointer-events-none"
+          >
+            <div className="flex items-center gap-2"><ChevronLeft className="w-4 h-4" /> Braukti <ChevronRight className="w-4 h-4" /></div>
+            <div className="w-[1px] bg-white/30"></div>
+            <div>Gnybti norint priartinti</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
@@ -421,7 +461,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
           {galleryImages.length > 1 && (
             <div 
               className="col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
-              onClick={() => { setPhotoIndex(1); setIsOpen(true); }}
+              onClick={() => { setPhotoIndex(0); setIsOpen(true); }}
             >
               <Image 
                 src={galleryImages[1]} 
@@ -440,7 +480,7 @@ export function PropertyClientView({ initialProperty, slug }: { initialProperty:
           {galleryImages.length > 2 && (
             <div 
               className="col-span-2 row-span-1 relative group overflow-hidden cursor-pointer"
-              onClick={() => { setPhotoIndex(2); setIsOpen(true); }}
+              onClick={() => { setPhotoIndex(0); setIsOpen(true); }}
             >
               <Image 
                 src={galleryImages[2]} 
