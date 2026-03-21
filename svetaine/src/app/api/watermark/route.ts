@@ -29,10 +29,11 @@ export async function POST(req: Request) {
     const imgWidth = imageMeta.width || 1920;
     const imgHeight = imageMeta.height || 1080;
 
-    // Watermark sizing: ~15% of image width, with 4% padding from edges
-    const watermarkWidth = Math.round(imgWidth * 0.15);
-    const paddingX = Math.round(imgWidth * 0.04);
-    const paddingY = Math.round(imgWidth * 0.04);
+    // Watermark sizing: ~20% of width for horizontal, ~35% for vertical
+    const isHorizontal = imgWidth >= imgHeight;
+    const watermarkWidth = isHorizontal ? Math.round(imgWidth * 0.20) : Math.round(imgWidth * 0.35);
+    const paddingX = Math.round(Math.min(imgWidth, imgHeight) * 0.05);
+    const paddingY = paddingX;
 
     // Resize the logo to desired watermark size, maintain aspect ratio
     const resizedLogo = await sharp(logoBuffer)
@@ -40,22 +41,12 @@ export async function POST(req: Request) {
       .ensureAlpha()
       .toBuffer();
 
-    // Apply opacity by creating a semi-transparent version of the logo
+    // The logo will be placed at 100% opacity, so we just pass the resized buffer
     const logoMeta = await sharp(resizedLogo).metadata();
     const logoW = logoMeta.width || watermarkWidth;
     const logoH = logoMeta.height || Math.round(watermarkWidth * 0.4);
 
-    // Create an opacity overlay: extract channels, reduce alpha
-    const watermarkWithOpacity = await sharp(resizedLogo)
-      .composite([
-        {
-          input: Buffer.from(
-            `<svg width="${logoW}" height="${logoH}"><rect width="${logoW}" height="${logoH}" fill="white" opacity="0.45"/></svg>`
-          ),
-          blend: "dest-in",
-        },
-      ])
-      .toBuffer();
+    const finalWatermarkBuffer = resizedLogo;
 
     // Calculate position: bottom-right with padding
     const left = Math.max(0, imgWidth - logoW - paddingX);
@@ -65,7 +56,7 @@ export async function POST(req: Request) {
     const processedBuffer = await sharp(imageBuffer)
       .composite([
         {
-          input: watermarkWithOpacity,
+          input: finalWatermarkBuffer,
           left,
           top,
           blend: "over",
