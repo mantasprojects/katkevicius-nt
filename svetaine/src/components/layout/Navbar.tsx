@@ -109,7 +109,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-[200] w-full bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-[0_2px_20px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
+      <header className="sticky top-0 z-[500] w-full bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-[0_2px_20px_-5px_rgba(0,0,0,0.05)] transition-all duration-300">
         <div className="container mx-auto px-4 lg:px-8 h-20 md:h-24 flex items-center justify-between max-w-[1400px]">
           <Link href="/" className="flex items-center relative z-[210] shrink-0">
             <Image 
@@ -171,7 +171,7 @@ export default function Navbar() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-[150] bg-white/98 backdrop-blur-3xl flex flex-col pt-[120px] md:pt-[160px] pb-10 px-6 overflow-y-auto"
+            className="fixed inset-0 z-[400] bg-white/98 backdrop-blur-3xl flex flex-col pt-[120px] md:pt-[160px] pb-10 px-6 overflow-y-auto"
           >
             <div className="flex flex-col h-full container mx-auto max-w-4xl relative z-10">
               <nav className="flex flex-col gap-6 mt-4">
