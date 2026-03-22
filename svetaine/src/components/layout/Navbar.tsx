@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -173,6 +173,14 @@ export default function Navbar() {
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="fixed inset-0 z-[400] bg-white/98 backdrop-blur-3xl flex flex-col pt-[120px] md:pt-[160px] pb-10 px-6 overflow-y-auto"
           >
+            <button 
+              onClick={() => setIsOpen(false)}
+              className="absolute top-6 right-6 flex items-center justify-center w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-100 hover:bg-slate-50 text-slate-900 transition-all focus:outline-none z-20"
+              aria-label="Close Menu"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
             <div className="flex flex-col h-full container mx-auto max-w-4xl relative z-10">
               <nav className="flex flex-col gap-6 mt-4">
                 {MOBILE_LINKS.map((link, i) => (
