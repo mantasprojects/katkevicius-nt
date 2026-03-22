@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Building, Star, Settings, Users, FileText, Mail } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function SidebarNav() {
+export default function SidebarNav({ onItemClick }: { onItemClick?: () => void }) {
   const pathname = usePathname();
 
   const items = [
@@ -27,6 +27,7 @@ export default function SidebarNav() {
           <Link 
             key={item.href} 
             href={item.href} 
+            onClick={onItemClick}
             className={cn(
               "flex items-center gap-3 p-3 rounded-xl font-medium transition-all border border-transparent",
               isActive 
@@ -42,4 +43,5 @@ export default function SidebarNav() {
     </nav>
   );
 }
+
 

@@ -30,11 +30,10 @@ export default function AdminMobileNav() {
       {/* Slide-out Menu */}
       {isOpen && (
         <div className="absolute top-[73px] left-0 right-0 bg-white border-b border-slate-200 shadow-xl p-6 space-y-4 animate-in slide-in-from-top-4 duration-200">
-          <div onClick={() => setIsOpen(false)}>
-            <SidebarNav />
-          </div>
+          <SidebarNav onItemClick={() => setIsOpen(false)} />
         </div>
       )}
     </div>
   );
 }
+
